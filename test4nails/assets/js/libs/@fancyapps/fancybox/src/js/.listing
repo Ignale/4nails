@@ -1,0 +1,11 @@
+drwxr-xr-x    2 ape87o1wty ape87o1wty       4096 Mar 15 15:17 .
+drwxr-xr-x    4 ape87o1wty ape87o1wty       4096 Mar 15 15:17 ..
+-rw-r--r--    1 ape87o1wty ape87o1wty     100023 Oct 26  1985 core.js
+-rw-r--r--    1 ape87o1wty ape87o1wty       5272 Oct 26  1985 fullscreen.js
+-rw-r--r--    1 ape87o1wty ape87o1wty      27483 Oct 26  1985 guestures.js
+-rw-r--r--    1 ape87o1wty ape87o1wty       6482 Oct 26  1985 hash.js
+-rw-r--r--    1 ape87o1wty ape87o1wty       8298 Oct 26  1985 media.js
+-rw-r--r--    1 ape87o1wty ape87o1wty       4559 Oct 26  1985 share.js
+-rw-r--r--    1 ape87o1wty ape87o1wty       5742 Oct 26  1985 slideshow.js
+-rw-r--r--    1 ape87o1wty ape87o1wty       6945 Oct 26  1985 thumbs.js
+-rw-r--r--    1 ape87o1wty ape87o1wty       1192 Oct 26  1985 wheel.js

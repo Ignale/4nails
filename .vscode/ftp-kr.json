@@ -1,0 +1,13 @@
+{
+  "host": "ftp.orange-webstudio.com",
+  "username": "developer2@test1.4nails.us",
+  "password": "[@JYg#qntWZ7",
+  "remotePath": "",
+  "protocol": "ftp",
+  "port": 21,
+  "fileNameEncoding": "utf8",
+  "autoUpload": false,
+  "autoDelete": false,
+  "autoDownload": false,
+  "ignore": [".git", "/.vscode"]
+}

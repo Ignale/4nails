@@ -1,0 +1,16 @@
+drwxr-xr-x    7 ape87o1wty ape87o1wty       4096 Mar 22 11:46 .
+drwxr-xr-x    3 ape87o1wty ape87o1wty       4096 Mar 22 11:46 ..
+drwxr-xr-x    2 ape87o1wty ape87o1wty       4096 Mar 22 11:46 compat
+-rw-r--r--    1 ape87o1wty ape87o1wty      15668 Nov 21  2017 core.js
+drwxr-xr-x    2 ape87o1wty ape87o1wty       4096 Mar 22 11:46 data
+-rw-r--r--    1 ape87o1wty ape87o1wty      10614 Nov 21  2017 defaults.js
+-rw-r--r--    1 ape87o1wty ape87o1wty      16165 Aug 31  2017 diacritics.js
+drwxr-xr-x    2 ape87o1wty ape87o1wty       4096 Mar 22 11:46 dropdown
+-rw-r--r--    1 ape87o1wty ape87o1wty        902 Aug 31  2017 dropdown.js
+drwxr-xr-x    2 ape87o1wty ape87o1wty       4096 Mar 22 11:46 i18n
+-rw-r--r--    1 ape87o1wty ape87o1wty        315 Aug 31  2017 keys.js
+-rw-r--r--    1 ape87o1wty ape87o1wty       3389 Nov 21  2017 options.js
+-rw-r--r--    1 ape87o1wty ape87o1wty      13026 Nov 22  2017 results.js
+drwxr-xr-x    2 ape87o1wty ape87o1wty       4096 Mar 22 11:46 selection
+-rw-r--r--    1 ape87o1wty ape87o1wty        717 Aug 31  2017 translation.js
+-rw-r--r--    1 ape87o1wty ape87o1wty       8585 Nov 21  2017 utils.js

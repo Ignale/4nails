@@ -1,0 +1,10 @@
+drwxr-xr-x    3 ape87o1wty ape87o1wty       4096 Mar 22 11:46 .
+drwxr-xr-x    4 ape87o1wty ape87o1wty       4096 Mar 22 11:46 ..
+-rw-r--r--    1 ape87o1wty ape87o1wty        149 Aug 31  2017 banner.end.js
+-rw-r--r--    1 ape87o1wty ape87o1wty        259 Aug 31  2017 banner.start.js
+-rw-r--r--    1 ape87o1wty ape87o1wty        111 Aug 31  2017 jquery.mousewheel.shim.js
+-rw-r--r--    1 ape87o1wty ape87o1wty       1497 Nov 21  2017 jquery.select2.js
+-rw-r--r--    1 ape87o1wty ape87o1wty        357 Aug 31  2017 jquery.shim.js
+drwxr-xr-x    7 ape87o1wty ape87o1wty       4096 Mar 22 11:46 select2
+-rw-r--r--    1 ape87o1wty ape87o1wty        459 Aug 31  2017 wrapper.end.js
+-rw-r--r--    1 ape87o1wty ape87o1wty       1250 Nov 21  2017 wrapper.start.js
