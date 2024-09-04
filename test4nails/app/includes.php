@@ -168,19 +168,23 @@ function nails_scripts_styles()
   if (is_archive() || is_product() || is_cart() || is_checkout()) {
     wp_enqueue_script('add-to-cart-async', path() . 'assets/js/add-to-cart.js', array('jquery'), null, true);
 
-    $wc_add_to_cart_params = array(
-      'ajax_url' => WC()->ajax_url(),
-      'wc_ajax_url' => WC_AJAX::get_endpoint('%%endpoint%%'),
-      'i18n_view_cart' => esc_attr__('View cart', 'woocommerce'),
-      'cart_url' => apply_filters('woocommerce_add_to_cart_redirect', wc_get_cart_url(), null),
-      'is_cart' => is_cart(),
-      'cart_redirect_after_add' => get_option('woocommerce_cart_redirect_after_add'),
-    );
-    wp_localize_script(
-      'add-to-cart-async',
-      'wc_add_to_cart_params',
-      $wc_add_to_cart_params
-    );
+    if (!is_archive()) {
+      $wc_add_to_cart_params = array(
+        'ajax_url' => WC()->ajax_url(),
+        'wc_ajax_url' => WC_AJAX::get_endpoint('%%endpoint%%'),
+        'i18n_view_cart' => esc_attr__('View cart', 'woocommerce'),
+        'cart_url' => apply_filters('woocommerce_add_to_cart_redirect', wc_get_cart_url(), null),
+        'is_cart' => is_cart(),
+        'cart_redirect_after_add' => get_option('woocommerce_cart_redirect_after_add'),
+      );
+      wp_localize_script(
+        'add-to-cart-async',
+        'wc_add_to_cart_params',
+        $wc_add_to_cart_params
+      );
+    }
+
+
   }
   /* Checkout page */
   if (is_checkout()) {
@@ -258,7 +262,7 @@ function nails_scripts_styles()
 
   /* Cart page */
   if (is_cart()) {
-    wp_enqueue_script('cart-async', path() . 'assets/js/cart.js', array('jquery'), null, true);
+    wp_enqueue_script('cart', path() . 'assets/js/cart.js', array('jquery'), null, true);
 
     wp_localize_script('cart', 'wc_cart_params', array('ajax_url' => admin_url('admin-ajax.php'), 'wc_ajax_url' => '%%endpoint%%', 'update_shipping_method_nonce' => wp_create_nonce('update-shipping-method'), 'remove_coupon_nonce' => wp_create_nonce('remove-coupon')));
   }

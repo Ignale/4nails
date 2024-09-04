@@ -782,31 +782,26 @@ function addToCart()
   $qty = absint($_POST['qty']);
   $response = [];
 
-  if (WC()->cart->add_to_cart($product_id, $qty)) {
-    $response['status'] = 'ok';
+  $product = wc_get_product($product_id)->get_data();
 
-    $response['notice'] = '<div class="woocommerce-message">';
-    $response['notice'] .= wc_add_to_cart_message($product_id, false, true);
-    $response['notice'] .= '</div>';
+  
 
-    ob_start();
-    woocommerce_mini_cart();
-    $response['cart'] = ob_get_contents();
-    ob_end_clean();
-    ob_start();
-    get_template_part('widgets/modal');
-    $response['modal'] = ob_get_contents();
-    ob_end_clean();
-  } else {
-    $response['status'] = 'error';
-    ob_start();
-    woocommerce_show_messages();
-    wc_print_notices();
-    $response['notice'] = wc_print_notices();
-    ob_end_clean();
+  $is_product_in_cart = [
+    'product_en' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'en'), $qty),
+    'product_es' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'es'), $qty),
+    'product_ru' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'ru'), $qty),
+  ];
+
+  if (in_array(true, $is_product_in_cart)) {
+    send_add_to_cart_error_message($product, $is_product_in_cart);
   }
-  echo json_encode($response);
-  die();
+
+  $result = WC()->cart->add_to_cart($product_id, $qty);
+  if ($result) {
+    send_add_to_cart_success_message($product, $is_product_in_cart);
+  } else {
+    send_add_to_cart_error_message($product, $is_product_in_cart);
+  }
 }
 
 
@@ -1841,8 +1836,16 @@ function change_cart_taxes_for_personal_discount($total, $compound, $display, $c
   return $new_tax_total;
 }
 
+add_action('4nail_after_archive_product', 'show_quantity_modal');
 
-
+function show_quantity_modal()
+{
+  return get_template_part('widgets/product/quantity-modal');
+}
+add_filter('woocommerce_quantity_input_classes', function ($elemetns) {
+  // var_dump($elemetns);
+  return array('text');
+}, 2, 20);
 //function pekky_cx_preferred_countries( $countries ){
 //    $countries = array('us','mx','ca');
 //    return $countries;

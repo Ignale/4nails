@@ -16,6 +16,8 @@ function addToCart(id, qty = 1, $btn) {
 
   $.post(url, data, (res) => {
     res = JSON.parse(res);
+    console.log(res);
+
     if (res.status === "ok") {
       $(".count-error").hide();
       trigger();
@@ -23,6 +25,9 @@ function addToCart(id, qty = 1, $btn) {
     }
     if (res.status === "error") {
       $(document.body).trigger("checkout_error");
+
+      $(".modalContainer").append(res.notice);
+
       Fancybox.show([
         {
           src: "#quantity-modal",
@@ -70,6 +75,8 @@ if (bodyClass("archive")) {
       id = $btn.data("product_id"),
       count = $btn.data("count");
     addToCart(id, count, $btn);
+
+    //https://test1.4nails.us/?wc-ajax=add_to_cart
   });
 }
 

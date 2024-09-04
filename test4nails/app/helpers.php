@@ -236,3 +236,64 @@ function getProductTranslatedName($product_id, $order_id, $langOfSite = false)
   }
 
 }
+
+function check_product_in_cart($id, $qty)
+{
+  $product_stock = wc_get_product($id)->get_stock_quantity();
+  foreach (WC()->cart->get_cart() as $item => $values) {
+    if ($id == $values['variaton_id'] || $id == $values['product_id']) {
+      if ($product_stock < ($qty + $values['quantity'])) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function send_add_to_cart_success_message($product, $is_product_in_cart = null)
+{
+  $response = [];
+  $response['status'] = 'ok';
+
+  $response['is_product_in_cart'] = $is_product_in_cart;
+
+  ob_start();
+  ?>
+<div class="woocommerce-message">
+  <?php echo wc_add_to_cart_message($product['id'], false, true); ?>
+</div>
+<?php
+  $response['notice'] = ob_get_clean();
+
+  ob_start();
+  woocommerce_mini_cart();
+  $response['cart'] = ob_get_clean();
+
+
+  ob_start();
+  get_template_part('widgets/modal');
+  $response['modal'] = ob_get_clean();
+
+  echo json_encode($response);
+  die();
+
+}
+
+function send_add_to_cart_error_message($product, $is_product_in_cart = null)
+{
+  $response = [];
+  $response['status'] = 'error';
+
+  $response['is_product_in_cart'] = $is_product_in_cart;
+
+  ob_start();
+
+  get_template_part('widgets/product/quantity', 'modal', ['product' => $product]);
+
+  $response['notice'] = ob_get_contents();
+
+  ob_clean();
+
+  echo json_encode($response);
+  die();
+}

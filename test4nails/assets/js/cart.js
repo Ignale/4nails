@@ -16,6 +16,25 @@ $("#login-btn").click((e) => {
   );
 });
 
+const maybeDisablePlusButton = () => {
+  const cartProduct = $(".cart__product");
+
+  cartProduct.each(function () {
+    const productValue = $(this).find(".product__value");
+    const productPlus = $(this).find("button.product__plus");
+
+    if (productValue.attr("max") == productValue.val()) {
+      productPlus.prop("disabled", true);
+    }
+  });
+};
+
+maybeDisablePlusButton();
+
+$(document).on("updated_cart_totals", function (e) {
+  maybeDisablePlusButton();
+});
+
 $("#goToCheckoutBtn").click((e) => {
   $("body")
     .addClass("processing")
