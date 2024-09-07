@@ -784,7 +784,7 @@ function addToCart()
 
   $product = wc_get_product($product_id)->get_data();
 
-  
+
 
   $is_product_in_cart = [
     'product_en' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'en'), $qty),
@@ -1302,7 +1302,7 @@ function ifPersonalDiscount($product)
   $product_price = get_product_price($product->id);
   $sale_price = $product->get_sale_price();
 
-  return !$product->is_virtual() && if_user_have_sale() && ($product_price < $sale_price || !$product->is_on_sale());
+  return if_user_have_sale() && ($product_price < $sale_price || !$product->is_on_sale());
 }
 
 add_action('woocommerce_admin_order_totals_after_discount', 'vp_add_sub_total', 10, 1);
