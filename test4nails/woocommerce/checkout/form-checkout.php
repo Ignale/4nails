@@ -228,7 +228,10 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                       </div>
                       <div class="checkout-total__info">
                         <div class="checkout-total__img">
-                          <?= $cart_item['data']->get_image(array(95, 95)); ?>
+                          <img
+                            src="<?= wp_get_attachment_image_url($_product->get_image_id(), 'product_cat') ?>"
+                            loading="lazy"
+                          >
                         </div>
                         <div class="checkout-total-mobile">
                           <div class="checkout-total__title"> <?= $_product->get_name(); ?></div>
