@@ -724,7 +724,6 @@ html[lang=es-ES] .checkout__step-btn {
 .steps__item span {
   text-transform: uppercase;
   color: #fff;
-  text-shadow: 0 1px 0 rgb(2, 2, 1);
   display: block;
   padding-left: 35px;
   padding-right: 10px;
@@ -1496,7 +1495,6 @@ form .selection {
   color: #fff;
   text-align: center;
   background-color: #09ccb4;
-  text-shadow: 0 1px 0 rgb(2, 2, 1);
   border-radius: 2px;
   font-size: 18px;
   text-transform: uppercase;
@@ -1661,6 +1659,10 @@ form .selection {
   display: -webkit-box !important;
   display: -ms-flexbox !important;
   display: flex !important;
+}
+
+.shipping_method-description {
+  font-size: 12px;
 }
 
 @media (max-width: 767px) {

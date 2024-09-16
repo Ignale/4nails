@@ -205,7 +205,6 @@ button {
 	text-transform: uppercase;
 	color: #fff;
 	background-color: #09ccb4;
-	text-shadow: 0 1px 0 rgb(2, 2, 2 / 0.333);
 	border-radius: 2px;
 }
 
@@ -413,7 +412,6 @@ label .required {
 	background-color: #09ccb4;
 	color: #fff;
 	text-transform: uppercase;
-	text-shadow: 0 1px 0 rgb(2, 2, 2 / 0.333);
 	white-space: nowrap;
 	padding: 4px 10px;
 	font-weight: 300;
@@ -1012,7 +1010,6 @@ form .select2-container--default .select2-selection--single .select2-selection__
 	background-color: #09ccb4;
 	white-space: nowrap;
 	text-transform: uppercase;
-	text-shadow: 0 1px 0 rgb(2, 2, 2 / 0.333);
 	margin-right: 5%;
 	color: white !important;
 	text-decoration: none !important;
@@ -1234,7 +1231,6 @@ form .select2-container--default .select2-selection--single .select2-selection__
 }
 
 .cart-btn {
-	text-shadow: 0 1px 0 rgb(2, 2, 2 / 0.333);
 	width: 100%;
 	text-transform: uppercase;
 	background-color: #09ccb4;
@@ -1558,7 +1554,6 @@ form .select2-container--default .select2-selection--single .select2-selection__
 h3.modal-header {
 	font-size: 23px;
 	color: #fff;
-	text-shadow: 0 1px 0 rgb(2, 2, 2 / 0.333);
 	line-height: 1.2;
 	padding: 5px 15px;
 	background-color: #09ccb4;
@@ -1704,7 +1699,6 @@ span.wpcf7-form-control-wrap.userWishes {
 	width: 100%;
 	background-color: #09ccb4;
 	color: #fff;
-	text-shadow: 0 1px 0 rgb(2, 2, 2 / 0.333);
 	transition: .15s ease-in-out;
 	text-transform: uppercase;
 	display: flex;
@@ -1833,7 +1827,6 @@ html[lang=ru-RU] .tinv-wishlist .tinvwl_added_to_wishlist.tinv-modal button.butt
 .toast-header .close {
 	cursor: pointer;
 	font-weight: 700;
-	text-shadow: 0 1px 0 #fff;
 	font-size: 24px;
 	margin-left: 8px;
 	margin-right: 12px;
@@ -1983,7 +1976,6 @@ html[lang=ru-RU] .tinv-wishlist .tinvwl_added_to_wishlist.tinv-modal button.butt
 	padding: 4px 12px;
 	color: #fff;
 	background-color: #09ccb4;
-	text-shadow: 0 1px 0 rgb(2, 2, 2 / 0.333);
 	max-width: 272px;
 	width: 100%;
 	transition: .3s all;
@@ -2399,7 +2391,6 @@ header {
 	padding: 8px 28px;
 	font-size: 17px;
 	color: #fff;
-	text-shadow: 0 1px 0 rgb(2, 2, 2 / 0.333);
 	transition: .3s all;
 }
 
@@ -2762,7 +2753,7 @@ embed {
 
 .video__link img {
 	width: 100%;
-
+  height: auto;
 }
 
 .video__info {
@@ -2787,7 +2778,6 @@ embed {
 }
 
 .video__name {
-	text-shadow: 0 0 2px rgb(0, 0, 0 / 0.5);
 	font-size: 18px;
 	color: #eee;
 	white-space: nowrap;
@@ -2876,7 +2866,6 @@ embed {
 	text-align: center;
 	white-space: nowrap;
 	text-transform: uppercase;
-	text-shadow: 0 1px 0 rgb(2, 2, 2 /0.333);
 }
 
 .btn-cyan:hover {
@@ -3098,7 +3087,6 @@ section.about {
 	margin-right: 15px;
 	margin-bottom: 4px;
 	font-size: 17px;
-	text-shadow: 0 1px 0 rgb(2, 2, 2 / 0.333);
 }
 
 .footer__follow {
