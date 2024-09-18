@@ -10,6 +10,31 @@
   transition: 1s all;
 }
 
+.cart__quantity {
+  position: relative;
+}
+
+.tooltip {
+  display: block !important;
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: all 0.3s ease-in;
+  transition: all 0.3s ease-in;
+  width: 300px;
+  top: 40px;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: #000;
+  color: #fff;
+  z-index: 100;
+}
+
+.cart__quantity:hover .tooltip {
+  visibility: visible;
+  opacity: 0.7;
+}
+
 .show-more {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -715,6 +740,9 @@ html[lang=es-ES] .cart__checkout a {
 @media (max-width: 600px) {
   .page-template-cart main {
     padding-bottom: 10%;
+  }
+  .tooltip {
+    right: 0;
   }
   section.cart .return-to-shop {
     margin-bottom: 40px;

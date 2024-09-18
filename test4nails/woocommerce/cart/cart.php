@@ -3,6 +3,7 @@
   method="post"
   class="cart__content woocommerce-cart-form"
 >
+  <div class="notices-area"><?php wc_print_notices() ?></div>
 
   <div class="cart__gifts">
 
@@ -61,6 +62,7 @@
       </div>
       <div class="cart__product-wrapper woocommerce-cart-form__contents">
         <?php
+        $cart = WC()->cart;
         foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item):
           $_product = apply_filters('woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key);
           $product_id = apply_filters('woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key);
@@ -114,12 +116,19 @@
             <div
               class="cart__quantity"
               data-title="<?php esc_attr_e('Quantity', 'woocommerce'); ?>"
+              data-is-individual="<?= $_product->is_sold_individually() ? '1' : 0 ?>"
             >
 
               <?php
                   $disabled = $_product->is_sold_individually() ? 'disabled' : '';
+                  $name = "cart[{$cart_item_key}][qty]";
+
+                  // if ($_POST["cart[{$cart_item_key}][qty]"] && $_POST["cart[{$cart_item_key}][qty]"] > $_product->get_max_purchase_quantity()) {
+                  //   $cart->set_quantity($cart_item_key, $_product->get_max_purchase_quantity(), true);
+                  // }
+                  // ;
                   $product_quantity = woocommerce_quantity_input([
-                    'input_name' => "cart[{$cart_item_key}][qty]",
+                    'input_name' => $name,
                     'input_value' => $cart_item['quantity'],
                     'max_value' => $_product->get_max_purchase_quantity(),
                     'min_value' => '0',
@@ -127,14 +136,22 @@
                     'classes' => $disabled,
                   ], $_product, false);
                   echo apply_filters('woocommerce_cart_item_quantity', $product_quantity, $cart_item_key, $cart_item);
-                  ?>
+                  if ($disabled === 'disabled') { ?>
+              <div
+                style="display: none;"
+                class="tooltip"
+              >
+                <?= __(' Due to its size and weight, this item can only be ordered in quantities of 1. If you need more than 1 then you will need to place a new order for each unit.', '4nails') ?>
+              </div>
+              <?php } ?>
             </div>
+
 
             <div
               class="cart__amount"
               data-title="<?php esc_attr_e('Total', 'woocommerce'); ?>"
             >
-              <?php $price = get_product_price($product_id) * $cart_item['quantity']; ?>
+              for<?php $price = get_product_price($product_id) * $cart_item['quantity']; ?>
               <div class="catalog__old-price">
                 <?= wc_price($price); ?>
               </div>
