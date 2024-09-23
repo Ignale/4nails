@@ -219,8 +219,14 @@ function if_international()
   }
 }
 
+function if_free_delivery_type($product)
+{
+  return get_field('free_delivery', $product->get_id());
+}
+
 function if_sunflower($product)
 {
+
   return get_field('another_warehouse', $product->get_id());
 
 }
@@ -240,6 +246,7 @@ function getProductTranslatedName($product_id, $order_id, $langOfSite = false)
 function check_product_in_cart($id, $qty)
 {
   $product_stock = wc_get_product($id)->get_stock_quantity();
+
   foreach (WC()->cart->get_cart() as $item => $values) {
     if ($id == $values['variaton_id'] || $id == $values['product_id']) {
       if ($product_stock < ($qty + $values['quantity'])) {
@@ -256,6 +263,8 @@ function send_add_to_cart_success_message($product, $is_product_in_cart = null)
   $response['status'] = 'ok';
 
   $response['is_product_in_cart'] = $is_product_in_cart;
+
+
 
   ob_start();
   ?>
@@ -285,6 +294,8 @@ function send_add_to_cart_error_message($product, $is_product_in_cart = null)
   $response['status'] = 'error';
 
   $response['is_product_in_cart'] = $is_product_in_cart;
+
+  $response['data'] = $product;
 
   ob_start();
 

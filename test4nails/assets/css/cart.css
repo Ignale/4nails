@@ -229,6 +229,7 @@ section.cart .return-to-shop {
 }
 .cart__product-img img {
   max-width: 80%;
+  height: auto;
 }
 .cart__product-name {
   font-size: 14px;

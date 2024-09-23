@@ -782,9 +782,10 @@ function addToCart()
   $qty = absint($_POST['qty']);
   $response = [];
 
-  $product = wc_get_product($product_id)->get_data();
+  $product = wc_get_product($product_id);
+  $product_data = $product->get_data();
 
-
+  $ignore_stock_status = if_free_delivery_type($product) === 'yes' && if_sunflower($product);
 
   $is_product_in_cart = [
     'product_en' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'en'), $qty),
@@ -792,15 +793,15 @@ function addToCart()
     'product_ru' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'ru'), $qty),
   ];
 
-  if (in_array(true, $is_product_in_cart)) {
-    send_add_to_cart_error_message($product, $is_product_in_cart);
+  if (in_array(true, $is_product_in_cart) && !$ignore_stock_status) {
+    send_add_to_cart_error_message($product_data, $is_product_in_cart);
   }
 
   $result = WC()->cart->add_to_cart($product_id, $qty);
   if ($result) {
-    send_add_to_cart_success_message($product, $is_product_in_cart);
+    send_add_to_cart_success_message($product_data, $is_product_in_cart);
   } else {
-    send_add_to_cart_error_message($product, $is_product_in_cart);
+    send_add_to_cart_error_message($product_data, $is_product_in_cart);
   }
 }
 
@@ -1222,16 +1223,44 @@ function if_user_have_sale()
   return is_user_logged_in() ? get_field('individual_discount', 'user_' . get_current_user_id()) : 0;
 }
 
+/**
+ * Checks if there're products in the cart with free delivery
+ * @param mixed $cart
+ * @return array
+ */
+function if_free_delivery($cart)
+{
+  $items_delivery = [];
+  $product_ids = [];
+
+
+  foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
+    $product = $cart_item['data'];
+    array_push($items_delivery, if_free_delivery_type($product));
+    array_push($product_ids, $cart_item['product_id']);
+  }
+  if (!in_array('yes', $items_delivery)) {
+    return ['free_delivery' => false];
+  }
+  return ['free_delivery' => true, 'ids' => $product_ids];
+}
+
+/**
+ * Checks if there're products in the cart with different warehaouses
+ * @param mixed $cart
+ * @return array
+ */
 function if_different_warehouses($cart)
 {
   $items_delivery = [];
   $product_ids = [];
+
   foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
     $product = $cart_item['data'];
-    array_push($items_delivery, !if_sunflower($product));
+    array_push($items_delivery, if_sunflower($product));
     array_push($product_ids, $cart_item['product_id']);
   }
-  if ((count(array_unique($items_delivery)) === 1)) {
+  if (!in_array(true, $items_delivery)) {
     return ['different' => false];
   }
   return ['different' => true, 'ids' => $product_ids];
@@ -1843,7 +1872,6 @@ function show_quantity_modal()
   return get_template_part('widgets/product/quantity-modal');
 }
 add_filter('woocommerce_quantity_input_classes', function ($elemetns) {
-  // var_dump($elemetns);
   return array('text');
 }, 2, 20);
 //function pekky_cx_preferred_countries( $countries ){
@@ -1853,3 +1881,81 @@ add_filter('woocommerce_quantity_input_classes', function ($elemetns) {
 //add_filter( 'wc_pv_preferred_countries', 'pekky_cx_preferred_countries' );
 //
 //add_filter( 'wc_pv_use_wc_default_store_country', '__return_true' );
+
+add_filter('woocommerce_countries', 'wc_remove_pr_country', 10, 1);
+
+function wc_remove_pr_country($country)
+{
+  unset($country["PR"]);
+  return $country;
+}
+
+add_filter('woocommerce_states', 'wc_us_states_mods');
+
+function wc_us_states_mods($states)
+{
+
+  $states['US'] = array(
+    'AL' => __('Alabama', 'woocommerce'),
+    'AK' => __('Alaska', 'woocommerce'),
+    'AZ' => __('Arizona', 'woocommerce'),
+    'AR' => __('Arkansas', 'woocommerce'),
+    'AS' => __('American Samoa', 'woocommerce'),
+    'CA' => __('California', 'woocommerce'),
+    'CO' => __('Colorado', 'woocommerce'),
+    'CT' => __('Connecticut', 'woocommerce'),
+    'DE' => __('Delaware', 'woocommerce'),
+    'DC' => __('District Of Columbia', 'woocommerce'),
+    'FL' => __('Florida', 'woocommerce'),
+    'GA' => _x('Georgia', 'US state of Georgia', 'woocommerce'),
+    'GU' => _x('Guam', 'woocommerce'),
+    'HI' => __('Hawaii', 'woocommerce'),
+    'ID' => __('Idaho', 'woocommerce'),
+    'IL' => __('Illinois', 'woocommerce'),
+    'IN' => __('Indiana', 'woocommerce'),
+    'IA' => __('Iowa', 'woocommerce'),
+    'KS' => __('Kansas', 'woocommerce'),
+    'KY' => __('Kentucky', 'woocommerce'),
+    'LA' => __('Louisiana', 'woocommerce'),
+    'ME' => __('Maine', 'woocommerce'),
+    'MD' => __('Maryland', 'woocommerce'),
+    'MA' => __('Massachusetts', 'woocommerce'),
+    'MI' => __('Michigan', 'woocommerce'),
+    'MN' => __('Minnesota', 'woocommerce'),
+    'MS' => __('Mississippi', 'woocommerce'),
+    'MO' => __('Missouri', 'woocommerce'),
+    'MP' => __('Commonwealth of the Northern Mariana Islands', 'woocommerce'),
+    'MT' => __('Montana', 'woocommerce'),
+    'NE' => __('Nebraska', 'woocommerce'),
+    'NV' => __('Nevada', 'woocommerce'),
+    'NH' => __('New Hampshire', 'woocommerce'),
+    'NJ' => __('New Jersey', 'woocommerce'),
+    'NM' => __('New Mexico', 'woocommerce'),
+    'NY' => __('New York', 'woocommerce'),
+    'NC' => __('North Carolina', 'woocommerce'),
+    'ND' => __('North Dakota', 'woocommerce'),
+    'OH' => __('Ohio', 'woocommerce'),
+    'OK' => __('Oklahoma', 'woocommerce'),
+    'OR' => __('Oregon', 'woocommerce'),
+    'PA' => __('Pennsylvania', 'woocommerce'),
+    'PR' => __('Puerto Rico', 'woocommerce'),
+    'RI' => __('Rhode Island', 'woocommerce'),
+    'SC' => __('South Carolina', 'woocommerce'),
+    'SD' => __('South Dakota', 'woocommerce'),
+    'TN' => __('Tennessee', 'woocommerce'),
+    'TX' => __('Texas', 'woocommerce'),
+    'UT' => __('Utah', 'woocommerce'),
+    'VT' => __('Vermont', 'woocommerce'),
+    'VA' => __('Virginia', 'woocommerce'),
+    'VI' => __('Virgin Islands', 'woocommerce'),
+    'WA' => __('Washington', 'woocommerce'),
+    'WV' => __('West Virginia', 'woocommerce'),
+    'WI' => __('Wisconsin', 'woocommerce'),
+    'WY' => __('Wyoming', 'woocommerce'),
+    'AA' => __('Armed Forces (AA)', 'woocommerce'),
+    'AE' => __('Armed Forces (AE)', 'woocommerce'),
+    'AP' => __('Armed Forces (AP)', 'woocommerce'),
+  );
+
+  return $states;
+}

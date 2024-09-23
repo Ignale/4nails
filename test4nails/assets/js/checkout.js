@@ -34,7 +34,11 @@
 const checkout_form = $("form.checkout");
 
 $(document).on("ajaxSuccess", function (event, xhr, settings) {
-  if (settings.url == "/?wc-ajax=update_order_review") {
+  if (
+    settings.url === "/?wc-ajax=update_order_review" ||
+    settings.url === "/ru/?wc-ajax=update_order_review" ||
+    settings.url === "/es/?wc-ajax=update_order_review"
+  ) {
     calcCurrentTotalPrice(
       $(".totals__item--shipping").data("shipping") || 0,
       $(".totals__item--fee")?.data("fee") || 0,
@@ -293,7 +297,8 @@ function calcCurrentTotalPrice(...prices) {
   const cartSubtotal = Number(
       +$(".totals__item--subtotal").data("subtotal")
     ).toFixed(2),
-    cartTotal = $("#totalPrice bdi");
+    cartTotal = $("#totalPrice bdi"),
+    zelleTotal = $("#wc-zelle-form .woocommerce-Price-amount");
   let total = 0;
 
   for (const arg of prices) {
@@ -307,6 +312,7 @@ function calcCurrentTotalPrice(...prices) {
     currency: "USD",
   });
   cartTotal.html(formattedPrice);
+  zelleTotal.html(formattedPrice);
 }
 
 function hideFirstStepBlock() {

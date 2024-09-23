@@ -290,15 +290,17 @@ function firstStep() {
 }
 
 function calcCurrentTotalPrice(...prices) {
-  const cartSubtotal = $(".totals__item--subtotal").data("subtotal"),
+  const cartSubtotal = Number(
+      +$(".totals__item--subtotal").data("subtotal")
+    ).toFixed(2),
     cartTotal = $("#totalPrice bdi");
   let total = 0;
 
-  console.log(prices);
-
   for (const arg of prices) {
-    total += Number(arg);
+    total += +arg.toFixed(2);
   }
+
+  console.log(...prices);
 
   let totalPrice = +cartSubtotal + total;
 
