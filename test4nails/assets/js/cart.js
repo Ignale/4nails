@@ -16,18 +16,70 @@ $("#login-btn").click((e) => {
   );
 });
 
-const maybeDisablePlusButton = () => {
+let isProductAvailable = true;
+let isQuantityModalShown = false;
+
+$(document).on("ajaxSuccess", function (event, xhr, settings) {
+  if (
+    settings.url === "https://test1.4nails.us/cart/" ||
+    settings.url === "https://test1.4nails.us/ru/cart/" ||
+    settings.url === "https://test1.4nails.us/es/cart/"
+  ) {
+    maybeDisablePlusButton();
+
+    if (!isProductAvailable && !isQuantityModalShown) {
+      Fancybox.show([
+        {
+          closeExisting: true,
+          src: "#quantity-modal",
+          type: "inline",
+        },
+      ]);
+      isQuantityModalShown = true;
+    }
+  }
+});
+
+$(document).on("DOMContentLoaded", maybeDisablePlusButton);
+
+function maybeDisablePlusButton() {
   const cartProduct = $(".cart__product");
 
   cartProduct.each(function () {
     const productValue = $(this).find(".product__value");
     const productPlus = $(this).find("button.product__plus");
+    const pruductStatus = $(this).find(".cart__quantity").data("stock-status");
 
-    if (productValue.attr("max") == productValue.val()) {
+    if (
+      productValue.attr("max") <= productValue.attr("value") &&
+      pruductStatus == "instock"
+    ) {
       productPlus.prop("disabled", true);
+
+      if (productValue.attr("max") < productValue.attr("value")) {
+        isProductAvailable = false;
+        isQuantityModalShown = false;
+        productValue.val(productValue.attr("max"));
+        productValue.attr("value", productValue.attr("max"));
+      }
+
+      $(".product__plus").on("mouseenter", function (e) {
+        const tooltip = $(this).parents(".cart__quantity").find(".tooltip");
+
+        if (tooltip.length > 0) {
+          tooltip.css({ visibility: "visible", opacity: "0.7" });
+        }
+      });
+      $(".product__plus").on("mouseleave", function (e) {
+        const tooltip = $(this).parents(".cart__quantity").find(".tooltip");
+
+        if (tooltip.length > 0) {
+          tooltip.css({ visibility: "hidden", opacity: "0" });
+        }
+      });
     }
   });
-};
+}
 
 maybeDisablePlusButton();
 

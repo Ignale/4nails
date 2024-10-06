@@ -186,14 +186,14 @@ function freeShipping()
 function productStatus($manage_stock, $backorders, $stock_status, $backorder)
 {
   if ($manage_stock && $backorders === 'yes') {
-    return "<span>" . esc_html__('In stock', '4nails') . "</span>";
+    return "<span class='product_status'>" . esc_html__('In stock', '4nails') . "</span>";
   }
   if ($stock_status === 'onbackorder') {
-    return "<span>" . esc_html__('On backorder', '4nails') . "</span>";
+    return "<span class='product_status'>" . esc_html__('On backorder', '4nails') . "</span>";
   } elseif ($stock_status === 'instock') {
-    return "<span>" . esc_html__('In stock', '4nails') . "</span>";
+    return "<span class='product_status'>" . esc_html__('In stock', '4nails') . "</span>";
   } else {
-    return "<span>" . esc_html__('Out of stock', '4nails') . "</span>";
+    return "<span class='product_status'>" . esc_html__('Out of stock', '4nails') . "</span>";
   }
 }
 
@@ -1892,6 +1892,8 @@ function wc_remove_pr_country($country)
 
 add_filter('woocommerce_states', 'wc_us_states_mods');
 
+add_filter('woocommerce_countries', 'wc_us_countries_mods');
+
 function wc_us_states_mods($states)
 {
 
@@ -1958,4 +1960,13 @@ function wc_us_states_mods($states)
   );
 
   return $states;
+}
+
+function wc_us_countries_mods($countries)
+{
+  unset($countries['GU']);
+  unset($countries['VI']);
+  unset($countries['AS']);
+  unset($countries['MP']);
+  return $countries;
 }

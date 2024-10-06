@@ -30,11 +30,6 @@
   z-index: 100;
 }
 
-.cart__quantity:hover .tooltip {
-  visibility: visible;
-  opacity: 0.7;
-}
-
 .show-more {
   display: -webkit-box;
   display: -ms-flexbox;
