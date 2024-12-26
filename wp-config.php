@@ -1,11 +1,11 @@
 <?php
 //Begin Really Simple Security key
-define('RSSSL_KEY', 'i1mUNS6kiGbzGIQBIwuddRx9FmU90pcjcm9IZr6XnrZVp5kzljOa0v2oZcefC8fz');
+define('RSSSL_KEY', 'rVy8JuPykihbZ8OEiCI5KgIOME9yQ7TnPs67fudvI4btfzCSwbIAdFdlCMqU42YZ');
 //END Really Simple Security key
 define('WP_CACHE', true);
 
-define('WP_HOME', 'https://4nails.us');
-define('WP_SITEURL', 'https://4nails.us');
+define('WP_HOME', 'https://test1.4nails.us');
+define('WP_SITEURL', 'https://test1.4nails.us');
 //Begin Really Simple SSL session cookie settings
 @ini_set('session.cookie_httponly', true);
 @ini_set('session.cookie_secure', true);
@@ -32,11 +32,11 @@ define('WP_AUTO_UPDATE_CORE', 'minor');
  */
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'orangew1_4nails');
+define('DB_NAME', 'orangew1_test1');
 /** MySQL database username */
-define('DB_USER', 'orangew1_dm');
+define('DB_USER', 'orangew1_test1');
 /** MySQL database password */
-define('DB_PASSWORD', 'OlzU7aGxJ3kY');
+define('DB_PASSWORD', 'ZLyFQmkqd$^E');
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
 /** Database Charset to use in creating database tables. */
@@ -84,9 +84,14 @@ $table_prefix = 'nl_';
  *
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
-define('WP_DEBUG', false);
-define('WP_DEBUG_DISPLAY', false);
+define('WP_DEBUG', true);
+define('WP_DEBUG_DISPLAY', true);
 define('WP_DEBUG_LOG', false);
+
+define('WPS_DEBUG_SCRIPTS', true);
+define('WPS_DEBUG_STYLES', true);
+
+define('WPS_DEBUG_DOM', true);
 define('MEDIA_TRASH', true);
 @ini_set('max_input_vars', 6000);
 /* That's all, stop editing! Happy publishing. */
@@ -95,4 +100,4 @@ if (!defined('ABSPATH')) {
   define('ABSPATH', dirname(__FILE__) . '/');
 }
 /** Sets up WordPress vars and included files. */
-require_once(ABSPATH . 'wp-settings.php');
+require_once (ABSPATH . 'wp-settings.php');

@@ -140,9 +140,7 @@ function nails_status($word)
 function cancelOrder(WC_Order $order)
 {
   $order_id = $order->get_id();
-
   if ($order->has_status(['on-hold', 'pending', 'processing'])) {
-
     $url = wp_nonce_url(admin_url('admin-ajax.php?action=nails_mark_order_as_cancel_request&order_id=' . $order_id), 'woocommerce-mark-order-cancell-request-myaccount');
     return $url;
   }
@@ -744,11 +742,9 @@ function nails_show_shipping_method($order)
 function get_order_info($order_id = 0)
 {
   $subtotal = 0;
-
   $sale_total = 0;
-
-
   $order = wc_get_order($order_id);
+  $personal = $GLOBALS['showPersonalDiscount'] ? get_individual_discount_order($order) : 0;
   $total = 0;
   foreach ($order->get_items() as $item) {
 
@@ -758,20 +754,20 @@ function get_order_info($order_id = 0)
       continue;
     }
 
-    $regular_prce = $product->get_regular_price();
 
-    $product_quantity = (int) $item->get_quantity();
-
-    $subtotal += $regular_prce * $product_quantity;
-
-    $price = get_product_price($product);
-
-    $total += $price * $product_quantity;
-
-
+    if (!empty($product)) {
+      $regular = $product->get_regular_price();
+    } else {
+      $regular = $item->get_total();
+    }
+    $quantity = $item['quantity'];
+    $subtotal += $regular * $item['quantity'];
+    if ($product->is_on_sale()) {
+      $sale_total += ($product->regular_price - $product->sale_price) * $quantity;
+    }
   }
 
-  $sale_total = $subtotal - $total;
+  $total = $subtotal - $sale_total - $personal;
   return ['sale' => $sale_total, 'subtotal' => $total];
 
 }
@@ -782,27 +778,31 @@ function addToCart()
   $qty = absint($_POST['qty']);
   $response = [];
 
-  $product = wc_get_product($product_id);
-  $product_data = $product->get_data();
+  if (WC()->cart->add_to_cart($product_id, $qty)) {
+    $response['status'] = 'ok';
 
-  $ignore_stock_status = if_free_delivery_type($product) === 'yes' && if_sunflower($product);
+    $response['notice'] = '<div class="woocommerce-message">';
+    $response['notice'] .= wc_add_to_cart_message($product_id, false, true);
+    $response['notice'] .= '</div>';
 
-  $is_product_in_cart = [
-    'product_en' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'en'), $qty),
-    'product_es' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'es'), $qty),
-    'product_ru' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'ru'), $qty),
-  ];
-
-  if (in_array(true, $is_product_in_cart) && !$ignore_stock_status) {
-    send_add_to_cart_error_message($product_data, $is_product_in_cart);
-  }
-
-  $result = WC()->cart->add_to_cart($product_id, $qty);
-  if ($result) {
-    send_add_to_cart_success_message($product_data, $is_product_in_cart);
+    ob_start();
+    woocommerce_mini_cart();
+    $response['cart'] = ob_get_contents();
+    ob_end_clean();
+    ob_start();
+    get_template_part('widgets/modal');
+    $response['modal'] = ob_get_contents();
+    ob_end_clean();
   } else {
-    send_add_to_cart_error_message($product_data, $is_product_in_cart);
+    $response['status'] = 'error';
+    ob_start();
+    woocommerce_show_messages();
+    wc_print_notices();
+    $response['notice'] = wc_print_notices();
+    ob_end_clean();
   }
+  echo json_encode($response);
+  die();
 }
 
 
@@ -819,133 +819,7 @@ function remove_shop_crumb($crumbs, $breadcrumb)
   return $new_crumbs;
 }
 
-//Массовое изменение скидок при сохранении данных на странице настроек
-add_action('acf/options_page/save', 'my_acf_save_options_page', 10, 2);
-function my_acf_save_options_page($post_id, $menu_slug)
-{
-
-  if ('theme-general-settings' !== $menu_slug) {
-    return;
-  }
-  // Get newly saved values for the theme settings page.
-  $values = get_fields($post_id);
-
-
-
-  // Check the new value of a specific field.
-  $discount_categories = get_field('discount_categories', $post_id);
-
-  $logger = wc_get_logger();
-
-
-  /**
-   * Получает подкатегории  и объединяет все в 1 массив. Если подкатегория не найдена, добавляет в массив родителя  
-   * @param array $parent_categories родительские категории
-   * @param bool $id_only (Optional) Возвратить только массив id?
-   * @return array
-   */
-  function get_children_categories($parent_categories, $id_only = true)
-  {
-    $children_cats = [];
-
-    foreach ($parent_categories as $parent_category => $value) {
-      $cat_args = array(
-        'taxonomy' => "product_cat",
-        'hide_empty' => true,
-        'limit' => 100,
-        'fields' => 'ids',
-        'parent' => $value['discount_category'],
-      );
-      $child_categories_ids = get_terms($cat_args);
-
-      if (!sizeof($child_categories_ids)) {
-        if (!$id_only) {
-          array_push($children_cats, ['discount_category' => $value['discount_category'], 'category_discount' => $value['category_discount']]);
-
-        } else {
-          array_push($children_cats, $value['discount_category']);
-        }
-
-        continue;
-      }
-      if (!$id_only) {
-        $child_categories = array_map(function ($item) use ($value) {
-
-          return ['discount_category' => $item, 'category_discount' => $value['category_discount']];
-
-        }, $child_categories_ids);
-
-        $children_cats = array_merge($children_cats, $child_categories);
-
-      } else {
-        $children_cats = array_merge($children_cats, $child_categories_ids);
-      }
-
-    }
-
-    return $children_cats;
-
-  }
-
-  $args = [
-    'product_category_id' => get_children_categories($discount_categories),
-    'limit' => 1000,
-  ];
-
-
-  $logger->debug('args', array('source' => 'woo4nails', 'args' => get_children_categories($discount_categories, false)));
-
-  $logger->debug('args', array('source' => 'woo4nails', 'args' => get_children_categories($discount_categories)));
-
-  $products = wc_get_products($args);
-
-  /**
-   * Retrievs the biggest discount amount among the categories in the settings page and categories of the product  
-   * @param array $discount_cats categories with discount from setting page
-   * @param array $cats array of the categories of the product 
-   * @return string 
-   */
-  function get_discount_amount_by_cat_id($discount_cats, $cats)
-  {
-    $discount = 0;
-
-    foreach ($cats as $cat) {
-      foreach ($discount_cats as $discount_cat => $value) {
-        if ($value['discount_category'] === $cat) {
-          if ($value['category_discount'] > $discount) {
-            $discount = $value['category_discount'];
-          }
-        }
-      }
-    }
-
-    return $discount;
-  }
-
-  foreach ($products as $product) {
-    $regular_price = $product->get_regular_price();
-
-    $categories = $product->get_category_ids();
-
-    $discount_amount = get_discount_amount_by_cat_id(get_children_categories($discount_categories, false), $categories);
-
-    $new_sale_price = $regular_price - $regular_price / 100 * $discount_amount;
-
-    if ($product->is_on_sale()) {
-      $sale_price = $product->get_sale_price();
-      if ($sale_price == $new_sale_price) {
-        continue;
-      }
-    }
-
-    $product->set_sale_price($new_sale_price);
-
-    $product->save();
-
-  }
-}
-
-// add_action('woocommerce_order_status_changed', 'orderStatusChanged', 10, 4);
+add_action('woocommerce_order_status_changed', 'orderStatusChanged', 10, 4);
 /**
  * Возникает при изменении заказа
  * @param int $order_id ИД заказа
@@ -987,24 +861,17 @@ function orderStatusChanged($order_id, $old_status, $new_status, $order)
 
     $email = get_user_meta($customer_id, 'billing_email')[0];
 
+
     $list_discount = get_field('personal_discount', 'options');
-
     $first_discount = isset($list_discount[0]) ? $list_discount[0]['total_price'] : 0;
-
     $personal_discount = get_field('individual_discount', 'user_' . $customer_id);
-
     $d = get_field('discount_for_first_complete_order', 'options');
-
     $send_new_discount = false;
 
     if (count($complete_order) > 0 && $total_complete_price < $first_discount && $personal_discount < $d) {
-
       update_field('individual_discount', $d, 'user_' . $customer_id);
-
       $message = "Congratulations! For the first purchase, you are assigned a personal discount of $d%";
-
       sendEmailDiscount($email, $message);
-
       $send_new_discount = true;
 
     } else {
@@ -1104,41 +971,33 @@ function change_shipping_methods_label_names($rates, $package)
   return $rates;
 }
 
-/**
- * Получает сумму индивидуальной скидки для заказа
- * @param WC_Order $order 
- * @return float|int
- */
+
 function get_individual_discount_order($order)
 {
-  $total_discount = 0;
-
+  $personal_total = 0;
+  $sale_total = 0;
+  $regular_total = 0;
   if (!$order)
     return 0;
-  $discount = get_field('individual_discount', 'user_' . $order->get_user_id());
-  if ($discount) {
+  if ($discount = get_field('individual_discount', 'user_' . $order->get_user_id())) {
 
     foreach ($order->get_items() as $item) {
       $product = $item->get_product();
-
       $quantity = $item['quantity'];
 
-      $price = $product->get_regular_price();
+      $regular_total += $quantity * $product->regular_price;
 
-      $personal_discount_price = get_product_price($product);
-
-      $total_discount += ($price - $personal_discount_price) * $quantity;
+      if ($product->sale_price) {
+        $sale_total += ($product->regular_price - $product->sale_price) * $quantity;
+      } else {
+        $personal_total += ($quantity * $product->regular_price) * ($discount / 100);
+      }
 
     }
   }
-  return $total_discount;
+  return $personal_total;
 }
 
-/**
- * Получает сумму индивидуальной скидки для корзины
- * @param WC_Cart $order 
- * @return float|int
- */
 function get_individual_discount_cart($cart)
 {
   $personal_total = 0;
@@ -1162,33 +1021,16 @@ function get_individual_discount_cart($cart)
   return $personal_total;
 }
 
-/**
- * Вывод цены на продукт, учитывая возможную персональную скидку. При указании $order_id, функция берет пользователя из указанного заказа и расчитывает цену для него, иначе для текущего пользователя. 
- * 
- * @param int $product_id id продукта
- * @param int $order_id (optional) Номер заказа
- * @return int $product_price
- */
-function get_product_price($product_id, $order_id = null)
+/* Вывод цены на продукт, учитывая возможную персональную скидку*/
+function get_product_price($id)
 {
-  $user_discount = 0;
+  $user = is_user_logged_in() ? get_field('individual_discount', 'user_' . get_current_user_id()) : 0;
 
-  if ($order_id) {
-    $order = wc_get_order($order_id);
-    if ($order->get_user_id()) {
-      $user_discount = is_user_logged_in() ? get_field('individual_discount', 'user_' . $order->get_user_id()) : 0;
-    }
-  }
-
-  if (!$user_discount) {
-    $user_discount = is_user_logged_in() ? get_field('individual_discount', 'user_' . get_current_user_id()) : 0;
-  }
-
-  $product = get_product($product_id);
+  $product = get_product($id);
 
   if ($GLOBALS['showPersonalDiscount']) {
 
-    $personal_price = $user_discount && $user_discount > 0 ? ($product->get_regular_price() - ($product->get_regular_price() * ((float) $user_discount / 100))) : $product->get_regular_price();
+    $personal_price = $user && $user > 0 ? ($product->get_regular_price() - ($product->get_regular_price() * ((float) $user / 100))) : $product->get_regular_price();
 
     if ($product->is_on_sale()) {
 
@@ -1201,11 +1043,15 @@ function get_product_price($product_id, $order_id = null)
     return $personal_price;
 
   }
-  if ($product->is_on_sale()) {
-    return $product->is_type('variable') ? $product->get_variation_sale_price('min', true) : $product->get_sale_price();
-  }
 
-  return $product->get_regular_price();
+  // if ($product->is_on_sale()) {
+  //   return $product->is_type('variable') ? $product->get_variation_sale_price('min', true) : $product->get_sale_price();
+  // } else {
+  //   if ($GLOBALS['showPersonalDiscount']) {
+  //     return $user && $user > 0 ? ($product->get_regular_price() - ($product->get_regular_price() * ((float) $user / 100))) : $product->get_regular_price();
+  //   }
+  //   return $product->get_regular_price();
+  // }
 
 }
 
@@ -1223,52 +1069,16 @@ function if_user_have_sale()
   return is_user_logged_in() ? get_field('individual_discount', 'user_' . get_current_user_id()) : 0;
 }
 
-/**
- * Checks if there are products in the cart with free delivery.
- *
- * @param mixed $cart The cart data to check.
- * @return array[
- *     free_delivery: bool,           // Indicates if at least one product has free delivery.
- *     ids: int[]|null,               // List of product IDs.
- *     only_free_delivery: bool       // Indicates if all products have only free delivery.
- * ]
- */
-function if_free_delivery($cart)
-{
-  $items_delivery = [];
-  $product_ids = [];
-  $only_free_delivery = true;
-
-  foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
-    $product = $cart_item['data'];
-    $free_delivery_product=if_free_delivery_type($product);
-    array_push($items_delivery, $free_delivery_product);
-    array_push($product_ids, $cart_item['product_id']);
-    $only_free_delivery = $only_free_delivery && ($free_delivery_product=='yes');
-  }
-  if (!in_array('yes', $items_delivery)) {
-    return ['free_delivery' => false,'only_free_delivery'=>false];
-  }
-  return ['free_delivery' => true, 'ids' => $product_ids,'only_free_delivery'=>$only_free_delivery];
-}
-
-
-/**
- * Checks if there're products in the cart with different warehaouses
- * @param mixed $cart
- * @return array
- */
 function if_different_warehouses($cart)
 {
   $items_delivery = [];
   $product_ids = [];
-
   foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
     $product = $cart_item['data'];
-    array_push($items_delivery, if_sunflower($product));
+    array_push($items_delivery, !if_sunflower($product));
     array_push($product_ids, $cart_item['product_id']);
-  } 
-  if (!in_array(true, $items_delivery)) {
+  }
+  if ((count(array_unique($items_delivery)) === 1)) {
     return ['different' => false];
   }
   return ['different' => true, 'ids' => $product_ids];
@@ -1339,7 +1149,7 @@ function ifPersonalDiscount($product)
   $product_price = get_product_price($product->id);
   $sale_price = $product->get_sale_price();
 
-  return if_user_have_sale() && ($product_price < $sale_price || !$product->is_on_sale());
+  return !$product->is_virtual() && if_user_have_sale() && ($product_price < $sale_price || !$product->is_on_sale());
 }
 
 add_action('woocommerce_admin_order_totals_after_discount', 'vp_add_sub_total', 10, 1);
@@ -1354,8 +1164,7 @@ function vp_add_sub_total($order_id)
   <td class="label">Personal discount:</td>
   <td width="1%"></td>
   <td class="total"><?php echo wc_price(get_individual_discount_order($order)) ?></td>
-</tr>
-<?php
+</tr><?php
 }
 
 add_action('woocommerce_admin_order_item_headers', 'my_woocommerce_admin_order_item_headers');
@@ -1388,9 +1197,28 @@ function getUserIndividualDiscountByOrderId($orderId)
   return 0;
 }
 
+function getPriceOfOrderItem($productId, $orderId)
+{
+  $order = wc_get_order($orderId);
+  $user = false;
+  if ($order->get_user_id()) {
+    $user = is_user_logged_in() ? get_field('individual_discount', 'user_' . $order->get_user_id()) : 0;
+  }
+
+  $product = new WC_Product($productId);
+  if ($product->is_on_sale()) {
+    return $product->is_type('variable') ? $product->get_variation_sale_price('min', true) : $product->get_sale_price();
+  } else {
+    if ($GLOBALS['showPersonalDiscount']) {
+      return $user && $user > 0 ? ($product->get_regular_price() - ($product->get_regular_price() * ((float) $user / 100))) : $product->get_regular_price();
+    }
+    return $product->get_regular_price();
+  }
+}
+
 function add_unit_of_measure_column_data1($row, $item_id, $item, $invoice)
 {
-  $actualPrice = get_product_price($item['product_id'], $item['order_id']) * $item['quantity'];
+  $actualPrice = getPriceOfOrderItem($item['product_id'], $item['order_id']) * $item['quantity'];
   $metaPrice = floatval(wc_get_order_item_meta($item_id, '_product_price', true)) * $item['quantity'];
 
   $row['total'] = wc_price($metaPrice ? $metaPrice : $actualPrice);
@@ -1736,7 +1564,8 @@ function has_product_with_free_delivery()
 
     $product_id = $product->get_id();
 
-    $free_delivery = get_field('free_delivery', $product_id); 
+    $free_delivery = get_field('free_delivery', $product_id);
+
     if ($free_delivery === 'yes') {
 
       return true;
@@ -1790,97 +1619,6 @@ function nails_update_customer_data()
   }
 
 }
-
-add_action('woocommerce_checkout_order_processed', 'apply_personal_discount_on_order_nails', 10, 3);
-
-/**
- * Применяет возможную персональную скидку к заказу и меняет итоговую сумму в заказе. Функция применяется с хуком "woocommerce_checkout_order_processed".
- * @param mixed $order_id Номер заказа
- * @param mixed $posted_data, не используется
- * @param WC_Order $order Заказ
-
- */
-function apply_personal_discount_on_order_nails($order_id, $posted_data, $order)
-{
-  // woocommerce_checkout_order_processed
-
-  if ($GLOBALS['showPersonalDiscount']) {
-    $order_items = $order->get_items();
-    $user_id = $order->get_user_id();
-    $personal_discount = is_user_logged_in() ? get_field('individual_discount', 'user_' . $user_id) : 0;
-    if ($personal_discount) {
-      foreach ($order_items as $item_id => $item) {
-        $product = $item->get_product();
-        $price = get_product_price($product->get_id());
-
-        $product_quantity = (int) $item->get_quantity(); // product Quantity
-
-        // The new line item price
-        $new_line_item_price = $price * $product_quantity;
-
-        // Set the new price
-        $item->set_subtotal($new_line_item_price);
-        $item->set_total($new_line_item_price);
-
-        // Make new taxes calculations
-        $item->calculate_taxes();
-
-        $item->save();
-
-      }
-
-      $order->calculate_totals();
-
-      $order->save();
-    }
-
-  }
-}
-
-add_filter('woocommerce_cart_taxes_total', 'change_cart_taxes_for_personal_discount', 10, 4);
-
-/**
- * Исправляет taxes total в корзине при включенной персональной скидке. Функция применяется с фильтром 'woocommerce_cart_taxes_total'. 
- * @param float | int $total
- * @param mixed $compound
- * @param mixed $display
- * @param WC_Cart $cart
- * @return float | int $total
- */
-function change_cart_taxes_for_personal_discount($total, $compound, $display, $cart)
-{
-  $rate = reset(WC_Tax::get_rates())['rate'];
-
-  if (!$GLOBALS['showPersonalDiscount'] || !$rate) {
-    return $total;
-  }
-
-  $new_tax_total = 0;
-  $items = $cart->get_cart();
-
-  foreach ($items as $item => $values) {
-
-    $pesonal_price = $values['variaion_id'] != 0 ? get_product_price(wc_get_product($values['variaion_id'])) : get_product_price(wc_get_product($values['product_id']));
-
-    $product_quantity = $values['quantity'];
-
-    $new_tax_total += round($pesonal_price * $product_quantity * $rate / 100, 2);
-
-  }
-
-
-  return $new_tax_total;
-}
-
-add_action('4nail_after_archive_product', 'show_quantity_modal');
-
-function show_quantity_modal()
-{
-  return get_template_part('widgets/product/quantity-modal');
-}
-add_filter('woocommerce_quantity_input_classes', function ($elemetns) {
-  return array('text');
-}, 2, 20);
 //function pekky_cx_preferred_countries( $countries ){
 //    $countries = array('us','mx','ca');
 //    return $countries;
@@ -1888,92 +1626,3 @@ add_filter('woocommerce_quantity_input_classes', function ($elemetns) {
 //add_filter( 'wc_pv_preferred_countries', 'pekky_cx_preferred_countries' );
 //
 //add_filter( 'wc_pv_use_wc_default_store_country', '__return_true' );
-
-add_filter('woocommerce_countries', 'wc_remove_pr_country', 10, 1);
-
-function wc_remove_pr_country($country)
-{
-  unset($country["PR"]);
-  return $country;
-}
-
-add_filter('woocommerce_states', 'wc_us_states_mods');
-
-add_filter('woocommerce_countries', 'wc_us_countries_mods');
-
-function wc_us_states_mods($states)
-{
-
-  $states['US'] = array(
-    'AL' => __('Alabama', 'woocommerce'),
-    'AK' => __('Alaska', 'woocommerce'),
-    'AZ' => __('Arizona', 'woocommerce'),
-    'AR' => __('Arkansas', 'woocommerce'),
-    'AS' => __('American Samoa', 'woocommerce'),
-    'CA' => __('California', 'woocommerce'),
-    'CO' => __('Colorado', 'woocommerce'),
-    'CT' => __('Connecticut', 'woocommerce'),
-    'DE' => __('Delaware', 'woocommerce'),
-    'DC' => __('District Of Columbia', 'woocommerce'),
-    'FL' => __('Florida', 'woocommerce'),
-    'GA' => _x('Georgia', 'US state of Georgia', 'woocommerce'),
-    'GU' => _x('Guam', 'woocommerce'),
-    'HI' => __('Hawaii', 'woocommerce'),
-    'ID' => __('Idaho', 'woocommerce'),
-    'IL' => __('Illinois', 'woocommerce'),
-    'IN' => __('Indiana', 'woocommerce'),
-    'IA' => __('Iowa', 'woocommerce'),
-    'KS' => __('Kansas', 'woocommerce'),
-    'KY' => __('Kentucky', 'woocommerce'),
-    'LA' => __('Louisiana', 'woocommerce'),
-    'ME' => __('Maine', 'woocommerce'),
-    'MD' => __('Maryland', 'woocommerce'),
-    'MA' => __('Massachusetts', 'woocommerce'),
-    'MI' => __('Michigan', 'woocommerce'),
-    'MN' => __('Minnesota', 'woocommerce'),
-    'MS' => __('Mississippi', 'woocommerce'),
-    'MO' => __('Missouri', 'woocommerce'),
-    'MP' => __('Commonwealth of the Northern Mariana Islands', 'woocommerce'),
-    'MT' => __('Montana', 'woocommerce'),
-    'NE' => __('Nebraska', 'woocommerce'),
-    'NV' => __('Nevada', 'woocommerce'),
-    'NH' => __('New Hampshire', 'woocommerce'),
-    'NJ' => __('New Jersey', 'woocommerce'),
-    'NM' => __('New Mexico', 'woocommerce'),
-    'NY' => __('New York', 'woocommerce'),
-    'NC' => __('North Carolina', 'woocommerce'),
-    'ND' => __('North Dakota', 'woocommerce'),
-    'OH' => __('Ohio', 'woocommerce'),
-    'OK' => __('Oklahoma', 'woocommerce'),
-    'OR' => __('Oregon', 'woocommerce'),
-    'PA' => __('Pennsylvania', 'woocommerce'),
-    'PR' => __('Puerto Rico', 'woocommerce'),
-    'RI' => __('Rhode Island', 'woocommerce'),
-    'SC' => __('South Carolina', 'woocommerce'),
-    'SD' => __('South Dakota', 'woocommerce'),
-    'TN' => __('Tennessee', 'woocommerce'),
-    'TX' => __('Texas', 'woocommerce'),
-    'UT' => __('Utah', 'woocommerce'),
-    'VT' => __('Vermont', 'woocommerce'),
-    'VA' => __('Virginia', 'woocommerce'),
-    'VI' => __('Virgin Islands', 'woocommerce'),
-    'WA' => __('Washington', 'woocommerce'),
-    'WV' => __('West Virginia', 'woocommerce'),
-    'WI' => __('Wisconsin', 'woocommerce'),
-    'WY' => __('Wyoming', 'woocommerce'),
-    'AA' => __('Armed Forces (AA)', 'woocommerce'),
-    'AE' => __('Armed Forces (AE)', 'woocommerce'),
-    'AP' => __('Armed Forces (AP)', 'woocommerce'),
-  );
-
-  return $states;
-}
-
-function wc_us_countries_mods($countries)
-{
-  unset($countries['GU']);
-  unset($countries['VI']);
-  unset($countries['AS']);
-  unset($countries['MP']);
-  return $countries;
-}

@@ -70,9 +70,7 @@ function qwe($id)
 
   // удалим временный файл
   @unlink($tmp);
-
 }
-
 
 
 /**
@@ -167,8 +165,6 @@ function get_local_facebook()
       return "https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fmashas.nails.shop%2F&tabs=timeline&width=231&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=1234367356961387";
   }
 }
-
-
 /**
  * 
  * Последние видео ( )
@@ -378,7 +374,6 @@ function send_notification_about_sub($user_id)
 {
   $message = 'User ' . get_userdata($user_id)->user_email . ' subscribed to the advertising mailing';
   wp_mail(get_bloginfo('admin_email'), __('User subscribed to the advertising mailing', '4nails'), $message);
-
 }
 
 /**
@@ -458,6 +453,5 @@ function search_by_sku($search, &$query_vars)
     }
   }
   return $search;
-
 }
 add_filter('posts_search', 'search_by_sku', 999, 2);

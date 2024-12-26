@@ -1,21 +1,17 @@
 <?php $products_id=$args['products_id'] ?>
 
-<div style="display: none; width: 500px;" class="modal fade" id="login-error-massage" tabindex="-1">
+<div style="display: none; width: 500px;" class="modal fade" id="overweight-massage" tabindex="-1">
 
     <div class="modal-dialog modal-dialog-centered" role="document">
 
         <div class="modal-content">
 
             <div class="modal-body">
-
-
-
                 <div class="modal-error">
                     <div class="modal-header__delete">
                         <img src="<?= path() ?>assets/img/icons/delete_b.svg"
                              alt="<?php _e('Remove', 'ti-woocommerce-wishlist') ?>">
                     </div>
-                    <div cl
                     <div class="modal-error__header"><?= __("The first items must be ordered separately. The remaining items on the list can be combined into one order.", '4nails') ?></div>
 
                     <div class="modal-error__wrap">

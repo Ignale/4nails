@@ -61,8 +61,10 @@
   line-height: 1.2;
 }
 .sign-in__btn {
+  margin-top: 10px;
   padding: 6px 8px;
   font-size: 18px;
+  font-weight: 400;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -74,6 +76,7 @@
           justify-content: center;
   max-width: 272px;
   width: 100%;
+  height: 32px;
 }
 .sign-in__right {
   width: 40.1%;
@@ -98,7 +101,8 @@
           align-items: center;
 }
 .sign-in__buttons .sign-in__btn {
-  width: 47%;
+  width: 50%;
+  line-height: 1.5;
 }
 .sign-in__remember {
   width: 47%;
@@ -341,7 +345,7 @@
           justify-content: space-between;
 }
 .account__nav {
-  width: 24%;
+  width: 30%;
   padding-right: 15px;
 }
 .account__menu {
@@ -350,7 +354,7 @@
   max-width: fit-content;
 }
 .account__menu li {
-  margin-bottom: 11px;
+  margin-bottom: 15px;
   color: #fff;
   background-color: #09ccb4;
   -webkit-transition: 0.3s all;
@@ -369,6 +373,9 @@
           align-items: center;
   text-transform: uppercase;
   white-space: nowrap;
+  height: 32px;
+  /*min-width: 177px;*/
+  font-size: 17px;
 }
 .account__info {
   width: 76%;
@@ -396,7 +403,7 @@
 
 /*---------------------ACCOUNT-PROFILE-----------------------*/
 .profile {
-  width: 48%;
+  width: 60%;
 }
 .profile__title {
   padding-top: 5px;
@@ -420,16 +427,22 @@
           justify-content: space-between;
 }
 .profile__btn button {
+  margin-top: 15px;
   white-space: nowrap;
-  padding: 4px;
+  padding: 5px;
   width: 100%;
-  max-width: 184px;
-}
+  max-width: 180px;
+  height: 32px;
+  font-size: 17px;
+  font-weight: 400;
+  }
 .profile__cancel.red-btn {
   width: 100%;
+  height: 32px;
   max-width: 184px;
+  margin-top: 15px;
   margin-left: 15px;
-  height: 33px;
+  /*height: 48px;*/
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -441,6 +454,8 @@
           justify-content: center;
   text-shadow: none;
   text-transform: uppercase;
+  font-size: 17px;
+  font-weight: 400;
   border: 1px solid #09ccb4;
   color: #09ccb4;
   background-color: #fff;
@@ -451,17 +466,20 @@
   border-color: var(--red);
 }
 
-html[lang=ru-RU] .profile__btn button, html[lang=es-ES] .profile__btn button {
-  max-width: 196px;
-  font-size: 14px;
+html[lang=ru-RU] .profile__btn button, 
+html[lang=es-ES] .profile__btn button 
+{
+  max-width: 230px;
+  font-size: 17px;
   padding: 6px 4px;
+  letter-spacing: normal;
 }
 
 html[lang=ru-RU] .profile__cancel.red-btn, html[lang=es-ES] .profile__cancel.red-btn {
-  font-size: 14px;
+  font-size: 18px;
   max-width: 128px;
   padding: 6px 4px;
-  height: 37px;
+  height: 32px;
 }
 
 /*---------------ACCOUNT-PASS----------------------*/
@@ -568,7 +586,7 @@ html[lang=es-ES] .wishlist .cart-btn {
 
 @media (min-width: 768px) and (max-width: 1199px) {
   html[lang=es-ES] .account__nav {
-    width: 28%;
+    width: 35%;
   }
   html[lang=es-ES] .account__info {
     width: 72%;
@@ -580,6 +598,9 @@ html[lang=es-ES] .wishlist .cart-btn {
   }
   .wishlist .catalog__item {
     max-width: 28%;
+  }
+  .profile, .address__item {
+    width: 80%;
   }
 }
 @media (max-width: 1024px) {
@@ -593,18 +614,22 @@ html[lang=es-ES] .wishlist .cart-btn {
     border-right: none;
     border-left: 8px solid #fff;
   }
+  .profile, .address__item {
+    width: 90%;
+  }
 }
 @media (max-width: 991px) {
   html[lang=ru-RU] .sign-in__btn,
   html[lang=es-ES] .sign-in__btn {
-    font-size: 16px;
+    /*font-size: 16px;*/
     padding: 6px;
   }
-  .account__menu li a {
-    font-size: 14px;
-  }
+    
   html[lang=es-ES] .account__menu li a {
-    font-size: 12px;
+    font-size: 17px;
+  }
+  html[lang=ru-RU] .account__menu li a {
+    font-size: 17px;
   }
   .wishlist {
     -webkit-box-pack: justify;
@@ -627,11 +652,20 @@ html[lang=es-ES] .wishlist .cart-btn {
     margin: 3px auto 0;
   }
   html[lang=ru-RU] .profile__btn button,
+  html[lang=ru-RU] .profile__cancel.red-btn
+  {
+    font-size: 18px;
+    max-width: 240px;
+    /*height: 48px;*/
+    letter-spacing: normal;
+  }
   html[lang=es-ES] .profile__btn button,
-  html[lang=ru-RU] .profile__cancel.red-btn,
-  html[lang=es-ES] .profile__cancel.red-btn {
-    font-size: 17px;
-    max-width: 225px;
+  html[lang=es-ES] .profile__cancel.red-btn 
+  {
+    font-size: 18px;
+    max-width: 230px;
+    /*height: 48px;*/
+    letter-spacing: normal;
   }
   .address__item:first-child {
     margin-bottom: 32px;
@@ -644,11 +678,20 @@ html[lang=es-ES] .wishlist .cart-btn {
   }
 }
 @media (max-width: 767px) {
+  .profile__btn button,
+  .profile__cancel.red-btn
+  {
+  font-weight: 700;
+  letter-spacing: 1px;
+  }
   .reset__title {
     margin-bottom: 15px;
   }
+  .sign-in__btn {
+         font-weight: 700;
+      }
   .register .sign-in__right {
-    margin-top: 10px;
+    margin-top: 15px;
   }
   .register__checkbox {
     margin: 12px 0 10px;
@@ -689,15 +732,23 @@ html[lang=es-ES] .wishlist .cart-btn {
   }
   .account__menu li {
     text-align: center;
-    width: calc(50% - 5px);
+    width: calc(50% - 7px);
   }
   .account__menu li a {
-    padding: 0 4px;
+    padding: 0 1px;
     -webkit-box-pack: center;
         -ms-flex-pack: center;
             justify-content: center;
-    line-height: 37px;
+    line-height: 35px;
+    font-size: 17px;
+    font-weight: 600;
   }
+  html[lang=es-ES] .account__menu li a {
+    font-size: 15px;
+  }
+  html[lang=ru-RU] .account__menu li a {
+    font-size: 16px;
+  }  
   .account__content {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
@@ -730,11 +781,15 @@ html[lang=es-ES] .wishlist .cart-btn {
   .order__item {
     width: 100%;
   }
+  .sign-in__buttons .sign-in__btn {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
   .sign-in__text {
     display: none;
   }
   .sign-in__btn {
-    font-size: 16px;
+    font-size: 18px;
     max-width: 100%;
   }
   .sign-in__right {
@@ -744,7 +799,7 @@ html[lang=es-ES] .wishlist .cart-btn {
   .sign-in__item,
   .recovery__form .sign-in__btn,
   .recovery__form .sign-in__item {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
   .register__title {
     margin-bottom: 0;
@@ -850,6 +905,9 @@ html[lang=es-ES] .wishlist .cart-btn {
   }
 }
 @media (max-width: 600px) {
+    .sign-in__btn {
+         font-weight: 700;
+      }
   .page-template-account .required,
   .tip-btn {
     display: none;
@@ -917,6 +975,12 @@ html[lang=es-ES] .wishlist .cart-btn {
   }
 }
 @media (max-width: 420px) {
+  html[lang=es-ES] .account__menu li a {
+    font-size: 13px;
+  }
+    html[lang=ru-RU] .account__menu li a {
+    font-size: 15px;
+  }  
   .wishlist .cart-btn,
   html[lang=es-ES] .wishlist .cart-btn {
     font-size: 12px;

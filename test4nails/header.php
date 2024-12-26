@@ -37,6 +37,7 @@
   </script>
   <!-- End Google Tag Manager -->
 
+  
 
 </head>
 
@@ -54,161 +55,9 @@
   </noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <!-- Messenger Плагин чата Code -->
-  <?php
-if (ICL_LANGUAGE_CODE == 'en') { //This is for English language
-    ?>
-  <div
-    id="fb-root"
-    class="<?= wp_is_mobile() ? 'fb-root-mobile' : '' ?>"
-  ></div>
-  <!--    <style>-->
-  <!--        #fb-root{-->
-  <!--            transition: none;-->
-  <!--        }-->
-  <!--        .fb-root-mobile{-->
-  <!--           display: none;-->
-  <!--        }-->
-  <!--    </style>-->
+ 
 
-  <!-- Your Плагин чата на Английском code -->
-  <div
-    id="fb-customer-chat"
-    class="fb-customerchat"
-  >
-  </div>
-
-  <script>
-  var chatbox = document.getElementById('fb-customer-chat');
-  chatbox.setAttribute("page_id", "100550711432372");
-  chatbox.setAttribute("attribution", "biz_inbox");
-
-  window.fbAsyncInit = function() {
-    FB.init({
-      xfbml: true,
-      version: 'v11.0'
-    });
-
-  };
-
-  (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = 'https://connect.facebook.net/en_GB/sdk/xfbml.customerchat.js';
-    fjs.parentNode.insertBefore(js, fjs);
-
-  }(document, 'script', 'facebook-jssdk'));
-
-  // window.setTimeout(()=>{
-  //     document.querySelector('#fb-root').classList.remove('fb-root-mobile');
-  // },10000)
-  </script>
-  <?php } ?>
-  <?php
-if (ICL_LANGUAGE_CODE == 'ru') { //This is for Russian language
-    ?>
-  <div
-    id="fb-root"
-    class="<?= wp_is_mobile() ? 'fb-root-mobile' : '' ?>"
-  ></div>
-
-  <!-- Your Плагин чата на Русском code -->
-  <div
-    id="fb-customer-chat"
-    class="fb-customerchat"
-  >
-  </div>
-
-  <!--    <style>-->
-  <!--        #fb-root{-->
-  <!--            transition: none;-->
-  <!--        }-->
-  <!--        .fb-root-mobile{-->
-  <!--            display: none;-->
-  <!--        }-->
-  <!--    </style>-->
-
-  <script>
-  var chatbox = document.getElementById('fb-customer-chat');
-  chatbox.setAttribute("page_id", "549659442641802");
-  chatbox.setAttribute("attribution", "biz_inbox");
-
-
-  window.fbAsyncInit = function() {
-    FB.init({
-      xfbml: true,
-      version: 'v11.0',
-    });
-  };
-
-  (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = 'https://connect.facebook.net/ru_RU/sdk/xfbml.customerchat.js?alignment=LEFT';
-    js.alignment = 'left';
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-
-  // window.setTimeout(()=>{
-  //     document.querySelector('#fb-root').classList.remove('fb-root-mobile');
-  // },10000)
-  </script>
-  <?php } ?>
-  <?php
-if (ICL_LANGUAGE_CODE == 'es') { //This is for Spanish language
-    ?>
-  <div
-    id="fb-root"
-    class="<?= wp_is_mobile() ? 'fb-root-mobile' : '' ?>"
-  ></div>
-
-  <!--    <style>-->
-  <!--        #fb-root{-->
-  <!--            transition: none;-->
-  <!--        }-->
-  <!--        .fb-root-mobile{-->
-  <!--            display: none;-->
-  <!--        }-->
-  <!--    </style>-->
-
-  <!-- Your Плагин чата на Испанском code -->
-  <div
-    id="fb-customer-chat"
-    class="fb-customerchat"
-  >
-  </div>
-
-  <script>
-  var chatbox = document.getElementById('fb-customer-chat');
-  chatbox.setAttribute("page_id", "103075198489933");
-  chatbox.setAttribute("attribution", "biz_inbox");
-
-  window.fbAsyncInit = function() {
-    FB.init({
-      xfbml: true,
-      version: 'v11.0'
-    });
-  };
-
-  (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = 'https://connect.facebook.net/es_LA/sdk/xfbml.customerchat.js';
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-
-  // window.setTimeout(()=>{
-  //     document.querySelector('#fb-root').classList.remove('fb-root-mobile');
-  // },10000)
-  </script>
-  <?php } ?>
-  <!-- END Messenger Плагин чата Code -->
+  
   <header>
     <div class="header-top">
       <div class="wrapper">
@@ -257,7 +106,7 @@ if (ICL_LANGUAGE_CODE == 'es') { //This is for Spanish language
           <div
             class="header__logo"
             id="logo-small"
-            style="display: none; width: 55px"
+            style="display: none"
           >
             <?php the_image('logo_mini', null, 'option') ?>
           </div>
@@ -265,7 +114,6 @@ if (ICL_LANGUAGE_CODE == 'es') { //This is for Spanish language
           <a
             href="<?php bloginfo('url') ?>"
             class="header__logo"
-            style='width: 73px'
           >
 
             <?php the_image('logo', null, 'option') ?>

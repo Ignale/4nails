@@ -1,20 +1,56 @@
 <?php
 
-/* Give default path*/
+/* Give default url path*/
 function path()
 {
-  return get_template_directory_uri() . '/';
+   return get_template_directory_uri() . '/'; 
 }
-
+/* Give default path*/
+function theme_path()
+{
+   return get_template_directory() . '/'; 
+}
 /* Write svg  in html*/
 function the_icon($name, $echo = true)
 {
-  $icon = file_get_contents(path() . "assets/img/icons/$name.svg");
+  /* LOMATKOD
+      $icon = file_get_contents(path() . "assets/img/icons/$name.svg");
+      if ($echo) {
+        echo $icon;
+        return true;
+      }
+      return file_get_contents(path() . "assets/img/icons/$name.svg");
+      */
+  //Obtaining an internal address and not Url
+  $icon_path = get_stylesheet_directory() . "/assets/img/icons/{$name}.svg";
+
+  if (!file_exists($icon_path)) {
+    return false; // If the file is not found, return the empty line
+  }
+
+  // Get the contents of the SVG file
+  $icon = file_get_contents($icon_path);
+
+  // Remove the line <? XML Version = "1.0"
+  // We convert <? XML Version = "1.0 ...> in the comment <!-? XML Version =" 1.0 "?->
+  if (strpos($icon, '<?xml') !== false) {
+    $icon = preg_replace([
+      '/<\?xml (.*?)\?>/',
+      '/<!DOCTYPE (.*?)>/'
+    ], [
+      '<!-- ?xml $1  -->',
+      '<!-- !DOCTYPE $1 -->'
+    ], $icon);
+  }
+
+  //print_r('icon='.json_encode( [$icon]));
+
   if ($echo) {
     echo $icon;
     return true;
   }
-  return file_get_contents(path() . "assets/img/icons/$name.svg");
+
+  return $icon;
 }
 
 /*Get category image*/
@@ -66,7 +102,7 @@ function cart_content()
 
 function cart_url()
 {
-  echo wc_get_cart_url();
+  echo apply_filters( 'wpml_permalink', wc_get_cart_url() );
 }
 
 function cart_active()
@@ -97,11 +133,9 @@ function getSalePrice($product)
     $sale = $isVariable ? $product->get_variation_sale_price('min', true) : $product->get_sale_price();
     $regular = $isVariable ? $product->get_variation_regular_price('min', true) : $product->get_regular_price();
     $sale_amount = 100 - intval(($sale / $regular) * 100);
-    return $sale_amount;
-    ;
+    return $sale_amount;;
   }
   return false;
-
 }
 function the_sku($product = null)
 {
@@ -148,7 +182,6 @@ function get_registration_link()
     default:
       return '/my-account/registration';
   }
-
 }
 function get_lang_url()
 {
@@ -228,7 +261,6 @@ function if_sunflower($product)
 {
 
   return get_field('another_warehouse', $product->get_id());
-
 }
 
 function getProductTranslatedName($product_id, $order_id, $langOfSite = false)
@@ -240,7 +272,6 @@ function getProductTranslatedName($product_id, $order_id, $langOfSite = false)
   } else {
     return get_the_title($product_id);
   }
-
 }
 
 function check_product_in_cart($id, $qty)
@@ -267,10 +298,10 @@ function send_add_to_cart_success_message($product, $is_product_in_cart = null)
 
 
   ob_start();
-  ?>
-<div class="woocommerce-message">
-  <?php echo wc_add_to_cart_message($product['id'], false, true); ?>
-</div>
+?>
+  <div class="woocommerce-message">
+    <?php echo wc_add_to_cart_message($product['id'], false, true); ?>
+  </div>
 <?php
   $response['notice'] = ob_get_clean();
 
@@ -285,7 +316,6 @@ function send_add_to_cart_success_message($product, $is_product_in_cart = null)
 
   echo json_encode($response);
   die();
-
 }
 
 function send_add_to_cart_error_message($product, $is_product_in_cart = null)

@@ -222,10 +222,6 @@ $(document).ready(function () {
   }, 2000);
 });
 
-document.addEventListener("readystatechange", function (e) {
-  console.log(e);
-});
-
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelector(".product__img").style.visibility = "unset";
 });

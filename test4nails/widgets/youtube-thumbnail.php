@@ -1,5 +1,5 @@
 <?php
-if($args['get_id']){
+if($args['get_id']??false){
     $url=$args['link'];
     $link='https://www.youtube.com/watch?v='.$args['link'];
 }else {

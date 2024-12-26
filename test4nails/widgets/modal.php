@@ -1,4 +1,4 @@
-<?php $post = get_post($_POST['product_id']) ?>
+<?php $post = get_post($_POST['product_id']??null) ?>
 <div class="modal-body">
     <div id="qweqwe" class="add-product ">
         <div class="add-product__content">
