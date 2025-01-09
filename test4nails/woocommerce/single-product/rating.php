@@ -25,7 +25,7 @@ foreach ( $comments as $comment ) {
         $rating_count++;
     }
 }
-
+$average=0;
 if ( $rating_count > 0 ) {
     // Calculate the average rating
     $average = round( $total_rating / $rating_count, 2 );

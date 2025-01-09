@@ -1,3 +1,23 @@
+let isProductAvailable = true;
+let isQuantityModalShown = false;
+
+$(document).on("DOMContentLoaded", maybeDisablePlusButton);
+
+$(document.body).on("updated_cart_totals", function (e) {
+  maybeDisablePlusButton();
+
+  if (!isProductAvailable && !isQuantityModalShown) {
+    Fancybox.show([
+      {
+        closeExisting: true,
+        src: "#quantity-modal",
+        type: "inline",
+      },
+    ]);
+    isQuantityModalShown = true;
+  }
+});
+
 $("#login-btn").click((e) => {
   e.preventDefault();
   Fancybox.show(
@@ -16,70 +36,34 @@ $("#login-btn").click((e) => {
   );
 });
 
-let isProductAvailable = true;
-let isQuantityModalShown = false;
-
-$(document).on("ajaxSuccess", function (event, xhr, settings) {
-  if (
-    settings.url === "https://test1.4nails.us/cart/" ||
-    settings.url === "https://test1.4nails.us/ru/cart/" ||
-    settings.url === "https://test1.4nails.us/es/cart/"
-  ) {
-    maybeDisablePlusButton();
-
-    if (!isProductAvailable && !isQuantityModalShown) {
-      Fancybox.show([
-        {
-          closeExisting: true,
-          src: "#quantity-modal",
-          type: "inline",
-        },
-      ]);
-      isQuantityModalShown = true;
-    }
-  }
-});
-
-$(document).on("DOMContentLoaded", maybeDisablePlusButton);
-
-function maybeDisablePlusButton() {
+const maybeDisablePlusButton = () => {
   const cartProduct = $(".cart__product");
 
   cartProduct.each(function () {
     const productValue = $(this).find(".product__value");
     const productPlus = $(this).find("button.product__plus");
-    const pruductStatus = $(this).find(".cart__quantity").data("stock-status");
 
-    if (
-      productValue.attr("max") <= productValue.attr("value") &&
-      pruductStatus == "instock"
-    ) {
+    if (productValue.attr("max") == productValue.val()) {
       productPlus.prop("disabled", true);
-
-      if (productValue.attr("max") < productValue.attr("value")) {
-        isProductAvailable = false;
-        isQuantityModalShown = false;
-        productValue.val(productValue.attr("max"));
-        productValue.attr("value", productValue.attr("max"));
-      }
-
-      $(".product__plus").on("mouseenter", function (e) {
-        const tooltip = $(this).parents(".cart__quantity").find(".tooltip");
-
-        if (tooltip.length > 0) {
-          tooltip.css({ visibility: "visible", opacity: "0.7" });
-        }
-      });
-      $(".product__plus").on("mouseleave", function (e) {
-        const tooltip = $(this).parents(".cart__quantity").find(".tooltip");
-
-        if (tooltip.length > 0) {
-          tooltip.css({ visibility: "hidden", opacity: "0" });
-        }
-      });
     }
   });
-}
+};
+
+$(".product__plus").on("mouseenter", function (e) {
+  const tooltip = $(this).parents(".cart__quantity").find(".tooltip");
+
+  if (tooltip.length > 0) {
+    tooltip.css({ visibility: "visible", opacity: "0.7" });
+  }
+});
+
+$(".product__plus").on("mouseleave", function (e) {
+  const tooltip = $(this).parents(".cart__quantity").find(".tooltip");
+
+  if (tooltip.length > 0) {
+    tooltip.css({ visibility: "hidden", opacity: "0" });
+  }
+});
 
 maybeDisablePlusButton();
 
@@ -126,7 +110,8 @@ $(".product__plus").on("click", function () {
       { closeExisting: true, src: "#overweight-massage", type: "inline" },
     ]);
 });
-$("#overweight").click((e) => {
+
+$(document).on("click", "#overweight", (e) => {
   e.preventDefault();
   Fancybox.show(
     [
@@ -138,19 +123,35 @@ $("#overweight").click((e) => {
     ],
     {
       on: {
-        destroy: (fancybox, slide) => {},
+        //  destroy: (fancybox, slide) => {},
+        ready: (fancybox) => {
+          const $deleteButton = $("#overweight-massage").find(
+            ".modal-header__delete"
+          );
+          if ($deleteButton.length) {
+            $deleteButton.on("click", function () {
+              Fancybox.close();
+            });
+          }
+        },
       },
     }
   );
 });
+
 if (document.querySelector("#backToCart")) {
-  document.querySelector("#backToCart").addEventListener("touchend", () => {
-    Fancybox.close();
+  document.addEventListener("click", (event) => {
+    if (event.target.id === "backToCart") {
+      Fancybox.close();
+    }
   });
-  document.querySelector("#backToCart").addEventListener("click", () => {
-    Fancybox.close();
+  document.addEventListener("touchend", (event) => {
+    if (event.target.id === "backToCart") {
+      Fancybox.close();
+    }
   });
 }
+
 class ShowMore {
   constructor(
     cartItemsContainer,

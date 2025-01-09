@@ -38,12 +38,12 @@ foreach ($items as $item_id => $item):
   }
 
   ?>
-  <tr class="<?php echo esc_attr(apply_filters('woocommerce_order_item_class', 'order_item', $item, $order)); ?>">
-    <td
+<tr class="<?php echo esc_attr(apply_filters('woocommerce_order_item_class', 'order_item', $item, $order)); ?>">
+  <td
     class="td"
     style="text-align:<?php echo esc_attr($text_align); ?>; vertical-align: middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; word-wrap:break-word;"
-    >
-      <?php
+  >
+    <?php
 
       // Show title/image etc.
       if ($show_image) {
@@ -72,12 +72,12 @@ foreach ($items as $item_id => $item):
       do_action('woocommerce_order_item_meta_end', $item_id, $item, $order, $plain_text);
 
       ?>
-    </td>
-    <td
+  </td>
+  <td
     class="td"
     style="text-align:<?php echo esc_attr($text_align); ?>; vertical-align:middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;"
-    >
-      <?php
+  >
+    <?php
       $qty = $item->get_quantity();
       $refunded_qty = $order->get_qty_refunded_for_item($item_id);
 
@@ -88,35 +88,35 @@ foreach ($items as $item_id => $item):
       }
       echo wp_kses_post(apply_filters('woocommerce_email_order_item_quantity', $qty_display, $item));
       ?>
-    </td>
-    <td
+  </td>
+  <td
     class="td"
     style="text-align:<?php echo esc_attr($text_align); ?>; vertical-align:middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;"
-    >
-      <?php
+  >
+    <?php
       $actualPrice = get_product_price($order->get_item($item)['product_id'], $order->get_id()) * $order->get_item($item)['quantity'];
       $metaPrice = floatval(wc_get_order_item_meta($item_id, '_product_price', true)) * $item['quantity'];
       echo wc_price($actualPrice);
       // wc_price(wp_kses_post( get_post_meta( $order->get_item( $item )['product_id'], '_regular_price', true) ))
       ?>
 
-    </td>
-  </tr>
-  <?php
+  </td>
+</tr>
+<?php
 
   if ($show_purchase_note && $purchase_note) {
     ?>
-    <tr>
-      <td
-      colspan="3"
-      style="text-align:<?php echo esc_attr($text_align); ?>; vertical-align:middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;"
-      >
-        <?php
+<tr>
+  <td
+    colspan="3"
+    style="text-align:<?php echo esc_attr($text_align); ?>; vertical-align:middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;"
+  >
+    <?php
         echo wp_kses_post(wpautop(do_shortcode($purchase_note)));
         ?>
-      </td>
-    </tr>
-    <?php
+  </td>
+</tr>
+<?php
   }
   ?>
 

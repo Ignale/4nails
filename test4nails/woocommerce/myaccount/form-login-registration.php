@@ -101,16 +101,8 @@
             </div>
             <?php get_template_part('widgets/tip-button') ?>
           </div>
-
-          <div class="form-group checkbox-item redister__checkbox form-group">
-            <div class="custom-control custom-checkbox">
-              <a
-                href="https://t.me/+Q3aRRHOmbJg4Zjlh"
-                class="redister__tg-subscribe"
-                target="_blank"
-              ><?= __('Subscribe to our Telegram channel', '4nails'); ?></a>
-            </div>
-          </div>
+         
+         
           <div class="register__agree"><?= __('By clicking this button, you agree to our ', '4nails') ?>
             <a
               href="<?= get_privacy_policy_url() ?>"

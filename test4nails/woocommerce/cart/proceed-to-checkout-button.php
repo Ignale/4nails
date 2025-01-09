@@ -10,6 +10,9 @@ $free_delivery = if_free_delivery(WC()->cart);
 //Ignore overweight in cart if free delivery and diffWarehouses are checked in any product  
 $ignore_overweight = $free_delivery['free_delivery'] && $diffWarehouses['different'];
 
+// Checking that in the basket all goods are only only_free_delivery
+$only_free_delivery = $free_delivery['free_delivery'] && $free_delivery['only_free_delivery'];
+
 /* If cart have overweight or if cart items have different warehouses or if user isnt logged in and we are not ignoring overwheight*/
 $haveTrouble = !$loggedUser || ($overweight && !$ignore_overweight) ? true : false;
 
@@ -21,21 +24,31 @@ if (!$overweight && !$ignore_overweight) {
   $changePopupLink = 'overweight';
 }
 $href = $haveTrouble ? '' : esc_url(wc_get_checkout_url());
-
+/*
+  VwLogger::log([
+        '$loggedUser'=>$loggedUser,
+        '$ignore_overweight'=>$ignore_overweight,
+        '$diffWarehouses '=>$diffWarehouses ,
+        '$overweight'=>$overweight,
+        '$free_delivery'=>$free_delivery
+      ], 'info', __FILE__);
+*/
 $id = 0;
 /* If user logged in, and dont have overweight and we are not ignoring overwheight*/
-if ($loggedUser && !($overweight && !$ignore_overweight)) {
+if (!$only_free_delivery && $diffWarehouses['different'] && ($free_delivery['free_delivery'] ?? false)) { // проверка на наличие товара с свободной доставкой
+  $id = 'overweight';
+} elseif ($loggedUser && !($overweight && !$ignore_overweight)) {
   $id = 'goToCheckoutBtn';
-} elseif (!$loggedUser) { // if user dont logged in but have no troubles
+} elseif (!$loggedUser) { // if user is not logged in but has no troubles
   $id = 'login-btn';
-} elseif (!$overweight && !$ignore_overweight) { // if logged in but have other warehouses
+} elseif (!$overweight && !$ignore_overweight) { // if logged in but has items from different warehouses
   $id = 'login-error';
-} elseif ($overweight && !$ignore_overweight) { // if logged in but have overweight
+} elseif ($overweight && !$ignore_overweight) { // if logged in but has overweight items
   $id = 'overweight';
 }
 ?>
 <a
-href="<?= $href ?>"
+href="<?= $w ?>"
 class="red-btn checkout-button button btn-cyan w-100 alt wc-forward"
 id="<?= $id ?>"
 >
@@ -48,11 +61,10 @@ id="<?= $id ?>"
 if (!$loggedUser) {
   get_template_part('widgets/cart/cart', 'login', ['have_trouble' => $diffWarehouses['different'] || $overweight ? $changePopupLink : 0]);
 }
-if ($diffWarehouses['different'] && !$free_delivery['free_delivery']) {
+if ($diffWarehouses['different'] && (!$only_free_delivery && $free_delivery['free_delivery'] ?? false)) {
   get_template_part('widgets/cart/cart', 'notAllow', ['products_id' => $diffWarehouses['ids']]);
 }
 if ($overweight && !$ignore_overweight) {
-
   get_template_part('widgets/cart/cart', 'overweight', ['cart' => WC()->cart]);
 }
 ?>

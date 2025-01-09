@@ -6,7 +6,7 @@ $title = $category->name;
 $link = get_term_link($category);
 $img_category = if_gel_category(get_queried_object())? wp_get_attachment_image_url(categoryImage($category->term_id), 'medium'):wp_get_attachment_image_url(categoryImage($category->term_id), '4nails_category_product');
 $categories = get_the_category();
-$category_id = $categories[0]->cat_ID;
+$category_id = ($categories[0]??false)?$categories[0]->cat_ID:'';
 ?>
 
     <div <?php wc_product_cat_class('item category__item', $category); ?>>

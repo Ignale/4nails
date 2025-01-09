@@ -37,7 +37,7 @@
   </script>
   <!-- End Google Tag Manager -->
 
-  
+
 
 </head>
 
@@ -55,9 +55,9 @@
   </noscript>
   <!-- End Google Tag Manager (noscript) -->
 
- 
 
-  
+
+
   <header>
     <div class="header-top">
       <div class="wrapper">
@@ -174,10 +174,11 @@
               </a>
 
               <a
-                href="<?php the_permalink(81) ?>"
+                href="<?php page_url(81) ?>"
                 class="header__contact <?= is_page('contact-us') ? 'current' : '' ?>"
               >
-                <svg
+                  
+              <svg
                   version="1.1"
                   xmlns="http://www.w3.org/2000/svg"
                   xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -362,5 +363,6 @@ if ($news_content): ?>
   <?php endif; ?>
 
   <?php woocommerce_breadcrumb(); ?>
+  
 
   <?php wp_body_open() ?>

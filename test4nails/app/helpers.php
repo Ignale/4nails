@@ -3,24 +3,24 @@
 /* Give default url path*/
 function path()
 {
-   return get_template_directory_uri() . '/'; 
+  return get_template_directory_uri() . '/';
 }
 /* Give default path*/
 function theme_path()
 {
-   return get_template_directory() . '/'; 
+  return get_template_directory() . '/';
 }
 /* Write svg  in html*/
 function the_icon($name, $echo = true)
 {
   /* LOMATKOD
-      $icon = file_get_contents(path() . "assets/img/icons/$name.svg");
-      if ($echo) {
-        echo $icon;
-        return true;
-      }
-      return file_get_contents(path() . "assets/img/icons/$name.svg");
-      */
+          $icon = file_get_contents(path() . "assets/img/icons/$name.svg");
+          if ($echo) {
+            echo $icon;
+            return true;
+          }
+          return file_get_contents(path() . "assets/img/icons/$name.svg");
+          */
   //Obtaining an internal address and not Url
   $icon_path = get_stylesheet_directory() . "/assets/img/icons/{$name}.svg";
 
@@ -36,10 +36,13 @@ function the_icon($name, $echo = true)
   if (strpos($icon, '<?xml') !== false) {
     $icon = preg_replace([
       '/<\?xml (.*?)\?>/',
-      '/<!DOCTYPE (.*?)>/'
+      '/
+<!DOCTYPE (.*?)>/'
     ], [
-      '<!-- ?xml $1  -->',
-      '<!-- !DOCTYPE $1 -->'
+      '
+<!-- ?xml $1  -->',
+      '
+<!-- !DOCTYPE $1 -->'
     ], $icon);
   }
 
@@ -53,12 +56,35 @@ function the_icon($name, $echo = true)
   return $icon;
 }
 
-/*Get category image*/
+/**
+ * Gets category image by id || Получить изображение категории по id
+ * @param mixed $termId - id of the category || id категории
+ * @return mixed
+ */
 function categoryImage($termId)
 {
   return get_term_meta($termId, 'thumbnail_id', true);
 }
-/* Show image from ACF fields*/
+
+/**
+ * Получает название таксономии по id || Get taxonomy name by id
+ * @param string $id - id of the taxonomy || id таксономии
+ * @param string $taxonomy - name of the taxonomy || имя таксономии
+ * @return string - title of the taxonomy || название таксономии
+ */
+function get_taxonomy_name($id, $taxonomy, )
+{
+  $dynamic_id = apply_filters('wpml_object_id', $id, $taxonomy);
+  echo get_cat_name($dynamic_id);
+}
+/**
+ * Get the image by name || Получить изображение по имени
+ * @param mixed $name - name of the field || имя поля
+ * @param mixed $class - class for image || класс для изображения
+ * @param mixed $post - post id || id поста
+ * @param mixed $size - size of image || размер изображения
+ * @return void
+ */
 function the_image($name, $class = '', $post = null, $size = 'full')
 {
   if ($post == null) {
@@ -70,14 +96,24 @@ function the_image($name, $class = '', $post = null, $size = 'full')
   if ($post == 'option') {
     $src = $image['url'];
     $alt = $image['alt'];
-    echo "<img width='1' height='1' style='width: 100%; height: auto;' src='$src' alt='$alt' class='$class' />";
+    echo "<img
+  width='1'
+  height='1'
+  style='width: 100%; height: auto;'
+  src='$src'
+  alt='$alt'
+  class='$class'
+/>";
   } else {
 
     echo wp_get_attachment_image($image, $size, false, ['class' => $class]);
   }
 }
 
-/* Get parent cat */
+/**
+ * Get parent categories || Получить родительские категории
+ * @return mixed
+ */
 function parentCategories()
 {
   return get_terms('product_cat', [
@@ -85,24 +121,44 @@ function parentCategories()
   ]);
 }
 
+/**
+ * Gets account_url || Получить url аккаунта
+ * @return void
+ */
 function account_url()
 {
   echo get_permalink(wc_get_page_id('myaccount'));
 }
 
+/**
+ * Gets wishlist_url || Получить url списка желаний
+ * @return void
+ */
 function wishlist_url()
 {
   echo tinv_url_wishlist_default();
 }
-
+//get the cart count
 function cart_content()
 {
   echo WC()->cart->get_cart_contents_count() ?: '';
 }
 
+/**
+ * Gets the page url by id and language || Получить url страницы по id и языку
+ * @param mixed $page_id
+ * @return string - url of the page || url страницы
+ */
+function page_url($page_id)
+{
+  echo apply_filters('wpml_permalink', get_permalink($page_id));
+  ;
+}
+;
+
 function cart_url()
 {
-  echo apply_filters( 'wpml_permalink', wc_get_cart_url() );
+  echo apply_filters('wpml_permalink', wc_get_cart_url());
 }
 
 function cart_active()
@@ -111,7 +167,7 @@ function cart_active()
 }
 
 /**
- *  Получить id youtube видео из ссылки || Get youtube video id from url
+ * Получить id youtube видео из ссылки || Get youtube video id from url
  * @param $url
  * @return mixed
  */
@@ -133,7 +189,8 @@ function getSalePrice($product)
     $sale = $isVariable ? $product->get_variation_sale_price('min', true) : $product->get_sale_price();
     $regular = $isVariable ? $product->get_variation_regular_price('min', true) : $product->get_regular_price();
     $sale_amount = 100 - intval(($sale / $regular) * 100);
-    return $sale_amount;;
+    return $sale_amount;
+    ;
   }
   return false;
 }
@@ -157,9 +214,9 @@ function moveKeyBefore($arr, $find, $move)
     return $arr;
   }
 
-  $elem = [$move => $arr[$move]];  // cache the element to be moved
+  $elem = [$move => $arr[$move]]; // cache the element to be moved
   $start = array_splice($arr, 0, array_search($find, array_keys($arr)));
-  unset($start[$move]);  // only important if $move is in $start
+  unset($start[$move]); // only important if $move is in $start
   return $start + $elem + $arr;
 }
 function the_checkbox($field, $print, $post = null)
@@ -242,7 +299,8 @@ function if_gel_category($cate)
 
 function is_blog()
 {
-  return (is_archive() || is_author() || is_category() || is_home() || is_single() || is_tag()) && 'post' == get_post_type();
+  return (is_archive() || is_author() || is_category() || is_home() || is_single() || is_tag()) && 'post' ==
+    get_post_type();
 }
 function if_international()
 {
@@ -280,29 +338,36 @@ function check_product_in_cart($id, $qty)
 
   foreach (WC()->cart->get_cart() as $item => $values) {
     if ($id == $values['variaton_id'] || $id == $values['product_id']) {
-      if ($product_stock < ($qty + $values['quantity'])) {
-        return true;
+      if (
+        $product_stock <
+        ($qty
+          +
+          $values['quantity'])
+      ) {
+        return
+          true;
       }
     }
   }
-  return false;
+  return
+    false;
 }
-
-function send_add_to_cart_success_message($product, $is_product_in_cart = null)
-{
+function
+  send_add_to_cart_success_message(
+  $product,
+  $is_product_in_cart = null
+) {
   $response = [];
-  $response['status'] = 'ok';
-
+  $response['status'] = 'ok'
+  ;
   $response['is_product_in_cart'] = $is_product_in_cart;
-
-
-
   ob_start();
-?>
+  ?>
+
   <div class="woocommerce-message">
     <?php echo wc_add_to_cart_message($product['id'], false, true); ?>
   </div>
-<?php
+  <?php
   $response['notice'] = ob_get_clean();
 
   ob_start();
