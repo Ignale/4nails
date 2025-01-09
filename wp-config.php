@@ -1,17 +1,29 @@
 <?php
-//Begin Really Simple Security key
-define('RSSSL_KEY', 'rVy8JuPykihbZ8OEiCI5KgIOME9yQ7TnPs67fudvI4btfzCSwbIAdFdlCMqU42YZ');
-//END Really Simple Security key
+
+
+
+
+
+
+
+
+
+
 define('WP_CACHE', true);
 
-define('WP_HOME', 'https://test1.4nails.us');
-define('WP_SITEURL', 'https://test1.4nails.us');
+//Begin Really Simple Security key
+define('RSSSL_KEY', 'i1mUNS6kiGbzGIQBIwuddRx9FmU90pcjcm9IZr6XnrZVp5kzljOa0v2oZcefC8fz');
+//END Really Simple Security key
+
+
+define( 'WP_HOME', 'https://test2.4nails.us' );
+define( 'WP_SITEURL', 'https://test2.4nails.us' );
 //Begin Really Simple SSL session cookie settings
 @ini_set('session.cookie_httponly', true);
 @ini_set('session.cookie_secure', true);
 @ini_set('session.use_only_cookies', true);
 //END Really Simple SSL
-define('WP_AUTO_UPDATE_CORE', 'minor');
+define( 'WP_AUTO_UPDATE_CORE', 'minor' );
 /**
  * The base configuration for WordPress
  *
@@ -32,21 +44,21 @@ define('WP_AUTO_UPDATE_CORE', 'minor');
  */
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'orangew1_test1');
+define('DB_NAME', "woyqmtgx_4nails_test2");
 /** MySQL database username */
-define('DB_USER', 'orangew1_test1');
+define('DB_USER', "woyqmtgx_4nails_test2");
 /** MySQL database password */
-define('DB_PASSWORD', 'ZLyFQmkqd$^E');
+define('DB_PASSWORD', "tuu^e}Ta#[yi");
 /** MySQL hostname */
-define('DB_HOST', 'localhost');
+define('DB_HOST', "localhost");
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8mb4');
 /** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');
 /** WP-cron disable */
-define('DISABLE_WP_CRON', false);
+define( 'DISABLE_WP_CRON', true );
 /** WordPress ����������� ������: */
-define('WP_MEMORY_LIMIT', '1024M');
+define( 'WP_MEMORY_LIMIT', '1024M' );
 /**#@+
  * Authentication Unique Keys and Salts.
  *
@@ -84,20 +96,29 @@ $table_prefix = 'nl_';
  *
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
-define('WP_DEBUG', true);
-define('WP_DEBUG_DISPLAY', true);
-define('WP_DEBUG_LOG', false);
-
-define('WPS_DEBUG_SCRIPTS', true);
-define('WPS_DEBUG_STYLES', true);
-
-define('WPS_DEBUG_DOM', true);
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_DISPLAY', false );
+define( 'WP_DEBUG_LOG', true );
 define('MEDIA_TRASH', true);
 @ini_set('max_input_vars', 6000);
+
+
+// We prohibit the WordPress auto updating
+//define( 'AUTOMATIC_UPDATER_DISABLED', true );
+
+/* We include basic const for working with timers */
+define('VW_STARTMEMORYUSAGE', memory_get_usage(true));
+define('VW_STARTMICROTIME', microtime(1));
+
+/* Redis */
+define('WP_REDIS_SCHEME', 'unix');
+define('WP_REDIS_PATH', '/home/woyqmtgx/.redis/redis.sock');
+define('WP_REDIS_PREFIX', 'test2site:');
+
 /* That's all, stop editing! Happy publishing. */
 /** Absolute path to the WordPress directory. */
 if (!defined('ABSPATH')) {
   define('ABSPATH', dirname(__FILE__) . '/');
 }
 /** Sets up WordPress vars and included files. */
-require_once (ABSPATH . 'wp-settings.php');
+require_once(ABSPATH . 'wp-settings.php');

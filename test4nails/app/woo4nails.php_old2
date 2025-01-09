@@ -356,6 +356,7 @@ function get_individual_duscount($cart)
     $userField = 'user_' . get_current_user_id();
     $total_individual_discount = 0;
     if ($discount = get_field('individual_discount', $userField)) {
+
       // применять индивидуальную скидку только на товары которые без Sale
       foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
         if ($cart_item['data']->sale_price == '' && $cart_item['data']->sale_price == 0) {
@@ -1021,24 +1022,29 @@ function get_individual_discount_cart($cart)
 }
 
 /* Вывод цены на продукт, учитывая возможную персональную скидку*/
-function get_product_price($id, $order_id = false)
+function get_product_price($id)
 {
-
-
   $user = is_user_logged_in() ? get_field('individual_discount', 'user_' . get_current_user_id()) : 0;
 
-  if ($order_id && wc_get_order($order_id)->get_user_id()) {
-    $user = is_user_logged_in() ? get_field('individual_discount', 'user_' . wc_get_order($order_id)->get_user_id()) : 0;
-  }
-
   $product = get_product($id);
+
+  if ($GLOBALS['showPersonalDiscount']) {
+
+    $personal_price = $user && $user > 0 ? ($product->get_regular_price() - ($product->get_regular_price() * ((float) $user / 100))) : $product->get_regular_price();
+
+    if ($product->is_on_sale()) {
+
+      $sale_price = $product->is_type('variable') ? $product->get_variation_sale_price('min', true) : $product->get_sale_price();
+      if ($sale_price < $personal_price) {
+        return $sale_price;
+      }
+
+    }
+    return $personal_price;
+
+  }
   if ($product->is_on_sale()) {
     return $product->is_type('variable') ? $product->get_variation_sale_price('min', true) : $product->get_sale_price();
-  } else {
-    if ($GLOBALS['showPersonalDiscount']) {
-      return $user && $user > 0 ? ($product->get_regular_price() - ($product->get_regular_price() * ((float) $user / 100))) : $product->get_regular_price();
-    }
-    return $product->get_regular_price();
   }
 
 }
@@ -1134,7 +1140,10 @@ add_filter('wpi_get_invoice_columns_data_row', 'add_unit_of_measure_column_data'
 
 function ifPersonalDiscount($product)
 {
-  return !$product->is_virtual() && if_user_have_sale() && !$product->is_on_sale();
+  $product_price = get_product_price($product->id);
+  $sale_price = $product->get_sale_price();
+
+  return !$product->is_virtual() && if_user_have_sale() && ($product_price < $sale_price || !$product->is_on_sale());
 }
 
 add_action('woocommerce_admin_order_totals_after_discount', 'vp_add_sub_total', 10, 1);
@@ -1587,15 +1596,23 @@ add_filter('woocommerce_package_rates', 'modify_shipping_methods', 10, 2);
 
 add_filter('woocommerce_paypal_payments_basic_checkout_validation_enabled', '__return_true');
 
-// //force update customer address
-// add_action('woocommerce_checkout_process', 'force_proccess_customer', 10);
+// update customer address on checkout before payment method is chosen
+add_action('woocommerce_checkout_process', 'nails_update_customer_data');
 
-// function force_proccess_customer()
-// {
-//   $checkout = WC()->checkout;
-//   $posted_data = $checkout->get_posted_data();
-//   $checkout->process_customer($posted_data);
-// }
+function nails_update_customer_data()
+{
+  if (is_user_logged_in()) {
+    $user_id = get_current_user_id();
+    $checkout = WC()->checkout;
+    $posted_data = $checkout->get_posted_data();
+
+    foreach ($posted_data as $meta_key => $meta_value) {
+      update_user_meta($user_id, $meta_key, $meta_value);
+    }
+
+  }
+
+}
 //function pekky_cx_preferred_countries( $countries ){
 //    $countries = array('us','mx','ca');
 //    return $countries;
