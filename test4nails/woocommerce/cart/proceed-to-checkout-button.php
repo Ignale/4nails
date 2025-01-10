@@ -33,7 +33,7 @@ $href = $haveTrouble ? '' : esc_url(wc_get_checkout_url());
         '$free_delivery'=>$free_delivery
       ], 'info', __FILE__);
 */
-$id = 0;
+$id = '';
 /* If user logged in, and dont have overweight and we are not ignoring overwheight*/
 if (!$only_free_delivery && $diffWarehouses['different'] && ($free_delivery['free_delivery'] ?? false)) { // проверка на наличие товара с свободной доставкой
   $id = 'overweight';
