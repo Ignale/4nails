@@ -1,6 +1,19 @@
 let isProductAvailable = true;
 let isQuantityModalShown = false;
 
+const maybeDisablePlusButton = () => {
+  const cartProduct = $(".cart__product");
+
+  cartProduct.each(function () {
+    const productValue = $(this).find(".product__value");
+    const productPlus = $(this).find("button.product__plus");
+
+    if (productValue.attr("max") == productValue.val()) {
+      productPlus.prop("disabled", true);
+    }
+  });
+};
+
 $(document).on("DOMContentLoaded", maybeDisablePlusButton);
 
 $(document.body).on("updated_cart_totals", function (e) {
@@ -35,19 +48,6 @@ $("#login-btn").click((e) => {
     }
   );
 });
-
-const maybeDisablePlusButton = () => {
-  const cartProduct = $(".cart__product");
-
-  cartProduct.each(function () {
-    const productValue = $(this).find(".product__value");
-    const productPlus = $(this).find("button.product__plus");
-
-    if (productValue.attr("max") == productValue.val()) {
-      productPlus.prop("disabled", true);
-    }
-  });
-};
 
 $(".product__plus").on("mouseenter", function (e) {
   const tooltip = $(this).parents(".cart__quantity").find(".tooltip");

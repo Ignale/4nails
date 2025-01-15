@@ -3,6 +3,7 @@ action="<?= esc_url(wc_get_cart_url()); ?>"
 method="post"
 class="cart__content woocommerce-cart-form"
 >
+  <?php wc_print_notices(); ?>
 
 
   <div class="cart__gifts">
@@ -271,7 +272,6 @@ class="cart__content woocommerce-cart-form"
             <?= __('In the next step, you will need to enter your billing and shipping address.', '4nails'); ?>
           </div>
           <?php woocommerce_button_proceed_to_checkout() ?>
-
         </div>
       </div>
     </div>

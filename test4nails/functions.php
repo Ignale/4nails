@@ -196,41 +196,41 @@ function get_latest_youtube_videos($count)
         return $video_ids;
       */
 
-    $API_Key = 'AIzaSyCn3U5crNIAyod5qzr1OMvJJnRFs3KL9Ws';
-    $Channel_ID = 'UCYRw15Xypbn4nILXNe4KSTw';
-    $cache_key = 'latest_youtube_videos_' . $count;
-    $cache_expiration = 86400; // 24 часа (в секундах)
+  $API_Key = 'AIzaSyCn3U5crNIAyod5qzr1OMvJJnRFs3KL9Ws';
+  $Channel_ID = 'UCYRw15Xypbn4nILXNe4KSTw';
+  $cache_key = 'latest_youtube_videos_' . $count;
+  $cache_expiration = 86400; // 24 часа (в секундах)
 
-    // Проверяем кэш
-    $video_ids = get_transient($cache_key);
-    if ($video_ids !== false) {
-        // Если данные есть в кэше, возвращаем их
-        return $video_ids;
-    }
-
-    // Если данных нет, делаем запрос к YouTube API
-    $api_url = 'https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId=' . $Channel_ID . '&maxResults=' . $count . '&key=' . $API_Key;
-    $apiData = @file_get_contents($api_url);
-
-    if ($apiData) {
-        $videoList = json_decode($apiData);
-    } else {
-        return []; // Возвращаем пустой массив в случае ошибки
-    }
-
-    $video_ids = [];
-    if (!empty($videoList->items)) {
-        foreach ($videoList->items as $item) {
-            if (!empty($item->id->videoId)) {
-                $video_ids[] = $item->id->videoId;
-            }
-        }
-    }
-
-    // Сохраняем результат в кэш
-    set_transient($cache_key, $video_ids, $cache_expiration);
-
+  // Проверяем кэш
+  $video_ids = get_transient($cache_key);
+  if ($video_ids !== false) {
+    // Если данные есть в кэше, возвращаем их
     return $video_ids;
+  }
+
+  // Если данных нет, делаем запрос к YouTube API
+  $api_url = 'https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId=' . $Channel_ID . '&maxResults=' . $count . '&key=' . $API_Key;
+  $apiData = @file_get_contents($api_url);
+
+  if ($apiData) {
+    $videoList = json_decode($apiData);
+  } else {
+    return []; // Возвращаем пустой массив в случае ошибки
+  }
+
+  $video_ids = [];
+  if (!empty($videoList->items)) {
+    foreach ($videoList->items as $item) {
+      if (!empty($item->id->videoId)) {
+        $video_ids[] = $item->id->videoId;
+      }
+    }
+  }
+
+  // Сохраняем результат в кэш
+  set_transient($cache_key, $video_ids, $cache_expiration);
+
+  return $video_ids;
 }
 
 
