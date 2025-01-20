@@ -62,9 +62,9 @@
     },
     ".lastlogin": {
       "type": "-",
-      "size": 590,
+      "size": 639,
       "lmtime": 0,
-      "modified": false
+      "modified": true
     },
     ".lsphp_restart.txt": {
       "type": "-",

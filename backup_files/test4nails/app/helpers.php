@@ -334,7 +334,11 @@ function getProductTranslatedName($product_id, $order_id, $langOfSite = false)
 
 function check_product_in_cart($id, $qty)
 {
-  $product_stock = wc_get_product($id)->get_stock_quantity();
+  $product = wc_get_product($id);
+  if (!$product) {
+    return false;
+  }
+  $product_stock = $product->get_stock_quantity();
 
   foreach (WC()->cart->get_cart() as $item => $values) {
     if ($id == $values['variaton_id'] || $id == $values['product_id']) {

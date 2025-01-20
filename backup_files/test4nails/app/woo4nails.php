@@ -262,7 +262,8 @@ function add_invoice_information_meta($info, $invoice)
 
   }
   $total = $regular_total - $sale_total - $personal;
-  $info['subtotal'] = number_format($total, 2);
+
+  $info['subtotal'] = number_format($total, 3);
   $info['sale_discount'] = number_format($sale_total, 2);
 
   $personal_discount = is_user_logged_in() ? get_field('individual_discount', 'user_' . $user_id) : 0;
@@ -741,7 +742,7 @@ function nails_show_shipping_method($order)
   }
 }
 
-function get_order_info($order_id = 0)
+function get_order_info($order_id)
 {
   $subtotal = 0;
 
@@ -764,7 +765,7 @@ function get_order_info($order_id = 0)
 
     $subtotal += $regular_prce * $product_quantity;
 
-    $price = get_product_price($product);
+    $price = get_product_price($product, $order_id);
 
     $total += $price * $product_quantity;
 
@@ -785,7 +786,7 @@ function addToCart()
   $product = wc_get_product($product_id);
   $product_data = $product->get_data();
 
-  $ignore_stock_status = if_free_delivery_type($product) === 'yes' && if_sunflower($product);
+  $ignore_stock_status = if_free_delivery_type($product) === 'yes';
 
   $is_product_in_cart = [
     'product_en' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'en'), $qty),
@@ -1125,7 +1126,7 @@ function get_individual_discount_order($order)
 
       $price = $product->get_regular_price();
 
-      $personal_discount_price = get_product_price($product);
+      $personal_discount_price = get_product_price($product, $order->get_id());
 
       $total_discount += ($price - $personal_discount_price) * $quantity;
 
@@ -1136,7 +1137,7 @@ function get_individual_discount_order($order)
 
 /**
  * Получает сумму индивидуальной скидки для корзины
- * @param WC_Cart $order 
+ * @param WC_Cart $cart 
  * @return float|int
  */
 function get_individual_discount_cart($cart)
@@ -1163,7 +1164,7 @@ function get_individual_discount_cart($cart)
 }
 
 /**
- * Вывод цены на продукт, учитывая возможную персональную скидку. При указании $order_id, функция берет пользователя из указанного заказа и расчитывает цену для него, иначе для текущего пользователя. 
+ * Вывод цены на продукт, учитывая возможную персональную скидку. При указании $order_id, функция берет пользователя из указанного заказа и расчитывает цену для него, иначе для текущего пользователя. Если заказ был сделан в гостевом режиме, тогда возвращается цена без индивидуальной скидки.
  * 
  * @param int $product_id id продукта
  * @param int $order_id (optional) Номер заказа
@@ -1175,12 +1176,13 @@ function get_product_price($product_id, $order_id = null)
 
   if ($order_id) {
     $order = wc_get_order($order_id);
-    if ($order->get_user_id()) {
-      $user_discount = is_user_logged_in() ? get_field('individual_discount', 'user_' . $order->get_user_id()) : 0;
+    $order_user_id = $order->get_user_id();
+    if ($order_user_id) {
+      $user_discount = get_field('individual_discount', 'user_' . $order_user_id) ?: 0;
     }
   }
 
-  if (!$user_discount) {
+  if (!$user_discount && !$order_id) {
     $user_discount = is_user_logged_in() ? get_field('individual_discount', 'user_' . get_current_user_id()) : 0;
   }
 
@@ -1201,6 +1203,7 @@ function get_product_price($product_id, $order_id = null)
     return $personal_price;
 
   }
+
   if ($product->is_on_sale()) {
     return $product->is_type('variable') ? $product->get_variation_sale_price('min', true) : $product->get_sale_price();
   }
@@ -1372,9 +1375,13 @@ function my_woocommerce_admin_order_item_values($_product, $item, $item_id = nul
   if (isset($_product) && isset($_product->id)) {
 
     if ($item['type'] == "line_item") {
-      $meta = wc_get_order_item_meta($item_id, '_product_price', true);
-      $actual = get_product_price($_product->get_id());
-      echo '<td>' . wc_price($meta ? $meta : $actual) . '</td>';
+      $item_data = $item->get_data();
+      // $meta = wc_get_order_item_meta($item_id, '_product_price', true);
+      $actual = $_product->get_regular_price();
+      // $actual = get_product_price($_product->get_id(), $item_data['order_id']) * $item_data['quantity'];
+      // echo '<td>' . wc_price($meta ? $meta : $actual) . '</td>';
+      echo '<td>' . wc_price($actual) . '</td>';
+      // echo '<td>' . var_dump($item_data['order_id']) . '</td>';
     }
   }
 }
@@ -1507,7 +1514,7 @@ function print_order_line_item_meta($items, $order)
   $order_number = $order->get_order_number();
   $items = $order->get_items();
   foreach ($items as $item) {
-    $price = get_product_price($item->get_product_id());
+    $price = get_product_price($item->get_product_id(), $order->get_id());
     $item->update_meta_data('_product_price', $price);
     $item->save_meta_data();
   }

@@ -34,9 +34,9 @@ tabindex="-1"
               foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item):
 
                 $product = $cart_item['data'];
-                if (if_sunflower($product) && !get_field('attached_product', $product->get_id())):
+                if (if_free_delivery_type($product) === 'yes' && !get_field('attached_product', $product->get_id())):
 
-                  ?>
+                  ?> 
 
                   <div
                   <?= $temp == 1 ? "id='firstItem'" : ""; ?>
@@ -67,7 +67,7 @@ tabindex="-1"
 
                 $product = $cart_item['data'];
 
-                if (if_sunflower($product) == 0 && !get_field('attached_product', $product->get_id())):
+                if (if_free_delivery_type($product) === 'no' && !get_field('attached_product', $product->get_id())):
 
                   ?>
 
