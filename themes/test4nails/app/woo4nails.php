@@ -1111,22 +1111,25 @@ function get_individual_discount_order($order)
 
   if (!$order)
     return 0;
-  $discount = get_field('individual_discount', 'user_' . $order->get_user_id());
-  if ($discount) {
 
-    foreach ($order->get_items() as $item) {
-      $product = $item->get_product();
+  // $discount = get_field('individual_discount', 'user_' . $order->get_user_id());
 
-      $quantity = $item['quantity'];
+  // if ($discount) {
 
-      $price = $product->get_regular_price();
+  foreach ($order->get_items() as $item) {
+    $product = $item->get_product();
 
-      $personal_discount_price = get_product_price($product, $order->get_id());
+    $quantity = $item['quantity'];
 
-      $total_discount += ($price - $personal_discount_price) * $quantity;
+    $price = $product->get_regular_price();
 
-    }
+    $personal_discount_price = get_product_price($product, $order->get_id());
+
+    $total_discount += ($price - $personal_discount_price) * $quantity;
+
+    // }
   }
+
   return $total_discount;
 }
 
@@ -1411,7 +1414,6 @@ function getUserIndividualDiscountByOrderId($orderId)
 
 function add_unit_of_measure_column_data1($row, $item_id, $item, $invoice)
 {
-  $logger = wc_get_logger();
   $product = wc_get_product($item['product_id']);
 
   $row = array_insert($row, 1, ['total_price' => wc_price($product->get_regular_price())]);
@@ -1426,7 +1428,6 @@ function add_unit_of_measure_column_data1($row, $item_id, $item, $invoice)
 
   $row['total'] = wc_price($metaPrice ? $metaPrice : $actualPrice);
 
-  $logger->info(print_r($row, true));
 
   return $row;
 }
