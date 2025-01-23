@@ -263,7 +263,7 @@ function add_invoice_information_meta($info, $invoice)
   }
   $total = $regular_total - $sale_total - $personal;
 
-  $info['subtotal'] = number_format($total, 3);
+  $info['subtotal'] = number_format($total, 2);
   $info['sale_discount'] = number_format($sale_total, 2);
 
   $personal_discount = is_user_logged_in() ? get_field('individual_discount', 'user_' . $user_id) : 0;
@@ -836,7 +836,7 @@ function my_acf_save_options_page($post_id, $menu_slug)
   // Check the new value of a specific field.
   $discount_categories = get_field('discount_categories', $post_id);
 
-  $logger = wc_get_logger();
+
 
 
   /**
@@ -892,11 +892,6 @@ function my_acf_save_options_page($post_id, $menu_slug)
     'product_category_id' => get_children_categories($discount_categories),
     'limit' => 1000,
   ];
-
-
-  $logger->debug('args', array('source' => 'woo4nails', 'args' => get_children_categories($discount_categories, false)));
-
-  $logger->debug('args', array('source' => 'woo4nails', 'args' => get_children_categories($discount_categories)));
 
   $products = wc_get_products($args);
 
@@ -1336,6 +1331,25 @@ function add_unit_of_measure_column_data($row, $item_id, $item, $invoice)
 
 add_filter('wpi_get_invoice_columns_data_row', 'add_unit_of_measure_column_data', 20, 4);
 
+add_filter('wpi_get_invoice_columns', 'nails_invoice_columns', 10, 2);
+
+function nails_invoice_columns($columns, $invoice)
+{
+  // $logger = wc_get_logger();
+  $columns = array_insert($columns, 1, ['total_price' => __('Total Price', 'woocommerce-pdf-invoices')]);
+
+  $columns = array_insert($columns, 2, ['sale_price' => __('Sale price', 'woocommerce-pdf-invoices')]);
+
+  $columns = array_insert($columns, 3, ['quantity' => __('Quantity', 'woocommerce-pdf-invoices')]);
+
+
+  $columns['total'] = __('Total', 'woocommerce-pdf-invoices');
+
+
+  // $logger->info(print_r($columns, true));
+
+  return $columns;
+}
 
 function ifPersonalDiscount($product)
 {
@@ -1354,7 +1368,7 @@ function vp_add_sub_total($order_id)
   $order = wc_get_order($order_id);
   ?>
   <tr>
-    <td class="label">Personal discount:</td>
+    <td class="label">Money saved:</td>
     <td width="1%"></td>
     <td class="total"><?php echo wc_price(get_individual_discount_order($order)) ?></td>
   </tr>
@@ -1397,10 +1411,22 @@ function getUserIndividualDiscountByOrderId($orderId)
 
 function add_unit_of_measure_column_data1($row, $item_id, $item, $invoice)
 {
-  $actualPrice = get_product_price($item['product_id'], $item['order_id']) * $item['quantity'];
+  $logger = wc_get_logger();
+  $product = wc_get_product($item['product_id']);
+
+  $row = array_insert($row, 1, ['total_price' => wc_price($product->get_regular_price())]);
+
+  $row = array_insert($row, 2, ['sale_price' => wc_price(get_product_price($item['product_id'], $item['order_id']))]);
+
+  $row = array_insert($row, 3, ['quantity' => $item['quantity']]);
+
+  $actualPrice = floatval(get_product_price($item['product_id'], $item['order_id']) * $item['quantity']);
+
   $metaPrice = floatval(wc_get_order_item_meta($item_id, '_product_price', true)) * $item['quantity'];
 
   $row['total'] = wc_price($metaPrice ? $metaPrice : $actualPrice);
+
+  $logger->info(print_r($row, true));
 
   return $row;
 }
@@ -1463,7 +1489,7 @@ function kia_display_order_data_in_admin($order)
   if ($order->get_user_id()) {
     $discount = empty(get_post_meta($order->id, 'personal_discount', true)) ? getUserIndividualDiscountByOrderId($order->id) : get_post_meta($order->id, 'personal_discount', true);
 
-    echo '<p style="margin-top: 15px; display: inline-block"><strong>Personal discount: </strong>' . $discount . '%</p>';
+    echo '<p style="margin-top: 15px; display: inline-block"><strong>Money saved: </strong>' . $discount . '%</p>';
   }
 }
 

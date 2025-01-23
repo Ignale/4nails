@@ -175,7 +175,6 @@ cellspacing="0"
         align="left"
         class="border <?php echo esc_attr($class); ?>"
         >
-          hello
           <?php echo $total['label']; ?>
         </td>
 

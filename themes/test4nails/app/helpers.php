@@ -268,6 +268,20 @@ function cart_items()
   echo WC()->cart->get_cart_contents_count() == 1 ? ' ' . __('item', '4nails') : ' ' . __('items', '4nails');
 }
 
+/**
+ * Insert array into another array at specific position || Вставить массив в другой массив на определенную позицию
+ * @param array $array
+ * @param int $position
+ * @param array $insert_array
+ * @return array
+ */
+function array_insert($array, $position, $insert_array)
+{
+  $first_array = array_splice($array, 0, $position);
+  $second_array = array_splice($array, $position);
+  return array_merge($first_array, $insert_array, $second_array);
+}
+
 function get_wishlist()
 {
   $wlp = TInvWL_Public_Wishlist_View::instance();

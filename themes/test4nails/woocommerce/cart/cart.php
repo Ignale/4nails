@@ -50,7 +50,7 @@ class="cart__content woocommerce-cart-form"
 
           </div>
 
-          <div class="cart__price"><?php esc_html_e('Price', 'woocommerce'); ?></div>
+          <div class="cart__price"><?php esc_html_e('Sale Price', 'woocommerce'); ?></div>
 
           <div class="cart__quantity"><?= __('Qty', '4nails'); ?></div>
 
