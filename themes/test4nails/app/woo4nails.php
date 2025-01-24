@@ -252,16 +252,14 @@ function add_invoice_information_meta($info, $invoice)
 
     $product = $item->get_product();
     $quantity = $item['quantity'];
-
-
     $regular_total += $quantity * $product->regular_price;
 
     if ($product->sale_price) {
-      $sale_total += ($product->regular_price - $product->sale_price) * $quantity;
+      $sale_total += ($product->regular_price - get_product_price($product->get_id(), $info['order_number']['value'])) * $quantity;
     }
 
   }
-  $total = $regular_total - $sale_total - $personal;
+  $total = $regular_total - $sale_total;
 
   $info['subtotal'] = number_format($total, 2);
   $info['sale_discount'] = number_format($sale_total, 2);
