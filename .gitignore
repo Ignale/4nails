@@ -2,3 +2,9 @@
 backup_files/
 prepros.config
 .DS_Store
+.DS_Store
+themes/.DS_Store
+themes/test4nails/.DS_Store
+themes/test4nails/assets/.DS_Store
+themes/test4nails/widgets/.DS_Store
+themes/test4nails/woocommerce/.DS_Store
