@@ -103,8 +103,6 @@ $("#login-error").click((e) => {
 });
 
 $(".product__plus").on("click", function () {
-  console.log("hello");
-
   if ($(this).attr("disabled") && $(this).siblings("input").attr("disabled"))
     Fancybox.show([
       { closeExisting: true, src: "#overweight-massage", type: "inline" },
