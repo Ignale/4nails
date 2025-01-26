@@ -454,7 +454,7 @@ label .required {
   text-transform: uppercase;
   white-space: nowrap;
   padding: 4px 10px;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.5;
   border-radius: 2px;
   width: -webkit-fit-content;
@@ -2357,7 +2357,7 @@ html[lang=ru-RU] .tinv-wishlist .tinvwl_added_to_wishlist.tinv-modal button.butt
   width: -moz-fit-content;
   width: fit-content;
   margin: 0;
-  padding: 5px 22px;
+  padding: 0px 22px;
 }
 
 .blog__comments .comment-form {
@@ -2415,7 +2415,7 @@ html[lang=ru-RU] .tinv-wishlist .tinvwl_added_to_wishlist.tinv-modal button.butt
   z-index: 5;
   width: 100%;
   height: 100%;
-  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 header {
@@ -3322,7 +3322,7 @@ embed {
   border-color: #09ccb4;
   background-color: #09ccb4;
   color: #fff;
-  font-weight: 500;
+  font-weight: 300;
   text-align: center;
   white-space: nowrap;
   text-transform: uppercase;
