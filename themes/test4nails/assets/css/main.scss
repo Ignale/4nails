@@ -2193,7 +2193,7 @@ header {
 	border: 1px solid #bbcac8;
 	border-radius: 3px;
 	height: 33px;
-	width: 100%;
+	width: calc(100% - 30px);
 	padding: 3px 40px 4px 12px;
 }
 
@@ -2255,7 +2255,7 @@ header {
 	height: 33px;
 	position: absolute;
 	top: 0;
-	right: 0;
+	right: 40px;
 	z-index: 1;
 	transition: .3s all;
 }
@@ -3506,7 +3506,7 @@ section.about {
 @media (max-width: 850px) {
 	.header-fixed .header__search.slide .close-icon {
 			display: flex;
-			top: 100%;
+			top: 3px;
 			right: 0;
 	}
 
@@ -3679,6 +3679,7 @@ section.about {
 
 	body.home .header__search.hide,
 	.header__search.hide {
+      display: block;
 			top: 46px;
 			transform: translateX(-100%);
 			transition: transform .3s ease-out;

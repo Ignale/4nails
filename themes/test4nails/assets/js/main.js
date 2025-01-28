@@ -30,6 +30,9 @@ $(".mobile-btn").click(function () {
 $(".header-bottom .header-fixed__btn").click(function () {
   if (!$(this).hasClass("open")) {
     $(this).addClass("open");
+
+    $(".header__search").show();
+
     $(".layer").show();
     $(".header__search ").addClass("header__search-fixed").animate(
       {
@@ -51,6 +54,9 @@ $(".header-bottom .header-fixed__btn").click(function () {
 
 $(".header-center .header-fixed__btn").click(function () {
   if (!$(this).hasClass("open")) {
+    // if ($(".header__search").hasClass("hide")) {
+    //   $(".header__search ").removeClass("hide");
+    // }
     $(this).addClass("open");
     $(".layer").show();
     $(".header__search").addClass("slide");
