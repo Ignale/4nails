@@ -5,7 +5,7 @@ add_action('init', 'css_js_versioning');
 
 function set_custom_ver_css_js($src)
 {
-  $changed_files = array('/assets/js/checkout.js', '/assets/css/checkout.css', '/assets/js/main.js', '/assets/css/cart.css');
+  $changed_files = array('/assets/js/checkout.js', '/assets/css/checkout.css', '/assets/js/main.js', '/assets/css/cart.css', '/assets/css/main.css', '/assets/css/adjust_woo_styles.css');
 
   foreach ($changed_files as $file) {
     if (strpos($src, $file)) {
@@ -46,12 +46,20 @@ function css_js_versioning()
   add_filter('script_loader_src', 'set_custom_ver_css_js', 9999); // js files versioning
 }
 
+function nails_add_woocommerce_admin_css()
+{
+
+  wp_enqueue_style('nails_admin_styles', path() . 'assets/css/adjust_woo_styles.css');
+}
+add_action('admin_enqueue_scripts', 'nails_add_woocommerce_admin_css');
+
 add_action('wp_enqueue_scripts', 'nails_scripts_styles', 1);
 function nails_scripts_styles()
 {
 
   /* --- Styles  --- */
   wp_register_style('main', path() . 'assets/css/main.css');
+
   wp_enqueue_style('main');
 
   wp_register_style('normalize', path() . 'assets/css/normalize.css');

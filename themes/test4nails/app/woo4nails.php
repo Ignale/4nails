@@ -1337,12 +1337,12 @@ add_filter('wpi_get_invoice_columns', 'nails_invoice_columns', 10, 2);
 function nails_invoice_columns($columns, $invoice)
 {
   // $logger = wc_get_logger();
-  $columns = array_insert($columns, 1, ['total_price' => __('Total Price', 'woocommerce-pdf-invoices')]);
+  $columns = array_insert($columns, 1, ['total_price' => __('Price', 'woocommerce-pdf-invoices')]);
+  $columns = array_insert($columns, 2, ['sale' => __('%', 'woocommerce-pdf-invoices')]);
 
-  $columns = array_insert($columns, 2, ['sale_price' => __('Sale price', 'woocommerce-pdf-invoices')]);
+  $columns = array_insert($columns, 3, ['sale_price' => __('Sale price', 'woocommerce-pdf-invoices')]);
 
-  $columns = array_insert($columns, 3, ['quantity' => __('Quantity', 'woocommerce-pdf-invoices')]);
-
+  $columns = array_insert($columns, 4, ['quantity' => __('Qty', 'woocommerce-pdf-invoices')]);
 
   $columns['total'] = __('Total', 'woocommerce-pdf-invoices');
 
@@ -1380,7 +1380,8 @@ add_action('woocommerce_admin_order_item_headers', 'my_woocommerce_admin_order_i
 function my_woocommerce_admin_order_item_headers()
 {
 
-  echo '<th>' . 'Total price' . '</th>';
+  echo '<th>' . 'Price' . '</th>';
+  echo '<th>' . '%' . '</th>';
 }
 
 add_action('woocommerce_admin_order_item_values', 'my_woocommerce_admin_order_item_values', 10, 3);
@@ -1393,9 +1394,11 @@ function my_woocommerce_admin_order_item_values($_product, $item, $item_id = nul
       $item_data = $item->get_data();
       // $meta = wc_get_order_item_meta($item_id, '_product_price', true);
       $actual = $_product->get_regular_price();
-      // $actual = get_product_price($_product->get_id(), $item_data['order_id']) * $item_data['quantity'];
+      $sale = get_product_price($_product->get_id(), $item_data['order_id']);
+      $sale_amount = ($actual - $sale) / $actual * 100;
       // echo '<td>' . wc_price($meta ? $meta : $actual) . '</td>';
-      echo '<td>' . wc_price($actual) . '</td>';
+      echo '<td class="price" width="1%">' . wc_price($actual) . '</td>';
+      echo '<td class="sale_amount" width="1%">' . $sale_amount . '</td>';
       // echo '<td>' . var_dump($item_data['order_id']) . '</td>';
     }
   }
@@ -1414,11 +1417,17 @@ function add_unit_of_measure_column_data1($row, $item_id, $item, $invoice)
 {
   $product = wc_get_product($item['product_id']);
 
-  $row = array_insert($row, 1, ['total_price' => wc_price($product->get_regular_price())]);
+  $regular_price = $product->get_regular_price();
+  $sale_price = get_product_price($item['product_id'], $item['order_id']);
+  $sale_amount = ($regular_price - $sale_price) / $regular_price * 100;
 
-  $row = array_insert($row, 2, ['sale_price' => wc_price(get_product_price($item['product_id'], $item['order_id']))]);
+  $row = array_insert($row, 1, ['total_price' => wc_price($regular_price)]);
 
-  $row = array_insert($row, 3, ['quantity' => $item['quantity']]);
+  $row = array_insert($row, 2, ['sale' => floatval($sale_amount)]);
+
+  $row = array_insert($row, 3, ['sale_price' => wc_price($sale_price)]);
+
+  $row = array_insert($row, 4, ['quantity' => $item['quantity']]);
 
   $actualPrice = floatval(get_product_price($item['product_id'], $item['order_id']) * $item['quantity']);
 

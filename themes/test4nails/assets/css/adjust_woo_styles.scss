@@ -1,0 +1,20 @@
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items thead th{
+  text-align: center;
+}
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items thead th.sortable {
+  text-align: center;
+}
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items tbody th,
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items td {
+  text-align: center;
+}
+
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .view,
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .view,
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .view,
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .view,
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .view,
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .view,
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .view{
+  text-align: center;
+}

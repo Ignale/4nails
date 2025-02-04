@@ -54,7 +54,7 @@ if (wc_tax_enabled()) {
         <th
         class="quantity sortable"
         data-sort="int"
-        ><?php esc_html_e('Quantity', 'woocommerce'); ?></th>
+        ><?php esc_html_e('Qty', 'woocommerce'); ?></th>
         <th
         class="line_cost sortable"
         data-sort="float"

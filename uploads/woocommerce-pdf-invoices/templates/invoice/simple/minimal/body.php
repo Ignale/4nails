@@ -144,6 +144,19 @@ cellspacing="0"
       class="border <?php echo esc_attr($class); ?>"
       >$<?= $data_info['subtotal']; ?></td>
     </tr>
+    <tr class="total">
+      <td width="50%">&nbsp;</td>
+      <td
+      width="25%"
+      align="left"
+      class="border <?php echo esc_attr($class); ?>"
+      >Money saved:</td>
+      <td
+      width="25%"
+      align="right"
+      class="border <?php echo esc_attr($class); ?>"
+      ><?= wc_price(get_individual_discount_order($order)); ?></td>
+    </tr>
     <!--
         <tr class="total">
             <td width="50%">&nbsp;</td>
@@ -158,6 +171,7 @@ cellspacing="0"
         </tr>
     <?php endif; ?>
     -->
+
     <?php
     foreach ($invoice->get_order_item_totals() as $key => $total) {
       $class = str_replace('_', '-', $key);
@@ -186,6 +200,7 @@ cellspacing="0"
           <?php echo str_replace('&nbsp;', '', $total['value']); ?>
         </td>
       </tr>
+
 
     <?php } ?>
   </tbody>
