@@ -207,7 +207,7 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
               <div class="checkout-total__wrapper">
                 <div class="checkout-total__top">
                   <div class="checkout-total__name"><?= __('Item', '4nails') ?></div>
-                  <div class="checkout-total__price"><?= __('Price', '4nails') ?></div>
+                  <div class="checkout-total__price"><?= __('Sale Price', '4nails') ?></div>
                   <div class="checkout-total__qty"> <?= __('Qty', '4nails') ?></div>
                   <div class="checkout-total__subtotal"><?= __('Amount', '4nails') ?></div>
                 </div>

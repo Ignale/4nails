@@ -3322,9 +3322,9 @@ embed {
   border-color: #09ccb4;
   background-color: #09ccb4;
   color: #fff;
-  font-weight: 300;
+  font-weight: 400;
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;
   text-transform: uppercase;
 }
 

@@ -33,19 +33,16 @@
 
 const checkout_form = $("form.checkout");
 
-$(document).on("ajaxSuccess", function (event, xhr, settings) {
-  if (
-    settings.url === "/?wc-ajax=update_order_review" ||
-    settings.url === "/ru/?wc-ajax=update_order_review" ||
-    settings.url === "/es/?wc-ajax=update_order_review"
-  ) {
-    calcCurrentTotalPrice(
-      $(".totals__item--shipping").data("shipping") || 0,
-      $(".totals__item--fee")?.data("fee") || 0,
-      $(".totals__item--tax")?.data("tax") || 0
-    );
-  }
+let currentStep = "first";
+
+$(document).on("updated_checkout", function (event) {
+  calcCurrentTotalPrice(
+    $(".totals__item--shipping").data("shipping") || 0,
+    $(".totals__item--fee")?.data("fee") || 0,
+    $(".totals__item--tax")?.data("tax") || 0
+  );
 });
+
 checkout_form.off(
   "change",
   "#ship-to-different-address-checkbox input",
@@ -57,7 +54,7 @@ if ($("#ship-to-different-address-checkbox").prop("checked") === true) {
 }
 /* CHECKOUT CHECKBOX */
 const checkout = document.querySelector(".checkout__container");
-let currentStep = "first";
+
 const margin = isMobile() ? 60 : 150;
 const sheepToDifferent = () =>
   $("#ship-to-different-address-checkbox").is(":checked");
