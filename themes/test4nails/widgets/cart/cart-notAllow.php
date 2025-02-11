@@ -32,8 +32,8 @@ tabindex="-1"
               <?php
               $temp = 1;
               foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item):
-
                 $product = $cart_item['data'];
+
                 if (if_free_delivery_type($product) === 'yes' && !get_field('attached_product', $product->get_id())):
 
                   ?> 
@@ -62,12 +62,11 @@ tabindex="-1"
 
 
             <div class="modal-error__second">
-
               <?php foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item):
 
                 $product = $cart_item['data'];
-
-                if (if_free_delivery_type($product) === 'no' && !get_field('attached_product', $product->get_id())):
+                
+                if ((if_free_delivery_type($product) === 'no' || if_free_delivery_type( $product)=== null) && !get_field('attached_product', $product->get_id())):
 
                   ?>
 

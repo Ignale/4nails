@@ -56,10 +56,11 @@ if ($("#ship-to-different-address-checkbox").prop("checked") === true) {
 const checkout = document.querySelector(".checkout__container");
 
 const margin = isMobile() ? 60 : 150;
+
 const sheepToDifferent = () =>
   $("#ship-to-different-address-checkbox").is(":checked");
-/* CHECKOUT CHECKBOX */
 
+/* CHECKOUT CHECKBOX */
 let CURRENT_URL = window.location.href;
 function eraseBilling() {
   var _form = $("form.checkout");
@@ -72,7 +73,7 @@ function eraseBilling() {
 }
 
 //since in woocommerce checkout.js priority is billing
-//fields, so if we don't want edit it we copy all sheepeng
+//fields, so if we don't want edit it we copy all shipping
 //fields to billing fields in every checkout update
 $("body").on("update_checkout", checkFields);
 
@@ -101,9 +102,17 @@ function checkFields(placeOrder = false) {
           .find(`[name=${name.replace("billing", "shipping")}]`)
           .val();
 
+        // console.log(shippingFieldValue, "shippingFieldValue");
+        // console.log(this, "this");
+
         $(this).val(shippingFieldValue);
+
+        _data[name] = shippingFieldValue;
+      } else {
+        _data[name] = $(this).val();
       }
-      _data[name] = $(this).val();
+
+      // console.log(_data, "data");
     });
 
   _data["ship_to_different_address"] = +sheepToDifferent();
@@ -179,9 +188,9 @@ function validateCheckout(callback) {
     },
   });
 }
-
+//country_to_state_changed
 if (bodyClass("woocommerce-checkout")) {
-  setInterval(function () {
+  setTimeout(function () {
     $(".input-radio[name='payment_method']")
       .off()
       .change(function () {
@@ -717,21 +726,36 @@ if (document.querySelector(".step__fields-save-btn")) {
 function collectShippingData() {
   var _form = $("form.checkout");
   var _data = {};
-  _form
-    .find(".woocommerce-shipping-fields")
-    .find("input, select")
-    .each(function () {
-      _data[$(this).attr("name")] = $(this).val();
-    });
-  if (!$("#ship-to-different-address-checkbox").prop("checked")) {
+  if (sheepToDifferent()) {
     _form
-      .find(".woocommerce-billing-fields")
+      .find(".woocommerce-shipping-fields")
       .find("input, select")
       .each(function () {
-        console.log("qwe");
         _data[$(this).attr("name")] = $(this).val();
       });
   }
+
+  _form
+    .find(".woocommerce-billing-fields")
+    .find("input, select")
+    .each(function () {
+      let name = $(this).attr("name");
+      console.log(name, "name");
+
+      //if checkbox is checked copy shipping fields to billing
+      if (!sheepToDifferent()) {
+        let shippingFieldValue = _form
+          .find(".woocommerce-shipping-fields")
+          .find(`[name=${name.replace("billing", "shipping")}]`)
+          .val();
+
+        $(this).val(shippingFieldValue);
+
+        _data[name] = shippingFieldValue;
+      } else {
+        _data[name] = $(this).val();
+      }
+    });
   return _data;
 }
 

@@ -1376,12 +1376,28 @@ function vp_add_sub_total($order_id)
   <?php
 }
 
+add_action('woocommerce_admin_order_totals_after_shipping', 'nails_order_fees', 10, 1);
+
+function nails_order_fees($order_id)
+{
+  $order = wc_get_order($order_id);
+  if (0 < $order->get_total_fees()): ?>
+    <tr>
+      <td class="label"><?php esc_html_e('Fees:', 'woocommerce'); ?></td>
+      <td width="1%"></td>
+      <td class="total">
+        <?php echo wc_price($order->get_total_fees(), array('currency' => $order->get_currency())); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+      </td>
+    </tr>
+  <?php endif;
+}
+
 add_action('woocommerce_admin_order_item_headers', 'my_woocommerce_admin_order_item_headers');
 function my_woocommerce_admin_order_item_headers()
 {
 
-  echo '<th>' . 'Price' . '</th>';
-  echo '<th>' . '%' . '</th>';
+  echo '<th class="item">' . 'Price' . '</th>';
+  echo '<th class="item">' . '%' . '</th>';
 }
 
 add_action('woocommerce_admin_order_item_values', 'my_woocommerce_admin_order_item_values', 10, 3);

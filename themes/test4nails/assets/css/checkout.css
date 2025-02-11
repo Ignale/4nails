@@ -1139,9 +1139,8 @@ form .selection {
   display: none;
 }
 
-.checkout-total__price,
-.checkout-total__qty {
-  padding-bottom: 0;
+.checkout-total__price, .checkout-total__qty, .checkout-total__subtotal {
+  text-align: center;
 }
 
 .steps {
@@ -1729,3 +1728,4 @@ form .selection {
 .payment_method_alg_custom_gateway_1 .image {
   display: none !important;
 }
+/*# sourceMappingURL=checkout.css.map */

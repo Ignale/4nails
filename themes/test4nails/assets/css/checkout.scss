@@ -1106,11 +1106,10 @@ form .selection {
 	display: none;
 }
 
-.checkout-total__price,
-.checkout-total__qty{
-	padding-bottom: 0;
-}
-
+.checkout-total{
+  &__price, &__qty, &__subtotal {
+    text-align: center;
+  }}
 .steps {
 	margin-bottom: 20px;
 }

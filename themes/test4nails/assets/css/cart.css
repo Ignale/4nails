@@ -621,6 +621,7 @@ html[lang=es-ES] .cart__checkout a {
     -webkit-box-pack: center;
         -ms-flex-pack: center;
             justify-content: center;
+    font-size: 12px;
   }
   .cart__top {
     padding: 0 0 0 15px;
@@ -744,3 +745,4 @@ html[lang=es-ES] .cart__checkout a {
     margin-bottom: 40px;
   }
 }
+/*# sourceMappingURL=cart.css.map */

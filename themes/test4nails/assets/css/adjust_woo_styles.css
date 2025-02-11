@@ -11,6 +11,15 @@
   text-align: center;
 }
 
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items tbody th,
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items td.name {
+  text-align: left;
+}
+
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item {
+  min-width: unset;
+}
+
 #woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .view,
 #woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .view,
 #woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .view,
@@ -18,6 +27,13 @@
 #woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .view,
 #woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .view,
 #woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .view {
+  text-align: center;
+}
+
+#woocommerce-order-items .woocommerce_order_items_wrapper table.woocommerce_order_items th.line_tax h2 {
+  width: 200px;
+  font-size: inherit;
+  color: inherit;
   text-align: center;
 }
 /*# sourceMappingURL=adjust_woo_styles.css.map */
