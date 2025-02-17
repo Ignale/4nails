@@ -2522,6 +2522,7 @@ html[lang=es-ES] .header-fixed .header__menu li:first-child svg {
 /*---------------------BANNER------------------*/
 
 .banner {
+  aspect-ratio: 4;
 	margin-top: 5px;
 	overflow: hidden;
 	margin-bottom: 53px;
@@ -2554,6 +2555,7 @@ html[lang=es-ES] .header-fixed .header__menu li:first-child svg {
 
 .category__item {
 	background-color: #fff;
+  aspect-ratio: 0.785;
 	width: calc(25% - 7px);
 	border: 1px solid #ebf3f2;
 	border-radius: 3px;
@@ -3165,6 +3167,17 @@ section.about {
 	margin-right: 10px;
 }
 
+// fixing heights of the section to prevent CLS
+.products__content, .video__container {
+  height: 352px;
+  
+}
+@media (max-width: 480px) {
+  .products__content {
+    height: 284px;
+  }
+
+}
 @media (max-width: 1240px) {
 	.header__search-fixed {
 			display: flex;
@@ -3699,7 +3712,8 @@ section.about {
 	}
 
 	.banner {
-			margin-top: 0;
+    aspect-ratio: 2.235;
+		margin-top: 0;
 	}
 
 	.mobile-btn {
