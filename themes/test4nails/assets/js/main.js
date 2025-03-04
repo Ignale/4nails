@@ -333,53 +333,6 @@ function isMobile() {
   );
 }
 
-if (!isMobile()) {
-  if (typeof getCookie("nailsMassage") === "undefined") {
-    $(document).mouseleave(function (e) {
-      if (e.clientY < 10) {
-        let date = new Date();
-        date.setFullYear(date.getFullYear() + 1);
-        document.cookie =
-          "nailsMassage=true; path=/; expires=" + date.toUTCString();
-        $(document).off("mouseleave");
-        Fancybox.show(
-          [
-            {
-              closeExisting: true,
-              src: "#leavePagePopup",
-              type: "inline",
-            },
-          ],
-          {
-            on: {
-              destroy: (fancybox, slide) => {},
-            },
-          }
-        );
-      }
-    });
-  }
-  document.querySelectorAll(".modal-header__delete").forEach((item) => {
-    item.addEventListener("click", () => {
-      Fancybox.close();
-    });
-  });
-}
-document
-  .querySelector(".modal-header__delete")
-  .addEventListener("touchend", () => {
-    Fancybox.close();
-  });
-
-$("#leavePagePopup .wpcf7-form").submit(() => {
-  Fancybox.close();
-  $("body")
-    .addClass("processing")
-    .append(
-      '<div class="blockUI" style="display:none"></div><div class="blockUI blockOverlay popup-feedback" style="z-index: 1000; border: none; margin: 0px; padding: 0px; width: 100%; height: 100%; top: 0px; left: 0px; background: rgb(255, 255, 255); opacity: 0.6; cursor: default; position: absolute;"></div><div class="blockUI blockMsg blockElement" style="z-index: 1011; display: none; position: absolute; left: 296px; top: 337px;"></div></div>'
-    );
-  $(".popup-feedback").fadeOut(3000, "swing");
-});
 function createCookie(name, value) {
   var expires;
   var date = new Date();
