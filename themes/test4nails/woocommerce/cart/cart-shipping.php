@@ -18,7 +18,11 @@ $calculator_text = '';
       id="shipping_method"
       class="woocommerce-shipping-methods p-0"
       >
-        <?php foreach ($available_methods as $method): ?>
+        <?php foreach ($available_methods as $method):
+          if (if_overweight(WC()->cart) && $method->id !== 'overweight_shipping' && $method->id !== 'local_pickup:7') {
+            continue;
+          }
+          ?>
           <li>
             <?php
             if (1 <= count($available_methods)) {

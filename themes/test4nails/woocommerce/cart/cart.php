@@ -131,7 +131,7 @@ class="cart__content woocommerce-cart-form"
                 >
 
                   <?php
-                  $max_value = $_product->get_max_purchase_quantity();
+                  $max_value = $_product->get_stock_quantity();
                   $value = $cart_item['quantity'];
                   $is_avialble = $value >= $max_value ? false : true;
                   $disabled = $_product->is_sold_individually() ? 'disabled' : '';
@@ -170,7 +170,7 @@ class="cart__content woocommerce-cart-form"
                       </div>
 
                     <?php }
-                    $cart->set_quantity($cart_item_key, $max_value);
+                    // $cart->set_quantity($cart_item_key, $max_value);
                   } ?>
                 </div>
 

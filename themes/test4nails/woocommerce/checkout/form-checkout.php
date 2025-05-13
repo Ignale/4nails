@@ -16,6 +16,7 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
 ?>
 <section class="checkout">
 
+
   <div
   class="checkout__container current-step--first hide-second-step hide-third-step <?= $chosen_payment_method ?>"
   <?= is_user_logged_in() ? 'data-user="true"' : '' ?>
@@ -33,10 +34,10 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
           <div class="checkout__main">
             <div class="first-step step">
               <?php if ($checkout->get_checkout_fields()): ?>
-                <?php do_action('woocommerce_checkout_before_customer_details'); ?>
+
                 <div class="step__container">
 
-                  <div class="step__container">
+                  <div style='border-top: 1px solid #bbcac8;'>
                     <h2
                     class="checkout__title title shipping-title"
                     <?= is_user_logged_in() ? 'style="display: none"' : '' ?>
@@ -117,8 +118,8 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                   </div>
                   <div
                   class="step__fields
-                  <?= is_user_logged_in() && (!empty($customer->get_shipping_first_name()) && !empty($customer->get_shipping_country()) && !empty($customer->get_shipping_postcode())) ? 'have-data' : '' ?>
-                  <?= is_user_logged_in() && (!empty($customer->get_shipping_first_name()) && !empty($customer->get_shipping_country()) && !empty($customer->get_shipping_postcode())) ? 'style="display: none"' : '' ?>"
+                  <?= is_user_logged_in() && (!empty($customer->get_billing_first_name()) && !empty($customer->get_billing_country()) && !empty($customer->get_billing_postcode())) ? 'have-data' : '' ?>
+                  <?= is_user_logged_in() && (!empty($customer->get_billing_first_name()) && !empty($customer->get_billing_country()) && !empty($customer->get_billing_postcode())) ? 'style="display: none"' : '' ?>"
                   >
                     <div class="
                   step__fields-shipping">
@@ -302,8 +303,20 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
         <aside>
           <div class="aside__content">
             <div class="checkout-aside">
-
             </div>
+            <div
+            class="g-wrapper"
+            style="display: none"
+            >
+              <div class="g-wrapper_or">
+                <?= __('OR', '4nails') ?>
+              </div>
+              <?php
+              if (class_exists('WC_Stripe_Payment_Request')) {
+                WC_Stripe_Payment_Request::instance()->display_payment_request_button_html();
+              } ?>
+            </div>
+
           </div>
         </aside>
       </div>

@@ -360,7 +360,7 @@ function get_individual_duscount($cart)
 
       // применять индивидуальную скидку только на товары которые без Sale
       foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
-        if ($cart_item['data']->sale_price == '' && $cart_item['data']->sale_price == 0) {
+        if ($cart_item['data']->sale_price == '' || $cart_item['data']->sale_price == 0) {
           $total_individual_discount += $cart_item['line_subtotal'] * ((float) $discount / 100);
         }
       }
@@ -391,7 +391,8 @@ function add_shipping_info($method, $chosen_method)
   $current = strtolower(str_replace(' ', '_', preg_replace('/[\(\)]/', '', $method->label))) . '_info';
   $mark = '';
   $mark .= "<div data-temp='" . strtolower(str_replace(' ', '_', preg_replace('/[\(\)]/', '', $method->label))) . '_info' . "'>";
-  $mark .= "<div class='delivery__info-text' >" . get_field(strtolower(str_replace(' ', '_', preg_replace('/[\(\)]/', '', $method->id))) . '_info', 'options');
+
+  $mark .= "<div class='delivery__info-text' >" . get_field($method->id . '_info', 'options');
 
   if (strtolower(str_replace(' ', '_', preg_replace('/[\(\)]/', '', $method->label))) == 'express_mail') {
     if (date('w') == 6) {
@@ -406,7 +407,7 @@ function add_shipping_info($method, $chosen_method)
   /* }*/
 
   $label = '<div class="delivery-method">';
-  if ($method->cost > 0) {
+  if ($method->cost > 0 || $method->id == 'overweight_shipping') {
     if (WC()->cart->tax_display_cart == 'excl') {
       $label .= wc_price($method->cost) . ' 一 ';
       if ($method->get_shipping_tax() > 0 && WC()->cart->prices_include_tax) {
@@ -564,8 +565,8 @@ function fg_add_fee()
     return;
   }
   global $woocommerce;
+  $total_price = WC()->cart->get_cart_contents_total() + $woocommerce->cart->tax_total + WC()->cart->shipping_total - get_individual_duscount(WC()->cart);
 
-  $total_price = WC()->cart->get_cart_contents_total() + $woocommerce->cart->tax_total + WC()->cart->shipping_total;
   $payment_method = $woocommerce->session->chosen_payment_method;
   $customer_billing_address = WC()->cart->get_customer()->get_billing_country();
   $customer_shipping_address = WC()->cart->get_customer()->get_shipping_country();
@@ -1314,6 +1315,9 @@ function get_over_overweight_list($cart)
 
 function get_cart_weight($cart)
 {
+  if (!$cart) {
+    return;
+  }
   return $cart->get_cart_contents_weight();
 }
 
@@ -2034,4 +2038,89 @@ function wc_us_countries_mods($countries)
   unset($countries['MP']);
   return $countries;
 }
+
+
+add_action('woocommerce_shipping_init', 'register_overweight_shipping_method');
+
+function register_overweight_shipping_method()
+{
+  if (!class_exists('WC_Shipping_Overweight')) {
+    class WC_Shipping_Overweight extends WC_Shipping_Method
+    {
+      public function __construct($instance_id = 0)
+      {
+        $this->id = 'overweight_shipping';
+        $this->instance_id = empty($instance_id) ? 99 : absint($instance_id);
+        $this->method_title = esc_html__('Separate Invoice Shipping', '4nails');
+        $this->supports = array(
+          'shipping-zones',
+          'settings',
+          'instance-settings',
+          'instance-settings-modal',
+        );
+        $this->enabled = 'yes';
+        $this->title = esc_html__('Separate Invoice', '4nails');
+
+        $this->init();
+      }
+
+      public function init()
+      {
+        $this->init_form_fields();
+        $this->init_settings();
+
+        $this->title = $this->get_option('title', $this->title);
+
+        add_action('woocommerce_update_options_shipping_' . $this->id, [
+          $this,
+          'process_admin_options',
+        ]);
+      }
+
+      public function init_form_fields()
+      {
+        $this->form_fields = [
+          'title' => [
+            'title' => __('Method Title', '4nails'),
+            'type' => 'text',
+            'description' => __('Displayed to customers during checkout.', '4nails'),
+            'default' => __('Separate Invoice', '4nails'),
+          ],
+        ];
+      }
+
+      public function calculate_shipping($package = [])
+      {
+        $total_weight = 0;
+
+        foreach ($package['contents'] as $item) {
+          $product = $item['data'];
+          if ($product && $product->has_weight()) {
+            $total_weight += floatval($product->get_weight()) * $item['quantity'];
+          }
+        }
+        if ($total_weight <= 30) {
+          return;
+        }
+        $rate = [
+          'id' => $this->id,
+          'label' => $this->get_option('title'),
+          'cost' => 0,
+          'calc_tax' => 'per_item',
+        ];
+        $this->add_rate($rate);
+
+      }
+    }
+  }
+}
+
+add_filter('woocommerce_shipping_methods', 'add_overweight_shipping_method');
+
+function add_overweight_shipping_method($methods)
+{
+  $methods['overweight_shipping'] = 'WC_Shipping_Overweight';
+  return $methods;
+}
+
 

@@ -19,11 +19,14 @@ $chosen_payment_method = WC()->session->get('chosen_payment_method');
         <label class="custom-control-label" for="payment_method_<?php echo esc_attr($gateway->id); ?>">
             <span class="local-pickup"><?php echo $gateway->get_title();  ?></span>
             <span class="image"><?php echo $gateway->get_icon(); ?></span>
+
+            <?php if ($gateway->has_fields() || $gateway->get_description()): ?>
+              <div class="payment_box payment_method_<?php echo esc_attr($gateway->id); ?>">
+                <?php $gateway->payment_fields(); ?>
+              </div>
+            <?php endif; ?>
         </label>
+       
     </div>
-    <?php if ($gateway->has_fields() || $gateway->get_description()) : ?>
-        <div class="payment_box payment_method_<?php echo esc_attr($gateway->id); ?>">
-            <?php $gateway->payment_fields(); ?>
-        </div>
-    <?php endif; ?>
+    
 </li>

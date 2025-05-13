@@ -33,7 +33,7 @@ $href = $haveTrouble ? '' : esc_url(wc_get_checkout_url());
 $id = '';
 /* If user logged in, and dont have overweight and we are not ignoring overwheight*/
 if (!$only_free_delivery && $free_delivery['free_delivery']) { // проверка на наличие товара с свободной доставкой
-  $id = 'overweight';
+  // $id = 'overweight';
 } elseif ($loggedUser && !($overweight && !$free_delivery['free_delivery'])) {
   $id = 'goToCheckoutBtn';
 } elseif (!$loggedUser) { // if user is not logged in but has no troubles
@@ -41,7 +41,7 @@ if (!$only_free_delivery && $free_delivery['free_delivery']) { // проверк
 } elseif (!$overweight && !$free_delivery['free_delivery']) { // if logged in but has items from different warehouses
   $id = 'login-error';
 } elseif ($overweight && !$free_delivery['free_delivery']) { // if logged in but has overweight items
-  $id = 'overweight';
+  // $id = 'overweight';
 }
 ?>
 <a
@@ -58,9 +58,9 @@ if (!$loggedUser) {
   get_template_part('widgets/cart/cart', 'login', ['have_trouble' => $free_delivery['free_delivery'] || $overweight ? $changePopupLink : 0]);
 }
 if (!$only_free_delivery && $free_delivery['free_delivery']) {
-  get_template_part('widgets/cart/cart', 'notAllow', ['products_id' => $free_delivery['ids']]);
+  get_template_part('widgets/cart/cart', 'notAllow', ['products_id' => $free_delivery['ids'], 'is_cart' => true]);
 }
 if ($overweight && !$free_delivery['free_delivery']) {
-  get_template_part('widgets/cart/cart', 'overweight', ['cart' => WC()->cart]);
+  get_template_part('widgets/cart/cart', 'overweight', ['is_cart' => true]);
 }
 ?>

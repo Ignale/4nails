@@ -1187,6 +1187,11 @@ form .selection {
   color: var(--red);
 }
 
+.g-wrapper_or {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
 @media (max-width: 920px) {
   .checkout-total__img {
     width: 95px;
@@ -1264,11 +1269,6 @@ form .selection {
   }
   .checkout-aside__button {
     text-align: center;
-  }
-  .pay-btn {
-    width: -webkit-fit-content;
-    width: -moz-fit-content;
-    width: fit-content;
   }
   .aside__content {
     margin: 30px auto 0;
