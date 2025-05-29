@@ -229,47 +229,91 @@ class="cart__content woocommerce-cart-form"
     <div class="cart__wrappper-aside">
       <div class="cart__aside">
         <div class="cart__total">
-
+          <div class="totals__title"><?= __('Order summary', '4nails'); ?></div>
           <div class="cart__total-item">
-
             <div class="cart__total-text"> <?php esc_attr_e('Subtotal ', 'woocommerce'); ?>
-              <div class="cart__total-items">
-                (<?php cart_content();
-                cart_items() ?>)
-              </div>
+              <span>(<?php cart_content();
+              cart_items() ?>)</span>
             </div>
 
             <div class="cart__total-sum">
               <div class="cart__total-price"> <?= wc_price(get_subtotal()); ?></div>
-              <div class="cart__total-description"><?= __('(Prices are in USD)', '4nails'); ?></div>
-            </div>
 
+            </div>
+          </div>
+          <div class="cart__total-item">
+            <?php if (wc_tax_enabled() && !WC()->cart->display_prices_including_tax()): ?>
+              <?php if ('itemized' === get_option('woocommerce_tax_total_display')): ?>
+                <?php
+                $taxes = reset(WC()->cart->get_tax_totals());
+                var_dump($taxes);
+                ?>
+                <div class="cart__total-text"><?= __('California sales tax', '4nails') ?></div>
+                <div
+                data-title=<?php echo esc_attr($taxes->label); ?>
+                class="cart__total-sum"
+                >
+                  <div class="cart__total-price"><?php echo wp_kses_post($taxes->formatted_amount); ?></div>
+                </div>
+
+              <?php else: ?>
+                <div class="cart__total-text"><?= __('California sales tax', '4nails') ?></div>
+                <div class="cart__total-sum">
+                  <div class="cart__total-price">
+                    <?php wc_cart_totals_taxes_total_html(); ?>
+                  </div>
+                </div>
+              <?php endif; ?>
+            <?php endif; ?>
+          </div>
+          <div class="cart__total-item">
+            <div class="cart__total-text"><?= __('Shipping', '4nails') ?></div>
+            <div class="cart__total-sum">
+              <div class="cart__total-price">
+                <?= wc_price(WC()->cart->get_shipping_total()) ?>
+              </div>
+            </div>
           </div>
 
+          <?php
+          if (!WC()->cart->get_fees()) { ?>
+            <div class="cart__total-item">
+              <div class="cart__total-text"><?= __('Fees', '4nails') ?>
+              </div>
+              <div class="cart__total-sum">
+                <div class="cart__total-price">
+                  <?= wc_price(WC()->cart->get_fee_total()); ?>
+                </div>
+              </div>
+            </div>
+            <?php
 
-          <?php //if (WC()->cart->total > 100): ?>
-          <!-- <div class="cart__total-item">
+          } else {
+            foreach (WC()->cart->get_fees() as $fee) { ?>
+              <div class="cart__total-item">
+                <div class="cart__total-text"><?php echo esc_html($fee->name); ?>
+                </div>
+                <div class="cart__total-sum">
+                  <div class="cart__total-price">
+                    <?php wc_cart_totals_fee_html($fee); ?>
+                  </div>
+                </div>
+              </div>
+            <?php }
+          } ?>
 
-                        <div class="cart__total-text"><?php /*= __('Shipping', '4nails') */ ?></div>
-
-                        <div class="cart__total-sum"><?php /*= __('Calculated at next step', '4nails'); */ ?></div>
-
-                    </div>
-                    <?php /*//endif; */ ?>
-
-                    <div class="cart__total-item">
-
-                        <div class="cart__total-text"><?php /*= __('Total', '4nails'); */ ?></div>
-
-                        <div class="cart__total-sum"><?php /*wc_cart_totals_order_total_html(); */ ?></div>
-
-                    </div>-->
-
+          <div class="cart__total-item">
+            <div class="cart__total-text"><?php _e('Total', 'woocommerce'); ?></div>
+            <div class="cart__total-sum">
+              <div class="cart__total-price"><?php wc_cart_totals_order_total_html(); ?></div>
+            </div>
+          </div>
         </div>
+        <div class="totals__price-text"><?= __('Prices are in US dollars.', '4nails') ?></div>
 
         <div class="cart__checkout">
           <div class="cart--checkout__massage">
-            <?= __('In the next step, you will need to enter your billing and shipping address.', '4nails'); ?>
+            <?= __('At the next step, you will need to enter your billing address and shipping address.', '4nails'); ?>
           </div>
           <?php woocommerce_button_proceed_to_checkout() ?>
         </div>

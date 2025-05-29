@@ -302,7 +302,9 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
 
         <aside>
           <div class="aside__content">
+            <div class="totals__title"><?= __('Order summary', '4nails'); ?></div>
             <div class="checkout-aside">
+
             </div>
             <div
             class="g-wrapper"
@@ -316,6 +318,7 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                 WC_Stripe_Payment_Request::instance()->display_payment_request_button_html();
               } ?>
             </div>
+            <?php wc_get_template('checkout/terms.php'); ?>
 
           </div>
         </aside>

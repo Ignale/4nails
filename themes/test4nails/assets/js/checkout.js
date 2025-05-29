@@ -289,10 +289,13 @@ function firstStep() {
 
   calcCurrentTotalPrice(
     $(".totals__item--shipping").data("shipping") || 0,
+    $(".totals__item--fee")?.data("fee") || 0,
     $(".totals__item--tax")?.data("tax") || 0
   );
 
   $(".steps__payment").removeClass("active");
+
+  $("body").trigger("updated_checkout");
 
   if (checkout.dataset.user) {
     saveUserData();
@@ -377,6 +380,7 @@ function secondStep() {
   );
 
   $(".aside__content #place_order").prop("disabled", false);
+  $("body").trigger("updated_checkout");
 }
 
 function showThirdStep() {
@@ -427,6 +431,7 @@ function showThirdStepBlock() {
   $(".third-step").slideDown();
   $(".checkout__terms").show();
   $(".totals__title").show();
+  $("body").trigger("updated_checkout");
 
   $("html, body").animate(
     {
@@ -436,10 +441,39 @@ function showThirdStepBlock() {
   );
 }
 
+$("body").on("updated_checkout", function () {
+  let stripeChecked = $("#payment_method_stripe").prop("checked");
+  $("#stripe-card-element").css({ position: "relative" });
+
+  if ($(".checkout__container").hasClass("current-step--third")) {
+    $(".g-wrapper").css({ display: "block" });
+  } else {
+    $(".g-wrapper").css({ display: "none" });
+  }
+
+  const disableStripe = $('<div class="disabled"></div>')
+    .css({
+      position: "absolute",
+      background: "rgba(255, 255, 255, 0.5)",
+      zIndex: 1000,
+      width: "100%",
+      height: "100%",
+      top: 0,
+      left: 0,
+    })
+    .on("click", function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      return false;
+    });
+  stripeChecked
+    ? $("#stripe-card-element").find(".disabled").remove()
+    : $("#stripe-card-element").prepend(disableStripe);
+});
+
 function hideThirdStepBlock() {
   $(".third-step").slideUp();
   $(".checkout__terms").hide();
-  $(".totals__title").hide();
 }
 
 function pasteShippingData() {
@@ -552,6 +586,7 @@ function changeShippingData() {
 
   calcCurrentTotalPrice(
     $(".totals__item--shipping").data("shipping") || 0,
+    $(".totals__item--fee")?.data("fee") || 0,
     $(".totals__item--tax")?.data("tax") || 0
   );
 }
@@ -748,7 +783,6 @@ function collectShippingData() {
           .find(".woocommerce-shipping-fields")
           .find(`[name=${name.replace("billing", "shipping")}]`)
           .val();
-
         $(this).val(shippingFieldValue);
 
         _data[name] = shippingFieldValue;
@@ -777,6 +811,11 @@ jQuery("body").on("updated_checkout", function () {
 
   if ($(".checkout__container").hasClass("current-step--third")) {
     // If it doesn't, disable the button
+    calcCurrentTotalPrice(
+      $(".totals__item--shipping").data("shipping") || 0,
+      $(".totals__item--fee")?.data("fee") || 0,
+      $(".totals__item--tax")?.data("tax") || 0
+    );
     $(".aside__content #place_order").prop("disabled", false);
   }
 });
@@ -799,6 +838,7 @@ jQuery(document).on("updated_checkout", function () {
     if ($(".checkout__container").hasClass("current-step--second")) {
       calcCurrentTotalPrice(
         $(".totals__item--shipping").data("shipping") || 0,
+        $(".totals__item--fee")?.data("fee") || 0,
         $(".totals__item--tax")?.data("tax") || 0
       );
     }

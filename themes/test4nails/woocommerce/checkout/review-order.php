@@ -13,18 +13,12 @@
         <div class="checkout-aside__totals totals">
 
           <div
-          class="totals__title"
-          style="display: none"
-          ><?= __('Order summary', '4nails'); ?></div>
-          <div
           class="totals__item totals__item--subtotal"
           data-subtotal="<?= get_subtotal() ?>"
           >
             <div class="totals__name"><?php _e('Subtotal', 'woocommerce'); ?>
-              <div class="totals__total-items">
-                (<?php cart_content();
-                cart_items() ?>)
-              </div>
+              <span>(<?php cart_content();
+              cart_items() ?>)</span>
             </div>
             <div class="totals__price"><?= wc_price(get_subtotal()); ?></div>
           </div>
@@ -65,17 +59,26 @@
             <div class="totals__price"><?= wc_price(WC()->cart->get_shipping_total()); ?></div>
           </div>
           <?php do_action('woocommerce_review_order_before_order_total'); ?>
-
-          <?php foreach (WC()->cart->get_fees() as $fee): ?>
-            <div
-            class="totals__item totals__item--fee"
-            data-fee="<?= calcTotalFee() ?>"
-            >
-              <div class="totals__name"><?php echo esc_html($fee->name); ?></div>
-              <div class="totals__price"><?php wc_cart_totals_fee_html($fee); ?>
-              </div>
+          <?php 
+          if(!WC()->cart->get_fees()) {?>
+            <div class="totals__item totals__item--fee" data-fee="<?= calcTotalFee() ?>">
+              <div class="totals__name"><?= __('Fees', '4nails') ?>
             </div>
-          <?php endforeach; ?>
+            <div class="totals__price">
+              <?= wc_price(WC()->cart->get_fee_total()); ?>
+            </div>
+          </div>
+          <?php
+          } else {
+            foreach (WC()->cart->get_fees() as $fee) { ?>
+            <div class="totals__item totals__item--fee" data-fee="<?= calcTotalFee() ?>">
+                <div class="totals__name"><?php echo esc_html($fee->name); ?>
+                </div>
+                <div class="totals__price">
+                  <?php wc_cart_totals_fee_html($fee); ?>
+                </div>
+                </div>
+          <?php }} ?>
           <div class="totals__item totals__item--total">
             <div class="totals__name"><?php _e('Total', 'woocommerce'); ?></div>
             <div
@@ -86,18 +89,21 @@
           <?php do_action('woocommerce_review_order_after_order_total'); ?>
         </div>
         <div class="totals__price-text"><?= __('Prices are in US dollars.', '4nails') ?></div>
-        <?php wc_get_template('checkout/terms.php'); ?>
+        
 
         <div class="checkout-aside__button">
           <?php
           /*delete after fix*/
-
+          
           $chosen_payment_method = WC()->session->get('chosen_payment_method');
 
           //$test_button = !empty($order_button_text) ? $test_button = esc_html($order_button_text) : __('Place an order without payment', '4nails');
           if ($chosen_payment_method !== 'ppcp-gateway') {
             echo apply_filters('woocommerce_order_button_html', '<button disabled type="submit" class="pay-btn red-btn submit-checkout-btn" name="woocommerce_checkout_place_order" id="place_order" value="' . __('PLACE ORDER', '4nails') . '" data-value="' . __('PLACE ORDER', '4nails') . '">' . __('PLACE ORDER', '4nails') . '</button>');
+
+            
           }
+          
           ?>
           <?php
           $chosen_payment_method = WC()->session->get('chosen_payment_method');
@@ -116,7 +122,7 @@
             <?= __('In the next step, you will need to choose a shipping method.', '4nails') ?>
           </p>
           <div
-          class="btn-next-step__btn"
+          class="btn-next-step__btn "
           onclick="validateCheckout(firstStep)"
           >
             <?= __('CONTINUE', '4nails') ?>
@@ -133,7 +139,6 @@
             <?= __('CONTINUE', '4nails') ?>
           </div>
         </div>
-
       </div>
     </div>
 

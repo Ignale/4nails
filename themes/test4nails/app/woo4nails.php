@@ -259,7 +259,7 @@ function add_invoice_information_meta($info, $invoice)
     }
 
   }
-  $total = $regular_total - $sale_total;
+  $total = $order->get_subtotal();
 
   $info['subtotal'] = number_format($total, 2);
   $info['sale_discount'] = number_format($sale_total, 2);
@@ -334,6 +334,7 @@ function nails_get_totals($order_id = 0)
   return ['sale' => $sale_total, 'subtotal' => $total];
 }
 
+
 function get_subtotal($order_id = 0)
 {
   $subtotal = 0;
@@ -351,13 +352,14 @@ function get_individual_duscount($cart)
   if (!$GLOBALS['showPersonalDiscount']) {
     return 0;
   }
-  global $woocommerce;
+
   $total_individual_discount = 0;
   if (is_user_logged_in()) {
     $userField = 'user_' . get_current_user_id();
     $total_individual_discount = 0;
-    if ($discount = get_field('individual_discount', $userField)) {
+    $discount = get_field('individual_discount', $userField);
 
+    if ($discount > 0) {
       // применять индивидуальную скидку только на товары которые без Sale
       foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
         if ($cart_item['data']->sale_price == '' || $cart_item['data']->sale_price == 0) {
@@ -552,10 +554,15 @@ function apply_fee($acf_option, $fee_percent, $total_price, $fee_name)
 {
   global $woocommerce;
 
+  $add_fee = 0.3;
+
+  if ($fee_name == 'usa_shipping_paypal') {
+    $add_fee = 0.49;
+  }
+
   $acf_fee = floatval(get_field($acf_option, 'options'));
   $fee_percent = $acf_fee ? ($acf_fee / 100) : $fee_percent;
-  $fee = $acf_fee == 0 ? 0 : ($total_price * $fee_percent) + 0.3;
-
+  $fee = $acf_fee == 0 ? 0 : ($total_price * $fee_percent) + $add_fee;
   $woocommerce->cart->add_fee(__($fee_name, '4nails'), $fee);
 }
 
@@ -565,7 +572,7 @@ function fg_add_fee()
     return;
   }
   global $woocommerce;
-  $total_price = WC()->cart->get_cart_contents_total() + $woocommerce->cart->tax_total + WC()->cart->shipping_total - get_individual_duscount(WC()->cart);
+  $total_price = get_subtotal() + $woocommerce->cart->get_taxes_total() + WC()->cart->shipping_total;
 
   $payment_method = $woocommerce->session->chosen_payment_method;
   $customer_billing_address = WC()->cart->get_customer()->get_billing_country();
@@ -830,12 +837,8 @@ function my_acf_save_options_page($post_id, $menu_slug)
   // Get newly saved values for the theme settings page.
   $values = get_fields($post_id);
 
-
-
   // Check the new value of a specific field.
   $discount_categories = get_field('discount_categories', $post_id);
-
-
 
 
   /**
@@ -889,10 +892,12 @@ function my_acf_save_options_page($post_id, $menu_slug)
 
   $args = [
     'product_category_id' => get_children_categories($discount_categories),
-    'limit' => 1000,
+    'limit' => 2000,
+    'return' => 'ids',
   ];
 
   $products = wc_get_products($args);
+
 
   /**
    * Retrievs the biggest discount amount among the categories in the settings page and categories of the product  
@@ -917,7 +922,11 @@ function my_acf_save_options_page($post_id, $menu_slug)
     return $discount;
   }
 
-  foreach ($products as $product) {
+  foreach ($products as $id) {
+    $product = wc_get_product($id);
+    if (!$product) {
+      continue;
+    }
     $regular_price = $product->get_regular_price();
 
     $categories = $product->get_category_ids();
@@ -925,6 +934,10 @@ function my_acf_save_options_page($post_id, $menu_slug)
     $discount_amount = get_discount_amount_by_cat_id(get_children_categories($discount_categories, false), $categories);
 
     $new_sale_price = $regular_price - $regular_price / 100 * $discount_amount;
+
+    if ($new_sale_price == $regular_price) {
+      continue;
+    }
 
     if ($product->is_on_sale()) {
       $sale_price = $product->get_sale_price();
@@ -1111,9 +1124,6 @@ function get_individual_discount_order($order)
   if (!$order)
     return 0;
 
-  // $discount = get_field('individual_discount', 'user_' . $order->get_user_id());
-
-  // if ($discount) {
 
   foreach ($order->get_items() as $item) {
     $product = $item->get_product();
@@ -1187,7 +1197,8 @@ function get_product_price($product_id, $order_id = null)
 
   if ($GLOBALS['showPersonalDiscount']) {
 
-    $personal_price = $user_discount && $user_discount > 0 ? ($product->get_regular_price() - ($product->get_regular_price() * ((float) $user_discount / 100))) : $product->get_regular_price();
+
+    $personal_price = $user_discount && $user_discount > 0 && get_brands($product_id) ? ($product->get_regular_price() - round($product->get_regular_price() * ((float) $user_discount / 100), 2)) : $product->get_regular_price();
 
     if ($product->is_on_sale()) {
 
@@ -1361,7 +1372,7 @@ function ifPersonalDiscount($product)
   $product_price = get_product_price($product->id);
   $sale_price = $product->get_sale_price();
 
-  return if_user_have_sale() && ($product_price < $sale_price || !$product->is_on_sale());
+  return if_user_have_sale() && ($product_price < $sale_price || !$product->is_on_sale()) && get_brands($product->id);
 }
 
 add_action('woocommerce_admin_order_totals_after_discount', 'vp_add_sub_total', 10, 1);
@@ -1500,7 +1511,7 @@ function mysite_woocommerce_order_status_completed()
   }
 }
 
-add_action('save_post', 'mysite_woocommerce_order_status_completed', 10, 1);
+// add_action('save_post', 'mysite_woocommerce_order_status_completed', 10, 1);
 
 function store_mall_wc_empty_cart_redirect_url()
 {
@@ -1852,16 +1863,16 @@ function nails_update_customer_data()
 
 }
 
-add_action('woocommerce_checkout_order_processed', 'apply_personal_discount_on_order_nails', 10, 3);
+add_action('woocommerce_order_status_on-hold', 'apply_personal_discount_on_order_nails', 10, 2);
 
 /**
- * Применяет возможную персональную скидку к заказу и меняет итоговую сумму в заказе. Функция применяется с хуком "woocommerce_checkout_order_processed".
+ * Применяет возможную персональную скидку к заказу и меняет итоговую сумму в заказе. Функция применяется с хуком "woocommerce_order_status_on-hold".
  * @param mixed $order_id Номер заказа
  * @param mixed $posted_data, не используется
  * @param WC_Order $order Заказ
 
  */
-function apply_personal_discount_on_order_nails($order_id, $posted_data, $order)
+function apply_personal_discount_on_order_nails($items, $order)
 {
   // woocommerce_checkout_order_processed
 
@@ -1872,7 +1883,7 @@ function apply_personal_discount_on_order_nails($order_id, $posted_data, $order)
     if ($personal_discount) {
       foreach ($order_items as $item_id => $item) {
         $product = $item->get_product();
-        $price = get_product_price($product->get_id());
+        $price = get_product_price($product->get_id(), $order->get_id());
 
         $product_quantity = (int) $item->get_quantity(); // product Quantity
 
@@ -1898,19 +1909,10 @@ function apply_personal_discount_on_order_nails($order_id, $posted_data, $order)
   }
 }
 
-add_filter('woocommerce_cart_taxes_total', 'change_cart_taxes_for_personal_discount', 10, 4);
-
-/**
- * Исправляет taxes total в корзине при включенной персональной скидке. Функция применяется с фильтром 'woocommerce_cart_taxes_total'. 
- * @param float | int $total
- * @param mixed $compound
- * @param mixed $display
- * @param WC_Cart $cart
- * @return float | int $total
- */
-function change_cart_taxes_for_personal_discount($total, $compound, $display, $cart)
+function get_taxes_total($cart, $total = 0)
 {
   $rate = reset(WC_Tax::get_rates())['rate'];
+  $total = $total === 0 ? $cart->get_taxes_total() : $total;
 
   if (!$GLOBALS['showPersonalDiscount'] || !$rate) {
     return $total;
@@ -1925,13 +1927,50 @@ function change_cart_taxes_for_personal_discount($total, $compound, $display, $c
 
     $product_quantity = $values['quantity'];
 
-    $new_tax_total += round($pesonal_price * $product_quantity * $rate / 100, 2);
+    $item_line_tax = round($pesonal_price * $product_quantity * $rate / 100, 2);
+
+    $new_tax_total += $item_line_tax;
 
   }
 
-
   return $new_tax_total;
 }
+
+add_filter('woocommerce_cart_taxes_total', 'change_cart_taxes_for_personal_discount', 10, 4);
+
+/**
+ * Исправляет taxes total в корзине при включенной персональной скидке. Функция применяется с фильтром 'woocommerce_cart_taxes_total'. 
+ * @param float | int $total
+ * @param mixed $compound
+ * @param mixed $display
+ * @param WC_Cart $cart
+ * @return float | int $total
+ */
+function change_cart_taxes_for_personal_discount($total, $compound, $display, $cart)
+{
+  $new_total = get_taxes_total($cart, $total);
+
+  $cart->set_cart_contents_tax($new_total);
+
+  return $new_total;
+}
+
+add_action('woocommerce_calculated_total', 'change_cart_total_for_personal_discount', 10, 1);
+function change_cart_total_for_personal_discount($total)
+{
+  $cart = WC()->cart;
+  // var_dump($cart->get_totals());
+
+  $fee_total = $cart->get_totals()['fee_total'];
+
+  $total_tax = $cart->get_totals()['cart_contents_tax'];
+
+  $shipping_total = $cart->get_totals()['shipping_total'];
+
+  return get_subtotal() + $total_tax + $fee_total + $shipping_total;
+}
+
+
 
 add_action('4nail_after_archive_product', 'show_quantity_modal');
 

@@ -8,8 +8,8 @@ style="display: none"
   </div>
 
   <?php do_action('woocommerce_before_checkout_billing_form', $checkout); ?>
-  <div class="woocommerce-billing-fields">
-    <div class="woocommerce-billing-fields__field-wrapper">
+
+    <div class="woocommerce-billing-fields__field-wrapper woocommerce-billing-fields">
       <?php
       $fields = $checkout->get_checkout_fields('billing');
 
@@ -32,7 +32,6 @@ style="display: none"
           value="US"
         /> -->
     </div>
-  </div>
 
 
   <?php do_action('woocommerce_after_checkout_billing_form', $checkout); ?>

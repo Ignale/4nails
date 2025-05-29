@@ -462,12 +462,14 @@ html[lang=es-ES] .checkout__step-btn {
 
 .pay-btn {
 	margin: 18px auto 10px;
-	font-size: 20px;
-	font-weight: 700;
+	font-size: 18px;
+	font-weight: 600;
 	padding: 0 16px;
 	width: 100%;
+  letter-spacing: 0.8px;
 	line-height: 1.2;
 	height: 52px;
+  text-transform: none;
 	
 	&.disabled{
 		background-color: #a2afad;
@@ -755,6 +757,9 @@ html[lang=es-ES] .checkout__step-btn {
 	flex-shrink: 0;
 	width: 284px;
 	color: #797878;
+  .chekcout-aside{
+    margin-bottom: 7px;
+  }
 }
 
 .steps {
@@ -875,11 +880,14 @@ html[lang=es-ES] .checkout__step-btn {
 }
 
 .totals {
+  &__price{
+    font-weight: 400;
+    font-size: 16px;
+  }
 	&__title {
 		font-weight: 700;
 		color: #000;
-		text-transform: capitalize;
-		font-size: 20px;
+		font-size: 18px;
 		margin-bottom: 15px;
 	}
 
@@ -888,19 +896,19 @@ html[lang=es-ES] .checkout__step-btn {
 		justify-content: flex-start;
 		justify-content: space-between;
 		margin-bottom: 3px;
+
 		
 		&.totals__item--total {
 			padding-top: 3px;
-			color: #cc0921;
+			color: #000;
 			font-weight: 700;
 			border-top: 1px solid #e5e5e5;
-			font-size: 19px;
+			font-size: 16px;
+      .totals__name{
+        font-weight: 700;
+      }
 		}
 	}
-}
-
-.checkout-aside {
-	margin-bottom: 20px;
 }
 
 .step__title {
@@ -939,10 +947,6 @@ form .selection {
 		border-right: 2px solid #fff;
 		transform: rotate(45deg);
 	}
-}
-
-.totals__price {
-	font-weight: 700;
 }
 
 .checkout {
@@ -1149,7 +1153,7 @@ form .selection {
 }
 
 .g-wrapper_or {
-  margin-bottom: 20px;
+  margin-top: 10px;
   text-align: center;
 }
 
@@ -1355,8 +1359,11 @@ form .selection {
 }
 /* new */
 .totals__name{
-	font-weight: 600;
+	font-weight: 400;
 	font-size: 16px;
+  span{
+    font-size: 12px;
+  }
 }
 .totals__total-items{
 	font-size: 12px;
@@ -1372,17 +1379,13 @@ form .selection {
 }
 
 .current-step--first {
-	.totals__item--shipping,
-	.totals__item--fee,
-	.totals__item--tax,
-	.totals__item--total,
+	// .totals__item--shipping,
+	// .totals__item--fee,
+	// .totals__item--tax,
+	// .totals__item--total,
 	.checkout-aside__button .submit-checkout-btn{
 		display: none;
 	}
-}
-
-.totals__price-text{
-	display: none;
 }
 
 .step__button--save{
@@ -1409,7 +1412,6 @@ form .selection {
 	}
 }
 .current-step--second {
-	.totals__item--fee,
 	.checkout-aside__button .submit-checkout-btn{
 		display: none;
 	}
@@ -1429,6 +1431,8 @@ form .selection {
 
 .woocommerce-privacy-policy-text{
 	display: none;
+  font-size: 14px;
+  margin-top: 20px;
 }
 
 .current-step--third .woocommerce-privacy-policy-text:last-of-type{
@@ -1479,12 +1483,13 @@ form .selection {
 	font-weight: 800;
 	margin-top: 10px;
 	padding: 5px;
+  transition: all 0.3s;
 }
 .btn-next-step {
 	margin-top: 20px;
 	
 	&__text {
-		font-size: 15px;
+		font-size: 14px;
 	}
 	
 	&__btn {
@@ -1511,8 +1516,9 @@ form .selection {
 }
 
 .totals__price-text{
-	font-size: 15px;
-	margin-bottom: 15px;
+  margin-top: -7px;
+	font-size: 12px;
+  text-align: right;
 }
 
 .hide {
@@ -1689,7 +1695,8 @@ form .selection {
 
 @media (max-width: 400px) {
 	.pay-btn {
-		height: 65px;
+    margin-top: 20px;
+		height: 50px;
 		width: 95%;
 	}
 }
