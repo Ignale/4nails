@@ -9,8 +9,8 @@ class="cart__content woocommerce-cart-form"
   <div class="cart__gifts">
 
     <?php
-    if ($GLOBALS['showPersonalDiscount']):
-      if (is_user_logged_in() && $discount = get_field('individual_discount', 'user_' . get_current_user_id())): ?>
+    if ($GLOBALS['showPersonalDiscount'] && is_user_logged_in()) {
+       $discount = get_field('individual_discount', 'user_' . get_current_user_id()) ?>
         <div class="cart__gifts-item">
           <svg
           class='discount'
@@ -32,8 +32,8 @@ class="cart__content woocommerce-cart-form"
           </svg>
           <?= sprintf(__('You have a %s personal discount', '4nails'), $discount . '%') ?>
         </div>
-      <?php endif;
-    endif;
+      <?php 
+    }
     ?>
   </div>
   <div class="cart__form">

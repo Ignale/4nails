@@ -4,11 +4,7 @@
 
 global $product;
 
-
-
 $classPrefix = 'product-';
-
-
 
 $isVariable = $product->is_type('variable');
 
@@ -16,22 +12,19 @@ $sale = $isVariable ? $product->get_variation_sale_price('min', true) : $product
 
 $regular = $isVariable ? $product->get_variation_regular_price('min', true) : $product->get_regular_price();
 
-
-
-if ((in_the_loop() || is_main_query()) && !is_single()) $classPrefix = 'card-'; ?>
+if ((in_the_loop() || is_main_query()) && !is_single())
+  $classPrefix = 'card-'; ?>
 
 <div class="product__price">
 
-
   <?php
 
-    if ($product->is_on_sale()||(if_user_have_sale()&&$GLOBALS['showPersonalDiscount'])): ?>
+  if (($product->is_on_sale() || (ifPersonalDiscount($product) && $GLOBALS['showPersonalDiscount'])) && $product->get_stock_status() != 'outofstock') { ?>
 
+    <div class="<?= $classPrefix ?>old-price"><?= wc_price($regular) ?></div>
 
-
-  <div class="<?= $classPrefix ?>old-price"><?= wc_price($regular) ?></div>
-
-  <?php endif; ?>
+  <?php }
+  ; ?>
 
   <div class="<?= $classPrefix ?>price">
 

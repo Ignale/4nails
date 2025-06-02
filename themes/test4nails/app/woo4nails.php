@@ -800,9 +800,9 @@ function addToCart()
     'product_ru' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'ru'), $qty),
   ];
 
-  if (in_array(true, $is_product_in_cart) && !$ignore_stock_status) {
-    send_add_to_cart_error_message($product_data, $is_product_in_cart);
-  }
+  // if (in_array(true, $is_product_in_cart) && !$ignore_stock_status) {
+  //   send_add_to_cart_error_message($product_data, $is_product_in_cart);
+  // }
 
   $result = WC()->cart->add_to_cart($product_id, $qty);
   if ($result) {
@@ -1195,15 +1195,32 @@ function get_product_price($product_id, $order_id = null)
 
   $product = get_product($product_id);
 
+  if ($product->get_stock_status() == 'outofstock') {
+    // Если продукт отсутствует на складе, то возвращаем цену без скидки
+    return $product->get_regular_price();
+  }
+
   if ($GLOBALS['showPersonalDiscount']) {
+    $personal_price = $product->get_regular_price();
 
+    if ($user_discount && $user_discount > 0 && get_brands($product_id)) {
 
-    $personal_price = $user_discount && $user_discount > 0 && get_brands($product_id) ? ($product->get_regular_price() - round($product->get_regular_price() * ((float) $user_discount / 100), 2)) : $product->get_regular_price();
+      // Если есть персональная скидка и продукт имеет бренд, то применяем персональную скидку
+      $personal_price = $product->get_regular_price() - round($product->get_regular_price() * ((float) $user_discount / 100), 2);
+    } elseif ($user_discount && $user_discount > 0 && !get_brands($product_id)) {
+
+      // Если есть персональная скидка и продукт не имеет бренд, то скидка 20%
+      $personal_price = $product->get_regular_price() - round($product->get_regular_price() / 100 * 20, 2);
+    } else {
+      // Если нет персональной скидки, то цена без скидки
+      $personal_price = $product->get_regular_price();
+    }
 
     if ($product->is_on_sale()) {
-
+      // Если продукт на распродаже, то проверяем, меньше ли цена со скидкой, чем персональная цена
       $sale_price = $product->is_type('variable') ? $product->get_variation_sale_price('min', true) : $product->get_sale_price();
       if ($sale_price < $personal_price) {
+        // Если цена со скидкой меньше персональной цены, то возвращаем цену со скидкой
         return $sale_price;
       }
 
@@ -1372,7 +1389,7 @@ function ifPersonalDiscount($product)
   $product_price = get_product_price($product->id);
   $sale_price = $product->get_sale_price();
 
-  return if_user_have_sale() && ($product_price < $sale_price || !$product->is_on_sale()) && get_brands($product->id);
+  return if_user_have_sale() && ($product_price < $sale_price || !$product->is_on_sale());
 }
 
 add_action('woocommerce_admin_order_totals_after_discount', 'vp_add_sub_total', 10, 1);

@@ -23,7 +23,7 @@
             <div class="totals__price"><?= wc_price(get_subtotal()); ?></div>
           </div>
 
-          <?php if (!((float) WC()->cart->get_taxes_total() === 0.0)): ?>
+
             <?php if (wc_tax_enabled() && !WC()->cart->display_prices_including_tax()): ?>
               <?php if ('itemized' === get_option('woocommerce_tax_total_display')): ?>
                 <?php foreach (WC()->cart->get_tax_totals() as $code => $tax): ?>
@@ -50,7 +50,6 @@
                 </div>
               <?php endif; ?>
             <?php endif; ?>
-          <?php endif; ?>
           <div
           class="totals__item totals__item--shipping"
           data-shipping="<?= WC()->cart->get_shipping_total() ?>"
