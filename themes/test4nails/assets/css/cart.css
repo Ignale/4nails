@@ -680,9 +680,6 @@ html[lang=es-ES] .cart__checkout a {
   .cart__product-delete {
     margin-right: 20px;
   }
-  .cart__total {
-    margin-bottom: 30px;
-  }
   .cart__total-text {
     text-align: left;
     width: auto;
