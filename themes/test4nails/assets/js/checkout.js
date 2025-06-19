@@ -310,8 +310,10 @@ function calcCurrentTotalPrice(...prices) {
     zelleTotal = $("#wc-zelle-form .woocommerce-Price-amount");
   let total = 0;
 
+  console.log(prices);
+
   for (const arg of prices) {
-    total += +arg.toFixed(2);
+    // total += +arg.toFixed(2);
   }
 
   let totalPrice = +cartSubtotal + total;
@@ -443,9 +445,12 @@ function showThirdStepBlock() {
 
 $("body").on("updated_checkout", function () {
   let stripeChecked = $("#payment_method_stripe").prop("checked");
-  $("#stripe-card-element").css({ position: "relative" });
+  $(".wc-stripe-upe-element").css({ position: "relative" });
 
-  if ($(".checkout__container").hasClass("current-step--third")) {
+  if (
+    $(".checkout__container").hasClass("current-step--third") &&
+    $("#payment_method_stripe").is(":checked")
+  ) {
     $(".g-wrapper").css({ display: "block" });
   } else {
     $(".g-wrapper").css({ display: "none" });
@@ -467,8 +472,8 @@ $("body").on("updated_checkout", function () {
       return false;
     });
   stripeChecked
-    ? $("#stripe-card-element").find(".disabled").remove()
-    : $("#stripe-card-element").prepend(disableStripe);
+    ? $(".wc-stripe-upe-element").find(".disabled").remove()
+    : $(".wc-stripe-upe-element").prepend(disableStripe);
 });
 
 function hideThirdStepBlock() {
@@ -494,10 +499,9 @@ function pasteShippingData() {
       " " +
       $("[name='shipping_postcode']").val() +
       " " +
-      shipping_state +
-      " " +
-      shipping_country || ""
+      shipping_state
   );
+  $(".shipping-info__country").text(shipping_country || "");
   $(".shipping-info__street").text(
     $("#shipping_address_1").val() + " " + $("#shipping_address_2").val()
   );
@@ -512,10 +516,10 @@ function pasteShippingData() {
         " " +
         $("[name='shipping_postcode']").val() +
         " " +
-        shipping_state +
-        " " +
-        shipping_country
+        shipping_state
     );
+    $(".billing-info__country").text(shipping_country || "");
+
     $(".billing-info__street").text(
       $("#shipping_address_1").val() + " " + $("#shipping_address_2").val()
     );
@@ -530,13 +534,12 @@ function pasteShippingData() {
         " " +
         $("[name='billing_postcode']").val() +
         " " +
-        billing_state +
-        " " +
-        billing_country || ""
+        billing_state
     );
     $(".billing-info__street").text(
       $("#billing_address_1").val() + " " + $("#billing_address_2").val()
     );
+    $(".billing-info__country").text(billing_country || "");
   }
 }
 
@@ -871,6 +874,24 @@ window.onload = function () {
 
   // listen to the address dropdown for changes
 };
+
+//styling iframe express payment buttons
+
+document.addEventListener("DOMContentLoaded", function () {
+  const frame = $("#wc-stripe-express-checkout-element iframe");
+
+  const style = frame.contentWindow.document.createElement("style");
+  style.innerHTML = `
+    .apple-pay-btn.white-outline {
+    border: none !important;
+  }
+  
+  .p-ThirdPartyButtonContainer {
+    border: 1px solid #000 !important;
+  }
+  `;
+  frame.contentWindow.document.head.appendChild(style);
+});
 
 // $( document.body ).on( 'updated_checkout', function(data) {
 //     if($('#billing_phone').val()!=='') {

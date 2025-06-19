@@ -18,46 +18,39 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
 
 
   <div
-  class="checkout__container current-step--first hide-second-step hide-third-step <?= $chosen_payment_method ?>"
-  <?= is_user_logged_in() ? 'data-user="true"' : '' ?>
+    class="checkout__container current-step--first hide-second-step hide-third-step <?= $chosen_payment_method ?>"
+    <?= is_user_logged_in() ? 'data-user="true"' : '' ?>
   >
     <form
-    name="checkout"
-    class="checkout__form checkout woocommerce-checkout"
-    method="post"
-    action="<?php echo esc_url(wc_get_checkout_url()); ?>"
-    enctype="multipart/form-data"
+      name="checkout"
+      class="checkout__form checkout woocommerce-checkout"
+      method="post"
+      action="<?php echo esc_url(wc_get_checkout_url()); ?>"
+      enctype="multipart/form-data"
     >
-
       <div class="checkout__container-additional">
         <div class="checkout__content">
           <div class="checkout__main">
             <div class="first-step step">
               <?php if ($checkout->get_checkout_fields()): ?>
 
-                <div class="step__container">
+              <div class="step__container">
 
-                  <div style='border-top: 1px solid #bbcac8;'>
-                    <h2
-                    class="checkout__title title shipping-title"
-                    <?= is_user_logged_in() ? 'style="display: none"' : '' ?>
-                    >
-                      <?= __('ENTER YOUR ADDRESSES', '4nails') ?>
-                    </h2>
-                  </div>
-                  <div
+                <div style='border-top: 1px solid #bbcac8;'>
+                </div>
+                <div
                   class="step__data <?= $customer && (!empty($customer->get_billing_first_name()) && !empty($customer->get_billing_country()) && !empty($customer->get_billing_postcode())) ? 'have-data' : '' ?> <?= is_user_logged_in() && (!empty($customer->get_billing_first_name()) && !empty($customer->get_billing_country()) && !empty($customer->get_billing_postcode())) ? '' : 'step__info--hide' ?>"
-                  >
-                    <h2 class="checkout__title title"><?= __('YOUR ADDRESS', '4nails') ?></h2>
-                    <div class="step__wrapper">
-                      <div class="step__info">
-                        <div class="step__info-item shipping-info">
-                          <p><?= __('Shipping address', '4nails') ?></p>
-                          <p class="shipping-info__name">
-                            <?= ($customer->get_shipping_first_name() === 'Default name' ? ' ' : $customer->get_shipping_first_name()) . ' ' . ($customer->get_shipping_last_name() === 'Default lastname' ? ' ' : $customer->get_shipping_last_name()) ?>
-                          </p>
-                          <p class="shipping-info__street">
-                            <?=
+                >
+
+                  <div class="step__wrapper">
+                    <div class="step__info">
+                      <div class="step__info-item shipping-info">
+                        <p><?= __('Shipping address', '4nails') ?></p>
+                        <p class="shipping-info__name">
+                          <?= ($customer->get_shipping_first_name() === 'Default name' ? ' ' : $customer->get_shipping_first_name()) . ' ' . ($customer->get_shipping_last_name() === 'Default lastname' ? ' ' : $customer->get_shipping_last_name()) ?>
+                        </p>
+                        <p class="shipping-info__street">
+                          <?=
                               $countries->get_formatted_address(
                                 array(
                                   'address_1' => $customer->get_shipping_address_1(),
@@ -65,35 +58,28 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                                 )
                               );
                             ?>
-                          </p>
-                          <p class="shipping-info__location <?= wp_is_mobile() ? 'shipping-info--hide' : '' ?>">
-                            <?= $countries->get_formatted_address(
-                              array(
+                        </p>
+                        <p class="shipping-info__location">
+                          <?= $countries->get_formatted_address() ?>
+                        </p>
+                        <p class="shipping-info__country">
+                          <?= $customer->get_shipping_country() ?>
+                        </p>
+                      </div>
+                      <div class="step__info-item billing-info">
+                        <p><?= __('Billing address', '4nails') ?></p>
 
-                                'city' => $customer->get_shipping_city(),
-                                'state' => $customer->get_shipping_state(),
-                                'postcode' => $customer->get_shipping_postcode(),
-                                'country' => $customer->get_shipping_country(),
-                              )
-                            )
+                        <p class="billing-info__name">
+                          <?= ($customer->get_billing_first_name() === 'Default name' ? ' ' : $customer->get_billing_first_name()) . ' ' . ($customer->get_billing_last_name() === 'Default lastname' ? ' ' : $customer->get_billing_last_name()) ?>
 
-                              ?>
-                          </p>
-                        </div>
-                        <div class="step__info-item billing-info">
-                          <p><?= __('Billing address', '4nails') ?></p>
-
-                          <p class="billing-info__name">
-                            <?= ($customer->get_billing_first_name() === 'Default name' ? ' ' : $customer->get_billing_first_name()) . ' ' . ($customer->get_billing_last_name() === 'Default lastname' ? ' ' : $customer->get_billing_last_name()) ?>
-
-                          </p>
-                          <p class="billing-info__street">
-                            <?= $customer->get_billing_address_1() .
+                        </p>
+                        <p class="billing-info__street">
+                          <?= $customer->get_billing_address_1() .
                               " " . $customer->get_billing_address_2()
                               ?>
-                          </p>
-                          <p class="billing-info__location <?= wp_is_mobile() ? 'shipping-info--hide' : '' ?>">
-                            <?= $countries->get_formatted_address(
+                        </p>
+                        <p class="billing-info__location ">
+                          <?= $countries->get_formatted_address(
                               array(
                                 'city' => $customer->get_billing_city(),
                                 'state' => $customer->get_billing_state(),
@@ -101,94 +87,100 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                                 'country' => $customer->get_billing_country(),
                               )
                             )
-
                               ?>
-                          </p>
-                        </div>
+                        </p>
+                        <p class="billing-info__country">
+                          <?= $customer->get_billing_country() ?>
+                        </p>
                       </div>
-
-                      <div
-                      class="step__button"
-                      onclick="changeAddressData()"
-                      >
-                        <?= __('Change', '4nails') ?>
-                      </div>
-
                     </div>
+
+                    <div
+                      class="
+                          step__button"
+                      onclick="changeAddressData()"
+                    >
+                      <?= __('Change', '4nails') ?>
+                    </div>
+
                   </div>
-                  <div
+                </div>
+                <div
                   class="step__fields
                   <?= is_user_logged_in() && (!empty($customer->get_billing_first_name()) && !empty($customer->get_billing_country()) && !empty($customer->get_billing_postcode())) ? 'have-data' : '' ?>
                   <?= is_user_logged_in() && (!empty($customer->get_billing_first_name()) && !empty($customer->get_billing_country()) && !empty($customer->get_billing_postcode())) ? 'style="display: none"' : '' ?>"
-                  >
-                    <div class="
+                >
+                  <div class="
                   step__fields-shipping">
-                      <h2 class="step__title"><?= __('Shipping address', '4nails'); ?></h2>
-                      <?php do_action('woocommerce_checkout_shipping'); ?>
+                    <h2 class="step__title"><?= __('Shipping address', '4nails'); ?></h2>
+                    <?php do_action('woocommerce_checkout_shipping'); ?>
+                  </div>
+                  <div class="step__fields-payment">
+                    <h2 class="step__title"><?= __('Billing address', '4nails'); ?></h2>
+                    <div class="checkout__title-description">
+                      <?= __("What is a billing address? This is the address associated with your credit card's account or PayPal account with which you will be making the payment.", '4nails'); ?>
                     </div>
-                    <div class="step__fields-payment">
-                      <h2 class="step__title"><?= __('Billing address', '4nails'); ?></h2>
-                      <div class="step__diff-addres ">
-                        <div
+                    <div class="step__diff-addres ">
+                      <div
                         id="ship-to-different-address"
                         class="mb-3 pt-3"
-                        >
-                          <label
+                      >
+                        <label
                           class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox custom-control custom-checkbox"
-                          >
-                            <input
+                        >
+                          <input
                             id="ship-to-different-address-checkbox"
                             class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox custom-control-input"
                             <?php checked(apply_filters('woocommerce_ship_to_different_address_checked', 'shipping' === get_option('woocommerce_ship_to_destination') ? 0 : 1), 0) ?>
                             type="checkbox"
                             name="ship_to_different_address"
-                            />
+                          />
 
-                            <label
+                          <label
                             class="custom-control-label"
                             for="ship-to-different-address-checkbox"
-                            ><?php _e('Shipping address matches billing address?', 'woocommerce'); ?></label>
-                          </label>
-                        </div>
+                          ><?php _e('Shipping address matches billing address?', 'woocommerce'); ?></label>
+                        </label>
                       </div>
-                      <?php do_action('woocommerce_checkout_billing'); ?>
                     </div>
-                    <div class="checkout__order-notes">
+                    <?php do_action('woocommerce_checkout_billing'); ?>
+                  </div>
+                  <div class="checkout__order-notes">
 
-                      <?php do_action('woocommerce_before_order_notes', $checkout); ?>
+                    <?php do_action('woocommerce_before_order_notes', $checkout); ?>
 
-                      <?php if (apply_filters('woocommerce_enable_order_notes_field', 'yes' === get_option('woocommerce_enable_order_comments', 'yes'))): ?>
+                    <?php if (apply_filters('woocommerce_enable_order_notes_field', 'yes' === get_option('woocommerce_enable_order_comments', 'yes'))): ?>
 
-                        <?php if (!WC()->cart->needs_shipping() || wc_ship_to_billing_address_only()): ?>
+                    <?php if (!WC()->cart->needs_shipping() || wc_ship_to_billing_address_only()): ?>
 
-                          <h3><?php _e('Additional information', 'woocommerce'); ?></h3>
+                    <h3><?php _e('Additional information', 'woocommerce'); ?></h3>
 
-                        <?php endif; ?>
+                    <?php endif; ?>
 
-                        <div class="woocommerce-additional-fields__field-wrapper">
-                          <?php foreach ($checkout->get_checkout_fields('order') as $key => $field): ?>
-                            <?php
+                    <div class="woocommerce-additional-fields__field-wrapper">
+                      <?php foreach ($checkout->get_checkout_fields('order') as $key => $field): ?>
+                      <?php
                             $field['class'][] = 'form-group';
                             $field['input_class'][] = 'control-form';
                             woocommerce_form_field($key, $field, $checkout->get_value($key)); ?>
-                          <?php endforeach; ?>
-                        </div>
-
-                      <?php endif; ?>
-
-                      <?php do_action('woocommerce_after_order_notes', $checkout); ?>
+                      <?php endforeach; ?>
                     </div>
+
+                    <?php endif; ?>
+
+                    <?php do_action('woocommerce_after_order_notes', $checkout); ?>
                   </div>
                 </div>
-                <?php do_action('woocommerce_checkout_after_customer_details'); ?>
+              </div>
+              <?php do_action('woocommerce_checkout_after_customer_details'); ?>
               <?php endif; ?>
             </div>
           </div>
 
           <?php do_action('woocommerce_checkout_before_order_review'); ?>
           <div
-          class="woocommerce-checkout-review-order"
-          id="order_review"
+            class="woocommerce-checkout-review-order"
+            id="order_review"
           >
             <?php do_action('woocommerce_checkout_order_review'); ?>
 
@@ -198,10 +190,10 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
           <div class="checkout-total">
             <div class="checkout-total__container">
               <div class="checkout-total__header">
-                <div class="checkout-total__title"><?= __('CHECK YOUR ORDER', '4nails') ?></div>
+                <div class="checkout-total__title"><?= __('Check your order', '4nails') ?></div>
                 <a
-                href="<?= cart_url() ?>"
-                class="checkout-total__back-to-cart"
+                  href="<?= cart_url() ?>"
+                  class="checkout-total__back-to-cart"
                 ><?= __('Change', '4nails') ?></a>
               </div>
 
@@ -222,69 +214,69 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                     if ($_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters('woocommerce_checkout_cart_item_visible', true, $cart_item, $cart_item_key)) {
                       ?>
 
-                      <div class="checkout-total__item">
-                        <div class="checkout-total__name">
-                          <div class="checkout-total__product-title checkout-total__product-title--hide">
-                            <?= __('Product', '4nails') ?>
-                          </div>
-                          <div class="checkout-total__info">
-                            <div class="checkout-total__img">
-                              <img
-                              src="<?= wp_get_attachment_image_url($_product->get_image_id(), 'product_cat') ?>"
-                              loading="lazy"
-                              >
+                  <div class="checkout-total__item">
+                    <div class="checkout-total__name">
+                      <div class="checkout-total__product-title checkout-total__product-title--hide">
+                        <?= __('Product', '4nails') ?>
+                      </div>
+                      <div class="checkout-total__info">
+                        <div class="checkout-total__img">
+                          <img
+                            src="<?= wp_get_attachment_image_url($_product->get_image_id(), 'product_cat') ?>"
+                            loading="lazy"
+                          >
+                        </div>
+                        <div class="checkout-total-mobile">
+                          <div class="checkout-total__title"> <?= $_product->get_name(); ?></div>
+                          <div class="checkout-total__price">
+                            <div class="checkout-total__product-title checkout-total__product-title--hide">
+                              <?= __('Price', '4nails'); ?>
                             </div>
-                            <div class="checkout-total-mobile">
-                              <div class="checkout-total__title"> <?= $_product->get_name(); ?></div>
-                              <div class="checkout-total__price">
-                                <div class="checkout-total__product-title checkout-total__product-title--hide">
-                                  <?= __('Price', '4nails'); ?>
-                                </div>
-                                <?php echo wc_price(get_product_price($_product->get_id())); ?>
-                              </div>
-                              <div class="checkout-total__qty">
-                                <div class="checkout-total__product-title checkout-total__product-title--hide">
-                                  <?= __('Qty', '4nails'); ?>
-                                </div>
-                                <?= $cart_item['quantity'] ?>
-                              </div>
+                            <?php echo wc_price(get_product_price($_product->get_id())); ?>
+                          </div>
+                          <div class="checkout-total__qty">
+                            <div class="checkout-total__product-title checkout-total__product-title--hide">
+                              <?= __('Qty', '4nails'); ?>
                             </div>
+                            <?= $cart_item['quantity'] ?>
                           </div>
                         </div>
-                        <div class="checkout-total__price">
-                          <div class="checkout-total__product-title checkout-total__product-title--hide">
-                            <?= __('Price', '4nails'); ?>
-                          </div>
-                          <?php echo wc_price(get_product_price($_product->get_id())); ?>
-                        </div>
-                        <div class="checkout-total__qty">
-                          <div class="checkout-total__product-title checkout-total__product-title--hide">
-                            <?= __('Qty', '4nails'); ?>
-                          </div>
-                          <?= $cart_item['quantity'] ?>
-                        </div>
-                        <div class="checkout-total__subtotal">
-                          <div class="checkout-total__product-title checkout-total__product-title--hide">
-                            <?= __('Subtotal', '4nails'); ?>
-                          </div>
-                          <?php
+                      </div>
+                    </div>
+                    <div class="checkout-total__price">
+                      <div class="checkout-total__product-title checkout-total__product-title--hide">
+                        <?= __('Price', '4nails'); ?>
+                      </div>
+                      <?php echo wc_price(get_product_price($_product->get_id())); ?>
+                    </div>
+                    <div class="checkout-total__qty">
+                      <div class="checkout-total__product-title checkout-total__product-title--hide">
+                        <?= __('Qty', '4nails'); ?>
+                      </div>
+                      <?= $cart_item['quantity'] ?>
+                    </div>
+                    <div class="checkout-total__subtotal">
+                      <div class="checkout-total__product-title checkout-total__product-title--hide">
+                        <?= __('Subtotal', '4nails'); ?>
+                      </div>
+                      <?php
                           $price = get_product_price($product_id);
                           $quantity = $cart_item['quantity'];
                           $total_price = $price * $quantity;
                           echo wc_price($total_price);
                           ?>
 
-                        </div>
-                      </div>
-                      <?php
+                    </div>
+                  </div>
+                  <?php
                     }
                   }
                   do_action('woocommerce_review_order_after_cart_contents');
                   ?>
                   <div class="show-more">
                     <div
-                    class="show-more__btn"
-                    style="display: none"
+                      class="show-more__btn"
+                      style="display: none"
                     >
                       <div class="show-more__text">
                         <div id="showMore"><?= __('Show more', '4nails'); ?></div>
@@ -307,19 +299,22 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
 
             </div>
             <div
-            class="g-wrapper"
-            style="display: none"
+              class="g-wrapper"
+              style="display: none"
             >
               <div class="g-wrapper_or">
-                <?= __('OR', '4nails') ?>
+                <?php
+                echo __('OR', '4nails')
+                  ?>
               </div>
               <?php
-              if (class_exists('WC_Stripe_Payment_Request')) {
-                WC_Stripe_Payment_Request::instance()->display_payment_request_button_html();
-              } ?>
+              do_action('woocommerce_pay_order_before_payment');
+              // if (class_exists('WC_Stripe_Express_Checkout_Element')) {
+              //   WC_Stripe_Express_Checkout_Element::instance()->display_express_checkout_button_html();
+              // }
+              ?>
             </div>
             <?php wc_get_template('checkout/terms.php'); ?>
-
           </div>
         </aside>
       </div>

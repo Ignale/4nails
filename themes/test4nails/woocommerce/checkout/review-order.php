@@ -2,19 +2,19 @@
   <div class="step__container">
     <?php $chosen_payment_method = WC()->session->get('chosen_payment_method'); ?>
     <div
-    class="<?= $chosen_payment_method ?>"
-    id="asideSumm"
+      class="<?= $chosen_payment_method ?>"
+      id="asideSumm"
     >
 
       <div
-      class="checkout-aside__container"
-      style="display: none"
+        class="checkout-aside__container"
+        style="display: none"
       >
         <div class="checkout-aside__totals totals">
 
           <div
-          class="totals__item totals__item--subtotal"
-          data-subtotal="<?= get_subtotal() ?>"
+            class="totals__item totals__item--subtotal"
+            data-subtotal="<?= get_subtotal() ?>"
           >
             <div class="totals__name"><?php _e('Subtotal', 'woocommerce'); ?>
               <span>(<?php cart_content();
@@ -24,44 +24,47 @@
           </div>
 
 
-            <?php if (wc_tax_enabled() && !WC()->cart->display_prices_including_tax()): ?>
-              <?php if ('itemized' === get_option('woocommerce_tax_total_display')): ?>
-                <?php foreach (WC()->cart->get_tax_totals() as $code => $tax): ?>
-                  <div
-                  class="totals__item totals__item--tax"
-                  data-tax="<?= WC()->cart->get_taxes_total() ?>"
-                  >
-                    <div class="totals__name"><?= __('California sales tax', '4nails') ?></div>
-                    <div
-                    data-title=<?php echo esc_attr($tax->label); ?>
-                    class="totals__price"
-                    ><?php echo wp_kses_post($tax->formatted_amount); ?>
-                    </div>
-                  </div>
-                <?php endforeach; ?>
-              <?php else: ?>
-                <div
-                class="totals__item totals__item--tax"
-                data-tax="<?= WC()->cart->get_taxes_total() ?>"
-                >
-                  <div class="totals__name"><?= __('California sales tax', '4nails') ?></div>
-                  <div class="totals__price"><?php wc_cart_totals_taxes_total_html(); ?>
-                  </div>
-                </div>
-              <?php endif; ?>
-            <?php endif; ?>
+          <?php if (wc_tax_enabled() && !WC()->cart->display_prices_including_tax()): ?>
+          <?php if ('itemized' === get_option('woocommerce_tax_total_display')): ?>
+          <?php foreach (WC()->cart->get_tax_totals() as $code => $tax): ?>
           <div
-          class="totals__item totals__item--shipping"
-          data-shipping="<?= WC()->cart->get_shipping_total() ?>"
+            class="totals__item totals__item--tax"
+            data-tax="<?= WC()->cart->get_taxes_total() ?>"
+          >
+            <div class="totals__name"><?= __('California sales tax', '4nails') ?></div>
+            <div
+              data-title=<?php echo esc_attr($tax->label); ?>
+              class="totals__price"
+            ><?php echo wp_kses_post($tax->formatted_amount); ?>
+            </div>
+          </div>
+          <?php endforeach; ?>
+          <?php else: ?>
+          <div
+            class="totals__item totals__item--tax"
+            data-tax="<?= WC()->cart->get_taxes_total() ?>"
+          >
+            <div class="totals__name"><?= __('California sales tax', '4nails') ?></div>
+            <div class="totals__price"><?php wc_cart_totals_taxes_total_html(); ?>
+            </div>
+          </div>
+          <?php endif; ?>
+          <?php endif; ?>
+          <div
+            class="totals__item totals__item--shipping"
+            data-shipping="<?= WC()->cart->get_shipping_total() ?>"
           >
             <div class="totals__name"><?= __('Shipping', '4nails') ?></div>
             <div class="totals__price"><?= wc_price(WC()->cart->get_shipping_total()); ?></div>
           </div>
           <?php do_action('woocommerce_review_order_before_order_total'); ?>
-          <?php 
-          if(!WC()->cart->get_fees()) {?>
-            <div class="totals__item totals__item--fee" data-fee="<?= calcTotalFee() ?>">
-              <div class="totals__name"><?= __('Fees', '4nails') ?>
+          <?php
+          if (!WC()->cart->get_fees()) { ?>
+          <div
+            class="totals__item totals__item--fee"
+            data-fee="<?= calcTotalFee() ?>"
+          >
+            <div class="totals__name"><?= __('Fees', '4nails') ?>
             </div>
             <div class="totals__price">
               <?= wc_price(WC()->cart->get_fee_total()); ?>
@@ -70,48 +73,52 @@
           <?php
           } else {
             foreach (WC()->cart->get_fees() as $fee) { ?>
-            <div class="totals__item totals__item--fee" data-fee="<?= calcTotalFee() ?>">
-                <div class="totals__name"><?php echo esc_html($fee->name); ?>
-                </div>
-                <div class="totals__price">
-                  <?php wc_cart_totals_fee_html($fee); ?>
-                </div>
-                </div>
-          <?php }} ?>
+          <div
+            class="totals__item totals__item--fee"
+            data-fee="<?= calcTotalFee() ?>"
+          >
+            <div class="totals__name"><?php echo esc_html($fee->name); ?>
+            </div>
+            <div class="totals__price">
+              <?php wc_cart_totals_fee_html($fee); ?>
+            </div>
+          </div>
+          <?php }
+          } ?>
           <div class="totals__item totals__item--total">
             <div class="totals__name"><?php _e('Total', 'woocommerce'); ?></div>
             <div
-            id="totalPrice"
-            class="totals__price"
+              id="totalPrice"
+              class="totals__price"
             ><?php wc_cart_totals_order_total_html(); ?></div>
           </div>
           <?php do_action('woocommerce_review_order_after_order_total'); ?>
         </div>
         <div class="totals__price-text"><?= __('Prices are in US dollars.', '4nails') ?></div>
-        
+
 
         <div class="checkout-aside__button">
           <?php
           /*delete after fix*/
-          
+
           $chosen_payment_method = WC()->session->get('chosen_payment_method');
 
           //$test_button = !empty($order_button_text) ? $test_button = esc_html($order_button_text) : __('Place an order without payment', '4nails');
           if ($chosen_payment_method !== 'ppcp-gateway') {
             echo apply_filters('woocommerce_order_button_html', '<button disabled type="submit" class="pay-btn red-btn submit-checkout-btn" name="woocommerce_checkout_place_order" id="place_order" value="' . __('PLACE ORDER', '4nails') . '" data-value="' . __('PLACE ORDER', '4nails') . '">' . __('PLACE ORDER', '4nails') . '</button>');
 
-            
+
           }
-          
+
           ?>
           <?php
           $chosen_payment_method = WC()->session->get('chosen_payment_method');
 
           if ($chosen_payment_method === 'ppcp-gateway'):
             ?>
-            <div class="paypalIframe">
-              <?php do_action('woocommerce_review_order_after_submit'); ?>
-            </div>
+          <div class="paypalIframe">
+            <?php do_action('woocommerce_review_order_after_submit'); ?>
+          </div>
           <?php endif; ?>
 
         </div>
@@ -121,8 +128,8 @@
             <?= __('In the next step, you will need to choose a shipping method.', '4nails') ?>
           </p>
           <div
-          class="btn-next-step__btn "
-          onclick="validateCheckout(firstStep)"
+            class="btn-next-step__btn "
+            onclick="validateCheckout(firstStep)"
           >
             <?= __('CONTINUE', '4nails') ?>
           </div>
@@ -132,8 +139,8 @@
             <?= __('In the next step, you will be able to choose a payment method and place your order.', '4nails') ?>
           </p>
           <div
-          class="btn-next-step__btn"
-          onclick="secondStep()"
+            class="btn-next-step__btn"
+            onclick="secondStep()"
           >
             <?= __('CONTINUE', '4nails') ?>
           </div>
@@ -142,36 +149,40 @@
     </div>
 
 
-    <h2 class="step__title delivery-title"><?= __('SELECT SHIPPING METHOD', '4nails') ?></h2>
+    <h2 class="step__title delivery-title"><?= __('Select shipping method', '4nails') ?></h2>
     <div
-    class="step__button step__button--save"
-    onclick="secondStep()"
+      class="step__button step__button--save"
+      onclick="secondStep()"
     >
       <?= __('Save', '4nails') ?>
     </div>
     <div class="shipp-info">
       <div class="shipp-info__container">
-        <h2 class="step__title"><?= __('SHIPPING METHOD', '4nails') ?></h2>
-        <div class="shipp-info__data">
-          <div class="shipp-info__name"></div>
-          <div class="shipp-info__desc"></div>
-          <div class="shipp-info__price"></div>
+
+        <div class="shipp-info__wrapper">
+          <h2 class="step__title"><?= __('Shipping method', '4nails') ?></h2>
+          <div class="shipp-info__data">
+            <div class="shipp-info__name"></div>
+            <div class="shipp-info__desc"></div>
+            <div class="shipp-info__price"></div>
+          </div>
         </div>
         <div
-        class="step__button"
-        onclick="changeShippingData()"
+          class="step__button"
+          onclick="changeShippingData()"
         >
           <?= __('Change', '4nails') ?>
         </div>
+
       </div>
     </div>
     <?php if (WC()->cart->show_shipping()): ?>
 
-      <?php do_action('woocommerce_review_order_before_shipping'); ?>
+    <?php do_action('woocommerce_review_order_before_shipping'); ?>
 
-      <?php wc_cart_totals_shipping_html(); ?>
+    <?php wc_cart_totals_shipping_html(); ?>
 
-      <?php
+    <?php
       $cart_items = WC()->cart->get_cart_contents();
       $cart_item = WC()->cart->get_cart_contents();
       $product = reset($cart_item);
@@ -188,30 +199,30 @@
       }
 
       if ($all_virtual) { ?>
-        <div class="checkout__order-item">
-          <div class="checkout__order-right">
-            <ul class=" p-0">
-              <li>
+    <div class="checkout__order-item">
+      <div class="checkout__order-right">
+        <ul class=" p-0">
+          <li>
 
-                <div class="custom-control custom-radio">
-                  <input
-                  type="radio"
-                  class="shipping_method custom-control-input"
-                  checked
-                  />
-                  <label class="custom-control-label shipp-for-training-text"><?= __('Free shipping', '4nails') ?></label>
-                </div>
+            <div class="custom-control custom-radio">
+              <input
+                type="radio"
+                class="shipping_method custom-control-input"
+                checked
+              />
+              <label class="custom-control-label shipp-for-training-text"><?= __('Free shipping', '4nails') ?></label>
+            </div>
 
-              </li>
-            </ul>
-          </div>
+          </li>
+        </ul>
+      </div>
 
-        </div>
-        <?php
+    </div>
+    <?php
       }
       ?>
 
-      <?php do_action('woocommerce_review_order_after_shipping'); ?>
+    <?php do_action('woocommerce_review_order_after_shipping'); ?>
 
     <?php endif; ?>
 

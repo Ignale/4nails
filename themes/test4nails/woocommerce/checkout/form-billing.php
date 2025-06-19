@@ -3,10 +3,6 @@ class="checkout__item-left checkout__billing"
 style="display: none"
 >
 
-  <div class="checkout__title-description">
-    <?= __("What is a billing address? This is the address associated with your credit card's account or PayPal account with which you will be making the payment.", '4nails'); ?>
-  </div>
-
   <?php do_action('woocommerce_before_checkout_billing_form', $checkout); ?>
 
     <div class="woocommerce-billing-fields__field-wrapper woocommerce-billing-fields">

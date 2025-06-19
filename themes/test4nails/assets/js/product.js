@@ -219,7 +219,7 @@ $(document).ready(function () {
         item.style.display = "none";
       });
     }
-  }, 2000);
+  });
 });
 
 document.addEventListener("DOMContentLoaded", function () {

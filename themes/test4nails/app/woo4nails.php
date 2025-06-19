@@ -393,8 +393,13 @@ function add_shipping_info($method, $chosen_method)
   $current = strtolower(str_replace(' ', '_', preg_replace('/[\(\)]/', '', $method->label))) . '_info';
   $mark = '';
   $mark .= "<div data-temp='" . strtolower(str_replace(' ', '_', preg_replace('/[\(\)]/', '', $method->label))) . '_info' . "'>";
+  if (strpos($method->id, 'local_pickup') !== false) {
 
-  $mark .= "<div class='delivery__info-text' >" . get_field($method->id . '_info', 'options');
+    $mark .= "<div class='delivery__info-text' >" . get_field('local_pickup_info', 'options');
+  } else {
+    $mark .= "<div class='delivery__info-text' >" . get_field($method->id . '_info', 'options');
+  }
+
 
   if (strtolower(str_replace(' ', '_', preg_replace('/[\(\)]/', '', $method->label))) == 'express_mail') {
     if (date('w') == 6) {
@@ -564,6 +569,21 @@ function apply_fee($acf_option, $fee_percent, $total_price, $fee_name)
   $fee_percent = $acf_fee ? ($acf_fee / 100) : $fee_percent;
   $fee = $acf_fee == 0 ? 0 : ($total_price * $fee_percent) + $add_fee;
   $woocommerce->cart->add_fee(__($fee_name, '4nails'), $fee);
+}
+
+function get_fee_amount($acf_option, $fee_percent, $total_price, $fee_name)
+{
+
+  $add_fee = 0.3;
+
+  if ($fee_name == 'usa_shipping_paypal') {
+    $add_fee = 0.49;
+  }
+
+  $acf_fee = floatval(get_field($acf_option, 'options'));
+  $fee_percent = $acf_fee ? ($acf_fee / 100) : $fee_percent;
+  $fee = $acf_fee == 0 ? 0 : ($total_price * $fee_percent) + $add_fee;
+  return $fee;
 }
 
 function fg_add_fee()
@@ -794,6 +814,7 @@ function addToCart()
 
   $ignore_stock_status = if_free_delivery_type($product) === 'yes';
 
+
   $is_product_in_cart = [
     'product_en' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'en'), $qty),
     'product_es' => check_product_in_cart(apply_filters('wpml_object_id', $product_id, 'product', false, 'es'), $qty),
@@ -912,6 +933,9 @@ function my_acf_save_options_page($post_id, $menu_slug)
     foreach ($cats as $cat) {
       foreach ($discount_cats as $discount_cat => $value) {
         if ($value['discount_category'] === $cat) {
+          if ($value['category_discount'] === null || $value['category_discount'] === '') {
+            return false;
+          }
           if ($value['category_discount'] > $discount) {
             $discount = $value['category_discount'];
           }
@@ -933,11 +957,15 @@ function my_acf_save_options_page($post_id, $menu_slug)
 
     $discount_amount = get_discount_amount_by_cat_id(get_children_categories($discount_categories, false), $categories);
 
-    $new_sale_price = $regular_price - $regular_price / 100 * $discount_amount;
-
-    if ($new_sale_price == $regular_price) {
+    if ($discount_amount === false) {
       continue;
     }
+
+    $new_sale_price = $regular_price - $regular_price / 100 * $discount_amount;
+
+    // if ($new_sale_price == $regular_price) {
+    //   continue;
+    // }
 
     if ($product->is_on_sale()) {
       $sale_price = $product->get_sale_price();
@@ -1219,7 +1247,7 @@ function get_product_price($product_id, $order_id = null)
     if ($product->is_on_sale()) {
       // Если продукт на распродаже, то проверяем, меньше ли цена со скидкой, чем персональная цена
       $sale_price = $product->is_type('variable') ? $product->get_variation_sale_price('min', true) : $product->get_sale_price();
-      if ($sale_price < $personal_price) {
+      if ($sale_price <= $personal_price) {
         // Если цена со скидкой меньше персональной цены, то возвращаем цену со скидкой
         return $sale_price;
       }
@@ -1234,10 +1262,36 @@ function get_product_price($product_id, $order_id = null)
   }
 
   return $product->get_regular_price();
-
 }
 
+function get_personal_price($product_id)
+{
+  if (!is_user_logged_in()) {
+    return get_product_price($product_id);
+  }
 
+  $user_discount = get_field('individual_discount', 'user_' . get_current_user_id());
+
+  $product = wc_get_product($product_id);
+
+  $personal_price = $product->get_regular_price();
+
+  if ($GLOBALS['showPersonalDiscount']) {
+
+
+    if ($user_discount && $user_discount > 0 && get_brands($product_id)) {
+
+      // Если есть персональная скидка и продукт имеет бренд, то применяем персональную скидку
+      $personal_price = $product->get_regular_price() - round($product->get_regular_price() * ((float) $user_discount / 100), 2);
+    } elseif ($user_discount && $user_discount > 0 && !get_brands($product_id)) {
+      // Если есть персональная скидка и продукт не имеет бренд, то скидка 20%
+      $personal_price = $product->get_regular_price() - round($product->get_regular_price() / 100 * 20, 2);
+    }
+  }
+
+  return $personal_price;
+
+}
 function get_regular_or_variable_price($product, $user)
 {
   if ($product->is_type('variable')) {
@@ -1386,10 +1440,10 @@ function nails_invoice_columns($columns, $invoice)
 
 function ifPersonalDiscount($product)
 {
-  $product_price = get_product_price($product->id);
+  $personal_price = get_personal_price($product->get_id());
   $sale_price = $product->get_sale_price();
 
-  return if_user_have_sale() && ($product_price < $sale_price || !$product->is_on_sale());
+  return if_user_have_sale() && ($personal_price <= $sale_price || !$product->is_on_sale());
 }
 
 add_action('woocommerce_admin_order_totals_after_discount', 'vp_add_sub_total', 10, 1);
@@ -2180,3 +2234,30 @@ function add_overweight_shipping_method($methods)
 }
 
 
+//при выборе оплаты через google начисляем комиссию stripe
+add_filter('woocommerce_stripe_calculated_total', function ($stripe_amount, $order_total, $cart) {
+
+  $cart_fee = WC()->cart->get_fee_total();
+
+  $stripe_fee_total = 0;
+
+  $total_without_fee = round($order_total, 2) - round($cart_fee, 2);
+
+  $customer_billing_address = WC()->cart->get_customer()->get_billing_country();
+  $customer_shipping_address = WC()->cart->get_customer()->get_shipping_country();
+
+  if ($customer_billing_address !== "US" || $customer_shipping_address !== "US") {
+
+    $stripe_fee_total = get_fee_amount('international_shipping_stripe', 0.05, $total_without_fee, 'Stripe fee');
+
+  } else {
+
+    $stripe_fee_total = get_fee_amount('usa_shipping_stripe', 0.03, $total_without_fee, 'Stripe fee');
+
+  }
+
+  // var_dump($total_without_fee, $order_total, $cart_fee, $stripe_fee_total);
+
+  return WC_Stripe_Helper::get_stripe_amount(round($total_without_fee + $stripe_fee_total, 2));
+
+}, 10, 3);

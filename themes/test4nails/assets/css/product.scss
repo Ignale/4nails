@@ -7,6 +7,27 @@
 .woocommerce-verification-required a{
 	color: #09ccb4;
 }
+
+.show-more {
+  display: flex;
+  justify-content: center;
+
+  &__btn {
+    color: #0fe0c7;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &:hover,
+    &:hover .show-more-arrow {
+      color: var(--red);
+      border-color: var(--red);
+    }
+  }
+}
+
+
 .quantity-modal__wrap{
 	padding: 0 20px;
 }

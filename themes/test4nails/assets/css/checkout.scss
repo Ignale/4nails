@@ -8,10 +8,25 @@
 	padding: 0;
 	border: none;
 
-	p:not(.zelle__text) {
-		display: none;
-	}
+	// p:not(.zelle__text) {
+	// 	display: none;
+	// }
 }
+
+
+#payment_method_stripe:checked + .custom-control-label .payment_method_stripe{
+  display: block;
+}
+#payment_method_stripe + .custom-control-label .payment_method_stripe{
+      display: none;
+  }
+#payment_method_zelle + label .payment_box{
+  display: none!important;
+}
+#payment_method_paypal + label .payment_box{
+  display: none!important;
+}
+
 
 .ppc-button-wrapper {
 	margin-top: 40px;
@@ -224,14 +239,11 @@ fieldset.wc-credit-card-form {
 
 .wc_payment_method {
 	.image {
-		margin: 10px 0 5px;
+		margin: -10px 0 5px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		flex-wrap: wrap;
-		border: 1px solid #b8b8b8;
-		border-radius: 6px;
-		padding: 25px 20px;
 		
 		svg,
 		img{
@@ -254,6 +266,9 @@ fieldset.wc-credit-card-form {
 	list-style-type: none;
 }
 
+
+  
+
 .payment_method_stripe img {
 	padding-right: 3px;
 	margin-bottom: 3px !important;
@@ -266,6 +281,8 @@ fieldset.wc-credit-card-form {
 	position: relative;
 	font-weight: 700;
 	display: flex;
+  flex-direction: column;
+  width: 95%;
 }
 
 .custom-control-label span.local-pickup {
@@ -281,7 +298,10 @@ fieldset.wc-credit-card-form {
 
 .custom-control {
 	position: relative;
-
+  padding: 10px;
+  border-radius: 10px;
+  height: 100%;
+  
 	.shipping_method:checked + .custom-control-label .woocommerce-Price-amount {
 		margin-left: -47px;
 	}
@@ -348,7 +368,23 @@ fieldset.wc-credit-card-form {
 }
 
 .payment_box {
-	display: block !important;
+  display: none;
+	// display: block !important;
+  width: 100%;
+  align-self: center;
+  margin-top: 20px;
+  #wc-stripe-upe-form{
+    border-radius: 20px;
+    width: clamp(250px, 100%, 400px);
+    margin: 0 auto;
+    & + fieldset{
+      border: none;
+      p{
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
+  }
 }
 
 .current-step--third .woocommerce-privacy-policy-text{
@@ -378,8 +414,11 @@ fieldset.wc-credit-card-form {
 }
 
 .payment_box p {
-	font-size: 16px;
-	line-height: 1.25;
+	display: none;
+}
+
+.stripe-cards-icon.stripe-icon{
+  display: none;
 }
 
 .wc_payment_method + .wc_payment_method {
@@ -473,16 +512,15 @@ html[lang=es-ES] .checkout__step-btn {
 	
 	&.disabled{
 		background-color: #a2afad;
-	
 		display: flex;
 		justify-content: center;
 		align-items: center;
 	}
 }
 
-/*input[type="radio"]:not(:checked) + label [data-temp="local_pickup_info"] .delivery__info-text a {*/
-/*	display: none;*/
-/*}*/
+// input[type="radio"]:not(:checked) + label [data-temp="local_pickup_info"] .delivery__info-text a {*/
+// /*	display: none;*/
+// /*}
 
 
 .active-step {
@@ -632,6 +670,7 @@ html[lang=es-ES] .checkout__step-btn {
 	.custom-control-label span.image {
 		margin-left: 0;
 		padding: 8px 6px 7px;
+    margin-top: 0;
 	}
 
 	.checkout {
@@ -912,7 +951,7 @@ html[lang=es-ES] .checkout__step-btn {
 }
 
 .step__title {
-	font-size: 24px;
+	font-size: 19px;
 	font-weight: 700;
 	margin-bottom: 10px;
 	margin-top: 5px;
@@ -934,6 +973,7 @@ form .selection {
 	&__diff-addres {
 		display: flex;
 		flex-direction: column;
+    margin-bottom: 20px;
 	}
 	
 	&__next:after {
@@ -951,11 +991,10 @@ form .selection {
 
 .checkout {
 	&-total__title {
-		font-weight: 700;
-		text-transform: uppercase;
-		font-size: 20px;
-		margin-bottom: 20px;
-		margin-top: 20px;
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    margin-top: 5px;
 	}
 
 	&__order-product {
@@ -975,7 +1014,6 @@ form .selection {
 		p:first-child {
 			font-weight: 700;
 			font-size: 19px;
-			margin-bottom: 10px;
 		}
 	}
 
@@ -1029,7 +1067,11 @@ form .selection {
 }
 
 .wc_payment_method .custom-control {
-	margin-bottom: 10px;
+  border: 1px solid #ccc!important
+}
+
+#payment_method_affirm:checked + .custom-control-label .payment_box p {
+  display: block;
 }
 
 .shipp-info {
@@ -1075,14 +1117,6 @@ form .selection {
 		display: flex;
 		align-items: center;
 		width: 45%;
-		
-		.checkout-total__title {
-			font-size: 14px;
-			margin-bottom: 0;
-			margin-top: 0;
-			margin-left: 10px;
-			font-weight: 400;
-		}
 	}
 	
 	&__price {
@@ -1155,6 +1189,19 @@ form .selection {
 .g-wrapper_or {
   margin-top: 10px;
   text-align: center;
+  display: none;
+}
+
+#wc-stripe-express-checkout-button-separator{
+  display: none!important;
+}
+
+.apple-pay-btn.white-outline {
+  border: none !important;
+}
+
+.p-ThirdPartyButtonContainer {
+  border: 1px solid #000 !important;
 }
 
 @media (max-width: 920px) {
@@ -1201,7 +1248,9 @@ form .selection {
 	}
 
 	.step__button{
-		margin-top: auto;
+    align-self: flex-start;
+    margin-top: 10px;
+    font-size: 0.8em;
 	}
 
 	.checkout__form .checkout__container-additional{
@@ -1240,7 +1289,7 @@ form .selection {
 
 	.aside__content {
 		margin: 30px auto 0;
-		width: 90%;
+		width: 100%;
 	}
 
   
@@ -1350,8 +1399,13 @@ form .selection {
 	}
 
 	.shipp-info__container {
-		display: block;
+		display: flex;
 	}
+
+.shipp-info__wrapper{
+
+  
+}
 
 	.shipp-info__price {
 		margin-left: 0;
@@ -1468,10 +1522,6 @@ form .selection {
 	}
 }
 
-.shipp-info__container{
-	flex-direction: column;
-}
-
 .btn-next-step__btn {
 	cursor: pointer;
 	color: #fff;
@@ -1550,6 +1600,7 @@ form .selection {
 .step__info {
 	width: 100%;
 	display: flex;
+  margin-top: 10px;
   height: fit-content;
 	overflow: hidden;
 }
