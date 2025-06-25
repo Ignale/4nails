@@ -60,7 +60,15 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                             ?>
                         </p>
                         <p class="shipping-info__location">
-                          <?= $countries->get_formatted_address() ?>
+                          <?= $countries->get_formatted_address(
+                              array(
+                                'city' => $customer->get_shipping_city(),
+                                'state' => $customer->get_shipping_state(),
+                                'postcode' => $customer->get_shipping_postcode(),
+                                'country' => $customer->get_shipping_country(),
+                              )
+                            )
+                              ?>
                         </p>
                         <p class="shipping-info__country">
                           <?= $customer->get_shipping_country() ?>

@@ -558,6 +558,21 @@ html[lang=es-ES] .checkout__step-btn {
 		color: var(--red);
 	}
 }
+.step__fields{
+  &-payment{
+    .step__title{
+      margin-bottom: 0;
+    }
+    .checkout__title-description{
+      margin-top: -5px;
+    }
+  }
+}
+#ship-to-different-address {
+  label.custom-checkbox {
+    padding: 0;
+  }
+}
 
 #wc-zelle-form{
 	border: unset;
@@ -926,7 +941,7 @@ html[lang=es-ES] .checkout__step-btn {
 	&__title {
 		font-weight: 700;
 		color: #000;
-		font-size: 18px;
+		font-size: 19px;
 		margin-bottom: 15px;
 	}
 
@@ -973,7 +988,7 @@ form .selection {
 	&__diff-addres {
 		display: flex;
 		flex-direction: column;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 	}
 	
 	&__next:after {
@@ -996,6 +1011,14 @@ form .selection {
     margin-bottom: 20px;
     margin-top: 5px;
 	}
+.checkout-total-mobile
+  .checkout-total__title{
+    font-weight: 400;
+    font-size: 16px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+  }
 
 	&__order-product {
 		border-bottom: 2px solid #e5e5e5;

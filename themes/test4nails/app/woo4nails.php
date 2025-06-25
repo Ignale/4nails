@@ -1455,7 +1455,7 @@ function vp_add_sub_total($order_id)
   $order = wc_get_order($order_id);
   ?>
   <tr>
-    <td class="label">Money saved:</td>
+    <td class="label">Personal discount:</td>
     <td width="1%"></td>
     <td class="total"><?php echo wc_price(get_individual_discount_order($order)) ?></td>
   </tr>
@@ -1494,13 +1494,15 @@ function my_woocommerce_admin_order_item_values($_product, $item, $item_id = nul
 
     if ($item['type'] == "line_item") {
       $item_data = $item->get_data();
+      $order = wc_get_order($item_data['order_id']);
       // $meta = wc_get_order_item_meta($item_id, '_product_price', true);
       $actual = $_product->get_regular_price();
       $sale = get_product_price($_product->get_id(), $item_data['order_id']);
-      $sale_amount = ($actual - $sale) / $actual * 100;
+      $item_subtotal = $order->get_item_subtotal($item, false, true);
+      $sale_amount = ($actual - $item_subtotal) / $actual * 100;
       // echo '<td>' . wc_price($meta ? $meta : $actual) . '</td>';
       echo '<td class="price" width="1%">' . wc_price($actual) . '</td>';
-      echo '<td class="sale_amount" width="1%">' . $sale_amount . '</td>';
+      echo '<td class="sale_amount" width="1%">' . round($sale_amount, 0) . '</td>';
       // echo '<td>' . var_dump($item_data['order_id']) . '</td>';
     }
   }
@@ -1599,7 +1601,7 @@ function kia_display_order_data_in_admin($order)
   if ($order->get_user_id()) {
     $discount = empty(get_post_meta($order->id, 'personal_discount', true)) ? getUserIndividualDiscountByOrderId($order->id) : get_post_meta($order->id, 'personal_discount', true);
 
-    echo '<p style="margin-top: 15px; display: inline-block"><strong>Money saved: </strong>' . $discount . '%</p>';
+    echo '<p style="margin-top: 15px; display: inline-block"><strong>Personal discount: </strong>' . $discount . '%</p>';
   }
 }
 

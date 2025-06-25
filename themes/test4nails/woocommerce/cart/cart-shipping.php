@@ -4,8 +4,10 @@ $formatted_destination = isset($formatted_destination) ? $formatted_destination 
 $has_calculated_shipping = !empty($has_calculated_shipping);
 $show_shipping_calculator = !empty($show_shipping_calculator);
 $calculator_text = '';
-
-
+$cart = WC()->cart;
+if ($has_calculated_shipping && if_overweight($cart)) {
+  $cart->set_shipping_total(0);
+}
 ?>
 
 <div class="checkout__order-item">
@@ -19,8 +21,13 @@ $calculator_text = '';
       class="woocommerce-shipping-methods p-0"
       >
         <?php foreach ($available_methods as $method):
+
+          // Отобразить только 2 метода доставки, если в корзине перевес
           if (if_overweight(WC()->cart) && $method->id !== 'overweight_shipping' && $method->id !== 'local_pickup:7') {
             continue;
+          }
+          if (if_overweight($cart)) {
+            $chosen_method = 'overweight_shipping';
           }
           ?>
           <li>

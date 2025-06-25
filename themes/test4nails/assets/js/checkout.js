@@ -313,7 +313,9 @@ function calcCurrentTotalPrice(...prices) {
   console.log(prices);
 
   for (const arg of prices) {
-    // total += +arg.toFixed(2);
+    if (typeof arg === "number") {
+      total += +arg.toFixed(2);
+    }
   }
 
   let totalPrice = +cartSubtotal + total;
