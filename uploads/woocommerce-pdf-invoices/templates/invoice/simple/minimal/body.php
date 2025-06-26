@@ -44,6 +44,7 @@ $data_info = $invoice->get_invoice_info();
     ?>
   </div>
 </div>
+
 <table
 cellpadding="0"
 cellspacing="0"
@@ -88,6 +89,9 @@ cellspacing="0"
     </td>
   </tr>
 </table>
+
+
+
 <table
 cellpadding="0"
 cellspacing="0"
@@ -125,7 +129,6 @@ cellspacing="0"
 
   </tbody>
 </table>
-
 <table
 cellpadding="0"
 cellspacing="0"
