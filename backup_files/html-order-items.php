@@ -71,8 +71,8 @@ if (wc_tax_enabled()) {
             <th
             class="line_tax tips"
             data-tip="<?php echo esc_attr($column_tip); ?>"
-            >
-              <?php echo esc_attr($column_label); ?>
+            ><h2><?php echo esc_attr($column_label); ?></h2>
+             
               <input
               type="hidden"
               class="order-tax-id"
@@ -221,13 +221,13 @@ if (wc_tax_enabled()) {
       </tr>
     <?php endif; ?>
     <?php if (0 < $order->get_total_fees()): ?>
-      <tr>
+      <!-- <tr>
         <td class="label"><?php esc_html_e('Fees:', 'woocommerce'); ?></td>
         <td width="1%"></td>
         <td class="total">
           <?php echo wc_price($order->get_total_fees(), array('currency' => $order->get_currency())); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
         </td>
-      </tr>
+      </tr> -->
     <?php endif; ?>
 
     <?php do_action('woocommerce_admin_order_totals_after_discount', $order->get_id()); ?>

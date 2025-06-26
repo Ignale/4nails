@@ -165,6 +165,57 @@ tabindex="-1"
   </div>
 </div>
 <?php wp_footer() ?>
+<?php if (is_checkout() && !empty(is_wc_endpoint_url('order-received'))) {
+  if ($order) {
+
+    ?>
+    <script
+    src="https://apis.google.com/js/platform.js?onload=renderOptIn"
+    async
+    defer
+    >
+    </script>
+
+    <script>
+
+      window.renderOptIn = function () {
+
+        window.gapi.load('surveyoptin', function () {
+
+          window.gapi.surveyoptin.render(
+
+            {
+
+              // REQUIRED
+
+              "merchant_id": "5298610465",
+
+              "order_id": "<?= $order->get_id() ?>",
+
+              "email": "<?= $order->get_billing_email() ?>",
+
+              "delivery_country": "<=",
+
+              "estimated_delivery_date": "ГГГГ-ММ-ДД",
+
+              // OPTIONAL
+
+              "products": [{ "gtin": "GTIN1" }, { "gtin": "GTIN2" >}],
+
+              "opt_in_style": "РАСПОЛОЖЕНИЕ МОДУЛЯ"
+
+            });
+
+        });
+
+      }
+
+    </script>
+
+    <?php
+  }
+} ?>
+
 <div class="layer"></div>
 
 </body>

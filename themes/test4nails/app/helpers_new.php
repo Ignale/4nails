@@ -56,6 +56,15 @@ function the_icon($name, $echo = true)
   return $icon;
 }
 
+function get_sale_amount($price_without_sale, $price_with_sale)
+{
+  if ($price_without_sale == 0) {
+    return 0;
+  }
+  $sale_amount = 100 - round(($price_with_sale / $price_without_sale) * 100, 0);
+  return $sale_amount;
+}
+
 /**
  * Gets category image by id || Получить изображение категории по id
  * @param mixed $termId - id of the category || id категории
@@ -326,6 +335,9 @@ function if_international()
 
 function if_free_delivery_type($product)
 {
+  if (!$product) {
+    return 'no';
+  }
   return get_field('free_delivery', $product->get_id());
 }
 
@@ -370,6 +382,24 @@ function check_product_in_cart($id, $qty)
   return
     false;
 }
+function send_updated_cart_modal($path, $template, $args, $src, $product_id = null)
+{
+  $cart = WC()->cart;
+  $response['cart_count'] = $cart->get_cart_contents_count();
+  $response['status'] = 'success';
+  $response['deleted_product'] = $product_id;
+  // $response['args'] = $args;
+  $response['src'] = '#' . $src;
+
+  ob_start();
+  get_template_part($path, $template, $args);
+
+  $response['notice'] = ob_get_clean();
+
+  wp_send_json($response);
+  wp_die();
+}
+
 function
   send_add_to_cart_success_message(
   $product,
@@ -382,11 +412,9 @@ function
   ob_start();
   ?>
 
-  <!-- <div class="woocommerce-message">
-    <?php
-    // echo wc_add_to_cart_message($product['id'], false, true); 
-    ?>
-  </div> -->
+  <div class="woocommerce-message">
+    <?php echo wc_add_to_cart_message($product['id'], false, true); ?>
+  </div>
   <?php
   $response['notice'] = ob_get_clean();
 
@@ -401,16 +429,6 @@ function
 
   echo json_encode($response);
   die();
-}
-
-
-function get_sale_amount($price_without_sale, $price_with_sale)
-{
-  if ($price_without_sale == 0) {
-    return 0;
-  }
-  $sale_amount = 100 - round(($price_with_sale / $price_without_sale) * 100, 0);
-  return $sale_amount;
 }
 
 function send_add_to_cart_error_message($product, $is_product_in_cart = null)
@@ -433,3 +451,52 @@ function send_add_to_cart_error_message($product, $is_product_in_cart = null)
   echo json_encode($response);
   die();
 }
+// function send_add_to_cart_success_message(
+//   $product,
+//   $is_product_in_cart = null,
+// ) {
+//   $cart = WC()->cart;
+//   $response['cart_count'] = $cart->get_cart_contents_count();
+//   $response['status'] = 'ok';
+//   $response['is_product_in_cart'] = $is_product_in_cart;
+//   ob_start();
+//   ?>
+
+// <div class="woocommerce-message">
+
+  // <?php echo wc_add_to_cart_message($product['id'], false, true); ?>
+  // </div>
+// <?php
+//   $response['notice'] = ob_get_clean();
+
+//   ob_start();
+//   woocommerce_mini_cart();
+//   $response['cart'] = ob_get_clean();
+
+
+//   ob_start();
+//   get_template_part('widgets/modal');
+//   $response['modal'] = ob_get_clean();
+
+//   wp_send_json($response);
+//   wp_die();
+// }
+
+// function send_add_to_cart_error_message($path, $template, $args, $src, $product = null, $is_product_in_cart = null)
+// {
+//   $cart = WC()->cart;
+//   $response['cart_count'] = $cart->get_cart_contents_count();
+//   $response['status'] = 'error';
+//   // $response['args'] = $args;
+//   $response['is_product_in_cart'] = $is_product_in_cart;
+//   $response['data'] = $product;
+//   $response['src'] = '#' . $src;
+
+//   ob_start();
+//   get_template_part($path, $template, $args);
+
+//   $response['notice'] = ob_get_clean();
+
+//   wp_send_json($response);
+//   wp_die();
+// }

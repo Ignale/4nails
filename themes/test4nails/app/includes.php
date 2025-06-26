@@ -5,7 +5,7 @@ add_action('init', 'css_js_versioning');
 
 function set_custom_ver_css_js($src)
 {
-  $changed_files = array('/assets/js/checkout.js', '/assets/css/checkout.css', '/assets/js/main.js', '/assets/css/cart.css', '/assets/css/main.css', '/assets/css/adjust_woo_styles.css');
+  $changed_files = array('/assets/js/checkout.js', '/assets/js/product.js', '/assets/js/add-to-cart.js', '/assets/css/checkout.css', '/assets/js/main.js', '/assets/css/cart.css', '/assets/css/catalog.css', '/assets/css/main.css', '/assets/css/adjust_woo_styles.css', '/assets/css/product.css', '/assets/js/category.js', '/assets/css/catalog.css');
 
   foreach ($changed_files as $file) {
     if (strpos($src, $file)) {

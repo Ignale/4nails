@@ -89,17 +89,9 @@ function my_account_menu_order()
 
 add_filter('woocommerce_account_menu_items', 'my_account_menu_order');
 
-/* Add to cart action */
+/* Add to cart action on the product page */
 add_action('wp_ajax_add_to_cart', 'addToCart');
 add_action('wp_ajax_nopriv_add_to_cart', 'addToCart');
-
-/* Remove from cart action */
-add_action('wp_ajax_removeFromCart', 'removeFromCart');
-add_action('wp_ajax_nopriv_removeFromCart', 'removeFromCart');
-
-/* Update product in cart action */
-add_action('wp_ajax_updateProduct', 'updateProduct');
-add_action('wp_ajax_nopriv_updateProduct', 'updateProduct');
 
 
 /* Delete standard woocommerce styles */
