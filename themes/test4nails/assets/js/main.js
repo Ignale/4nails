@@ -290,13 +290,29 @@ $(".toast .close").click(() => {
 });
 
 /* Notification banner*/
-if (document.querySelector(".news__notification")) {
+if ($(".news__notification").length) {
   if (
     !sessionStorage.getItem("banner") ||
-    sessionStorage.getItem("banner") !== document.documentElement.lang
+    sessionStorage.getItem("banner") !== document.documentElement.lang ||
+    sessionStorage.getItem("notification-dismissed") === null ||
+    (sessionStorage.getItem("notification-dismissed") &&
+      Date.now() - sessionStorage.getItem("notification-dismissed") >
+        24 * 60 * 60 * 1000) // 24 hours
   ) {
-    document.querySelector(".news__notification").style.display = "block";
+    $(".news__notification").css({ display: "block" });
     sessionStorage.setItem("banner", document.documentElement.lang);
+    $(".notification__button").on("click", function () {
+      // Set a sestion storage item with timestamp to prevent showing it that day
+
+      sessionStorage.setItem("notification-dismissed", Date.now());
+
+      // Hide the notification with animation and remove it from the DOM
+      $(this)
+        .closest(".news__notification")
+        .animate({ opacity: 0 }, 300, function () {
+          $(this).remove();
+        });
+    });
   }
 }
 $(function () {

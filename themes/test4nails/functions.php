@@ -237,18 +237,17 @@ function get_latest_youtube_videos($count)
 function nails_active_news()
 {
   $active = get_field('news_line_are_active', 'options');
+
   if (!$active)
     return false;
 
 
   $now = strtotime(date('d.m.Y 00:00:00'));
 
-
-
   $begin_date = strtotime(get_field('news_line_date_begin', 'options'));
   $end_date = strtotime(get_field('news_line_date_end', 'options'));
 
-  if ($now <= $begin_date || $now >= $end_date) {
+  if ($now < $begin_date || $now >= $end_date) {
     return false;
   }
 

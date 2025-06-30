@@ -343,7 +343,9 @@
   </header>
 
   <?php
+
 $news_content = nails_active_news();
+
 
 if ($news_content): ?>
   <div class="notification news__notification">
@@ -352,8 +354,6 @@ if ($news_content): ?>
 
         <div class="notification-text"><?= $news_content['text']; ?></div>
         <button
-          onclick="jQuery(this).closest('.notification').animate({opacity: 0}, 300, function(){jQuery(this).remove()})"
-          click="jQuery(this).closest('.notification').animate({opacity: 0}, 300, function(){jQuery(this).remove()})"
           class="notification__button"
         >OK
         </button>

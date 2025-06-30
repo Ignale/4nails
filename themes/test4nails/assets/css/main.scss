@@ -283,6 +283,7 @@ label .required {
 /*---------------------NOTIFICATION--------------------*/
 
 .notification {
+  display: none;
 	position: relative;
 	z-index: 5;
 	height: fit-content;
@@ -2222,6 +2223,11 @@ html[lang=ru-RU] .tinv-wishlist .tinvwl_added_to_wishlist.tinv-modal button.butt
 
 header {
 	position: relative;
+  &:has(.header-fixed){
+    &~.breadcrumbs {
+      margin-top: 37px;
+    }
+  }
 }
 
 .header-top {

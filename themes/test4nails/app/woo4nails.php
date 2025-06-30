@@ -91,7 +91,6 @@ add_action('woocommerce_save_account_details', function ($user_id) {
       'display_name' => "$first $last",
     ]);
   }
-
 }, 12, 1);
 
 add_filter('request', 'register_request', 9999, 1);
@@ -223,7 +222,6 @@ function add_parent_product_sku($description, $item_id, $item)
     $product_id = apply_filters('wpml_object_id', $product->get_id(), 'product', false, 'en');
     $english_product = wc_get_product($product_id);
     $description = $english_product->get_name();
-
   }
 
 
@@ -257,7 +255,6 @@ function add_invoice_information_meta($info, $invoice)
     if ($product->sale_price) {
       $sale_total += ($product->regular_price - get_product_price($product->get_id(), $info['order_number']['value'])) * $quantity;
     }
-
   }
   $total = $order->get_subtotal();
 
@@ -306,7 +303,6 @@ function nails_get_totals($order_id = 0)
 
   if (is_admin()) {
     $personal = $GLOBALS['showPersonalDiscount'] ? get_individual_discount_order($order) : 0;
-    ;
     $order = wc_get_order($order_id);
     foreach ($order->get_items() as $item) {
       $product = $item->get_product();
@@ -321,7 +317,6 @@ function nails_get_totals($order_id = 0)
   /* если вызов идёт на сайте или если письмо идёт покупателю*/
   foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
     $personal = $GLOBALS['showPersonalDiscount'] ? get_individual_discount_order($order) : 0;
-    ;
     $regular = $cart_item['data']->regular_price;
     $sale = $cart_item['data']->sale_price;
     $subtotal += $regular * $cart_item['quantity'];
@@ -420,16 +415,13 @@ function add_shipping_info($method, $chosen_method)
       if ($method->get_shipping_tax() > 0 && WC()->cart->prices_include_tax) {
         $label .= ' <small class="tax_label">' . WC()->countries->ex_tax_or_vat() . '</small>';
       }
-
     } else {
       $label .= wc_price($method->cost + $method->get_shipping_tax()) . ' 一 ';
 
       if ($method->get_shipping_tax() > 0 && !WC()->cart->prices_include_tax) {
         $label .= ' <small class="tax_label">' . WC()->countries->inc_tax_or_vat() . '</small>';
       }
-
     }
-
   }
 
   $label .= $method->get_label() . '</div>' . $mark;
@@ -458,20 +450,18 @@ function truemisha_payments_on_shipping($available_gateways)
     if ($customer_country !== 'US') {
 
       return $available_gateways;
-
     }
   }
 
   unset($available_gateways['alg_custom_gateway_1']); // Remove Stripe payment method
   return $available_gateways;
-
 }
 
 
 add_action('wp_head', 'custom_ajax_spinner', 1000);
 function custom_ajax_spinner()
 {
-  ?>
+?>
   <style>
     .current-step--first .woocommerce-checkout .blockUI.blockOverlay {
       display: none !important;
@@ -540,7 +530,7 @@ function custom_ajax_spinner()
       }
     }
   </style>
-  <?php
+<?php
 
 }
 
@@ -625,7 +615,6 @@ function fg_add_fee()
       apply_fee('affirm_fee', 0.06, $total_price, 'Fee');
       break;
   }
-
 }
 
 /* Меняем иконку paypal */
@@ -750,7 +739,6 @@ function nails_order_info($order_id)
 
 
   return get_order_info($order_id);
-
 }
 
 function nails_show_shipping_method($order)
@@ -794,13 +782,10 @@ function get_order_info($order_id)
     $price = get_product_price($product, $order_id);
 
     $total += $price * $product_quantity;
-
-
   }
 
   $sale_total = $subtotal - $total;
   return ['sale' => $sale_total, 'subtotal' => $total];
-
 }
 
 function addToCart()
@@ -885,7 +870,6 @@ function my_acf_save_options_page($post_id, $menu_slug)
       if (!sizeof($child_categories_ids)) {
         if (!$id_only) {
           array_push($children_cats, ['discount_category' => $value['discount_category'], 'category_discount' => $value['category_discount']]);
-
         } else {
           array_push($children_cats, $value['discount_category']);
         }
@@ -896,19 +880,15 @@ function my_acf_save_options_page($post_id, $menu_slug)
         $child_categories = array_map(function ($item) use ($value) {
 
           return ['discount_category' => $item, 'category_discount' => $value['category_discount']];
-
         }, $child_categories_ids);
 
         $children_cats = array_merge($children_cats, $child_categories);
-
       } else {
         $children_cats = array_merge($children_cats, $child_categories_ids);
       }
-
     }
 
     return $children_cats;
-
   }
 
   $args = [
@@ -977,7 +957,6 @@ function my_acf_save_options_page($post_id, $menu_slug)
     $product->set_sale_price($new_sale_price);
 
     $product->save();
-
   }
 }
 
@@ -1042,7 +1021,6 @@ function orderStatusChanged($order_id, $old_status, $new_status, $order)
       sendEmailDiscount($email, $message);
 
       $send_new_discount = true;
-
     } else {
       $d = 0;
       ksort($list_discount);
@@ -1073,9 +1051,7 @@ function orderStatusChanged($order_id, $old_status, $new_status, $order)
           $send_new_discount = true;
           break;
         }
-
       }
-
     }
 
     if (!$send_new_discount) {
@@ -1124,8 +1100,7 @@ function sendEmailDiscount($email, $message)
   $content = $mails['WC_Email_Customer_Note']->get_content_html();
 
   $mails['WC_Email_Customer_Note']->send($email, $subjects, $content, $headers, '');
-}
-
+};
 
 /* Translate shipping method*/
 add_filter('woocommerce_package_rates', 'change_shipping_methods_label_names', 10, 2);
@@ -1192,7 +1167,6 @@ function get_individual_discount_cart($cart)
       } else {
         $personal_total += ($quantity * $product->regular_price) * ($discount / 100);
       }
-
     }
   }
   return $personal_total;
@@ -1251,10 +1225,8 @@ function get_product_price($product_id, $order_id = null)
         // Если цена со скидкой меньше персональной цены, то возвращаем цену со скидкой
         return $sale_price;
       }
-
     }
     return $personal_price;
-
   }
 
   if ($product->is_on_sale()) {
@@ -1290,7 +1262,6 @@ function get_personal_price($product_id)
   }
 
   return $personal_price;
-
 }
 function get_regular_or_variable_price($product, $user)
 {
@@ -1411,7 +1382,6 @@ function add_unit_of_measure_column_data($row, $item_id, $item, $invoice)
     if (get_field('attached_product', $item->get_product_id())) {
       $row = '';
     }
-
   }
   return $row;
 }
@@ -1453,7 +1423,7 @@ function vp_add_sub_total($order_id)
     return;
   }
   $order = wc_get_order($order_id);
-  ?>
+?>
   <tr>
     <td class="label">Personal discount:</td>
     <td width="1%"></td>
@@ -1472,10 +1442,11 @@ function nails_order_fees($order_id)
       <td class="label"><?php esc_html_e('Fees:', 'woocommerce'); ?></td>
       <td width="1%"></td>
       <td class="total">
-        <?php echo wc_price($order->get_total_fees(), array('currency' => $order->get_currency())); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+        <?php echo wc_price($order->get_total_fees(), array('currency' => $order->get_currency())); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+        ?>
       </td>
     </tr>
-  <?php endif;
+<?php endif;
 }
 
 add_action('woocommerce_admin_order_item_headers', 'my_woocommerce_admin_order_item_headers');
@@ -1508,6 +1479,17 @@ function my_woocommerce_admin_order_item_values($_product, $item, $item_id = nul
   }
 }
 
+add_filter('woocommerce_order_amount_item_subtotal', 'my_woocommerce_order_amount_item_subtotal', 10, 5);
+function my_woocommerce_order_amount_item_subtotal($subtotal, $order, $item, $inc_tax, $round)
+{
+  $subtotal = get_product_price($item['product_id'], $order->get_id());
+
+  if ($round) {
+    $subtotal = round($subtotal, 2);
+  }
+  return $subtotal;
+};
+
 function getUserIndividualDiscountByOrderId($orderId)
 {
   $order = wc_get_order($orderId);
@@ -1527,7 +1509,7 @@ function add_unit_of_measure_column_data1($row, $item_id, $item, $invoice)
 
   $row = array_insert($row, 1, ['total_price' => wc_price($regular_price)]);
 
-  $row = array_insert($row, 2, ['sale' => floatval($sale_amount)]);
+  $row = array_insert($row, 2, ['sale' => round(floatval($sale_amount), 0)]);
 
   $row = array_insert($row, 3, ['sale_price' => wc_price($sale_price)]);
 
@@ -1624,7 +1606,6 @@ function gt_change_my_icons($icon_string, $id)
 
   if ('stripe' === $id) {
     $icon_string .= file_get_contents(theme_path() . '/assets/img/Stripe_Logo,.svg');
-
   }
 
 
@@ -1639,7 +1620,6 @@ function lp_free_shipping_label($label, $object)
   if ($temp[1]) {
 
     $label = $temp[0] . ')<div class="shipping_method-description">' . $temp[1] . '</div>';
-
   }
   return $label;
 }
@@ -1673,7 +1653,6 @@ function hide_shipping_method_based_on_shipping_class($rates, $package)
 
       unset($rates['local_pickup:7']);
       unset($rates['flat_rate:14']);
-
     }
   }
   return $rates;
@@ -1713,13 +1692,11 @@ function show_summ_all_products($cat)
       global $product;
       $count += (int) $product->get_stock_quantity();
       $full_product_price += ((int) $product->get_price() * (int) $product->get_stock_quantity());
-
     }
 
     wp_reset_query();
 
     return $full_product_price . ' $. <br>Count: ' . $count;
-
   }
 }
 
@@ -1732,7 +1709,6 @@ function show_total_price_in_admin_menu()
 
     echo "<div id='goods-info' style=' position: absolute;top: 55px;left: 543px;'>" . "<h2 style='color: red'>" . 'Total price of products: ' . show_summ_all_products($_GET['product_cat']) . '</h2>' . '</div>';
   }
-
 }
 
 function warp_ajax_product_remove()
@@ -1931,9 +1907,7 @@ function nails_update_customer_data()
     foreach ($posted_data as $meta_key => $meta_value) {
       update_user_meta($user_id, $meta_key, $meta_value);
     }
-
   }
-
 }
 
 add_action('woocommerce_order_status_on-hold', 'apply_personal_discount_on_order_nails', 10, 2);
@@ -1971,14 +1945,12 @@ function apply_personal_discount_on_order_nails($items, $order)
         $item->calculate_taxes();
 
         $item->save();
-
       }
 
       $order->calculate_totals();
 
       $order->save();
     }
-
   }
 }
 
@@ -2003,7 +1975,6 @@ function get_taxes_total($cart, $total = 0)
     $item_line_tax = round($pesonal_price * $product_quantity * $rate / 100, 2);
 
     $new_tax_total += $item_line_tax;
-
   }
 
   return $new_tax_total;
@@ -2221,7 +2192,6 @@ function register_overweight_shipping_method()
           'calc_tax' => 'per_item',
         ];
         $this->add_rate($rate);
-
       }
     }
   }
@@ -2251,15 +2221,12 @@ add_filter('woocommerce_stripe_calculated_total', function ($stripe_amount, $ord
   if ($customer_billing_address !== "US" || $customer_shipping_address !== "US") {
 
     $stripe_fee_total = get_fee_amount('international_shipping_stripe', 0.05, $total_without_fee, 'Stripe fee');
-
   } else {
 
     $stripe_fee_total = get_fee_amount('usa_shipping_stripe', 0.03, $total_without_fee, 'Stripe fee');
-
   }
 
   // var_dump($total_without_fee, $order_total, $cart_fee, $stripe_fee_total);
 
   return WC_Stripe_Helper::get_stripe_amount(round($total_without_fee + $stripe_fee_total, 2));
-
 }, 10, 3);

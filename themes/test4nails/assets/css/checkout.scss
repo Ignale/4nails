@@ -530,7 +530,7 @@ html[lang=es-ES] .checkout__step-btn {
 	&__shipping-adress.shipping_address {
 		display: block !important;
     height: fit-content !important;
-    margin-top: 23px !important;
+    margin-top: 0px !important;
 	}
 
 	&__step-btn.active-step {
@@ -562,6 +562,7 @@ html[lang=es-ES] .checkout__step-btn {
   &-payment{
     .step__title{
       margin-bottom: 0;
+      margin-top: 32px;
     }
     .checkout__title-description{
       margin-top: -5px;
@@ -988,7 +989,7 @@ form .selection {
 	&__diff-addres {
 		display: flex;
 		flex-direction: column;
-    margin-bottom: 30px;
+    margin-bottom: 16px;
 	}
 	
 	&__next:after {
