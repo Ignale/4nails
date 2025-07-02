@@ -2,9 +2,9 @@
   "ftp://developer@woyqmtgx.a2hosted.com@ftp.woyqmtgx.a2hosted.com:21": {
     ".bash_history": {
       "type": "-",
-      "size": 1085,
+      "size": 1166,
       "lmtime": 0,
-      "modified": false
+      "modified": true
     },
     ".bash_logout": {
       "type": "-",
@@ -54,6 +54,12 @@
       "modified": false
     },
     ".htpasswds": {},
+    ".imunify_patch_id": {
+      "type": "-",
+      "size": 106,
+      "lmtime": 0,
+      "modified": false
+    },
     ".kshrc": {
       "type": "-",
       "size": 172,
@@ -62,7 +68,7 @@
     },
     ".lastlogin": {
       "type": "-",
-      "size": 598,
+      "size": 590,
       "lmtime": 0,
       "modified": true
     },
@@ -113,6 +119,8 @@
       "lmtime": 0,
       "modified": false
     },
+    ".ssh": {},
+    ".subaccounts": {},
     ".trash": {},
     ".wget-hsts": {
       "type": "-",
@@ -154,6 +162,7 @@
     "test2.4nails.us": {},
     "tmp": {},
     "wordpress-backups": {},
+    "woyqmtgx.a2hosted.com": {},
     "www": {
       "type": "l",
       "size": 11,
