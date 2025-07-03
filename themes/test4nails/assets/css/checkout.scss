@@ -1115,10 +1115,11 @@ form .selection {
 .checkout-total {
 	&__top {
 		display: flex;
-		align-items: center;
+		align-items: flex-end;
 		background-color: #F8F8F8;
-		font-size: 18px;
+		font-size: 16px;
 		font-weight: 600;
+    line-height: 1.2;
 	}
 
 	&__item {
@@ -1535,7 +1536,6 @@ form .selection {
 	&__header {
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
 	}
 
 	&__back-to-cart {

@@ -409,7 +409,7 @@ function add_shipping_info($method, $chosen_method)
   /* }*/
 
   $label = '<div class="delivery-method">';
-  if ($method->cost > 0 || $method->id == 'overweight_shipping') {
+  if ($method->cost > 0) {
     if (WC()->cart->tax_display_cart == 'excl') {
       $label .= wc_price($method->cost) . ' 一 ';
       if ($method->get_shipping_tax() > 0 && WC()->cart->prices_include_tax) {
@@ -2230,3 +2230,5 @@ add_filter('woocommerce_stripe_calculated_total', function ($stripe_amount, $ord
 
   return WC_Stripe_Helper::get_stripe_amount(round($total_without_fee + $stripe_fee_total, 2));
 }, 10, 3);
+
+add_filter( 'woocommerce_formatted_address_force_country_display', '__return_true' );

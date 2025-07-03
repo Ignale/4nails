@@ -65,13 +65,14 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                                 'city' => $customer->get_shipping_city(),
                                 'state' => $customer->get_shipping_state(),
                                 'postcode' => $customer->get_shipping_postcode(),
-                                'country' => $customer->get_shipping_country(),
-                              )
+                              ), ', '
                             )
                               ?>
                         </p>
                         <p class="shipping-info__country">
-                          <?= $customer->get_shipping_country() ?>
+                          <?= $countries->get_formatted_address([
+                              'country' => $customer->get_shipping_country(),
+                          ]) ?>
                         </p>
                       </div>
                       <div class="step__info-item billing-info">
@@ -92,13 +93,12 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                                 'city' => $customer->get_billing_city(),
                                 'state' => $customer->get_billing_state(),
                                 'postcode' => $customer->get_billing_postcode(),
-                                'country' => $customer->get_billing_country(),
-                              )
+                              ), ', '
                             )
                               ?>
                         </p>
                         <p class="billing-info__country">
-                          <?= $customer->get_billing_country() ?>
+                          <?= $countries->get_formatted_address(['country' => $customer->get_billing_country(),]) ?>
                         </p>
                       </div>
                     </div>

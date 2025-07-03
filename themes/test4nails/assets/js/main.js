@@ -295,16 +295,14 @@ if ($(".news__notification").length) {
     !sessionStorage.getItem("banner") ||
     sessionStorage.getItem("banner") !== document.documentElement.lang ||
     sessionStorage.getItem("notification-dismissed") === null ||
-    (sessionStorage.getItem("notification-dismissed") &&
-      Date.now() - sessionStorage.getItem("notification-dismissed") >
-        24 * 60 * 60 * 1000) // 24 hours
+    sessionStorage.getItem("notification-dismissed") !== navigator.userAgent // the same user agent
   ) {
     $(".news__notification").css({ display: "block" });
     sessionStorage.setItem("banner", document.documentElement.lang);
     $(".notification__button").on("click", function () {
       // Set a sestion storage item with timestamp to prevent showing it that day
 
-      sessionStorage.setItem("notification-dismissed", Date.now());
+      sessionStorage.setItem("notification-dismissed", navigator.userAgent);
 
       // Hide the notification with animation and remove it from the DOM
       $(this)

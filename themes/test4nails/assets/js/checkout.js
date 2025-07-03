@@ -626,10 +626,8 @@ function pasteShipMethodData() {
   }
 
   $(".shipp-info__name").html(text);
-  $(".shipp-info__desc").text(
-    $(
-      ".shipping_method:checked + .custom-control-label .delivery__info-text"
-    ).text()
+  $(".shipp-info__desc").append(
+    $(".shipping_method:checked + .custom-control-label .delivery__info-text")
   );
 }
 

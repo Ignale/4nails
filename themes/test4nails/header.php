@@ -355,7 +355,7 @@ if ($news_content): ?>
         <div class="notification-text"><?= $news_content['text']; ?></div>
         <button
           class="notification__button"
-        >OK
+        >&#x2715
         </button>
         <?= $news_content['url'] == '' ? '</div' : '</a'; ?>>
     </div>

@@ -326,9 +326,9 @@ label .required {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: flex-end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .notification-text {
@@ -341,7 +341,7 @@ label .required {
   cursor: pointer;
   padding: 0 7px;
   border: 1px solid #fff;
-  float: right;
+  margin-left: 20px;
   -webkit-transition: 0.3s all;
   transition: 0.3s all;
 }
@@ -4297,12 +4297,11 @@ section.about {
     height: 25px;
   }
   .notification .header_news {
-    -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
     padding: 15px 20px 10px;
   }
   .notification__button {
-    margin-left: auto;
+    margin-left: 20px;
+    margin-right: -20px;
   }
   .notification {
     margin-top: 7px;

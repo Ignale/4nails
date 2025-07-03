@@ -233,7 +233,7 @@ section.cart .return-to-shop {
 		&-info {
 			width: 100%;
 			display: flex;
-			align-items: flex-end;
+			align-items: center;
 			justify-content: space-between;
 		}
 	}
@@ -595,6 +595,9 @@ html[lang=es-ES] .cart__checkout a {
 		width: 75%;
 		order: 1;
 		height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 	}
 
 	.cart {

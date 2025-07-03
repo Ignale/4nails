@@ -299,7 +299,7 @@ label .required {
 	color: #fff;
 	display: flex;
 	justify-content: space-between;
-	align-items: flex-end;
+	align-items: center;
 }
 
 .notification-text {
@@ -312,7 +312,7 @@ label .required {
 	cursor: pointer;
 	padding: 0 7px;
 	border: 1px solid #fff;
-	float: right;
+  margin-left: 20px;
 	transition: .3s all;
 }
 
@@ -3767,12 +3767,13 @@ section.about {
 	}
 
 	.notification .header_news {
-			flex-wrap: wrap;
 			padding: 15px 20px 10px;
+      
 	}
 
 	.notification__button {
-			margin-left: auto;
+    margin-left: 20px;
+    margin-right: -20px;
 	}
 
 	.notification {
