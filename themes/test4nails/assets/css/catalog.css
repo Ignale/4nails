@@ -236,9 +236,6 @@
     -ms-flex-pack: distribute;
         justify-content: space-around;
   }
-  body .catalog .products__marker div {
-    width: 75%;
-  }
   .cart-btn {
     font-size: 14px;
   }
@@ -256,9 +253,6 @@
   }
 }
 @media (max-width: 576px) {
-  .catalog__item .products__marker div {
-    width: 75%;
-  }
   html[lang=es-ES] .cart-btn {
     font-size: 12px;
   }

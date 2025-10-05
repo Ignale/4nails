@@ -403,6 +403,35 @@ function
   die();
 }
 
+function get_shipping_label_id($label) {
+return strtolower(str_replace(' ', '_', preg_replace('/[\(\)]/', '', $label)));
+}
+
+function write_log_info($data) {
+  $logger  = wc_get_logger();
+  $context = ['source' => 'woo4nails'];
+  if( is_array($data)) {
+    $data = json_encode($data);
+  }
+  if( is_object($data)) {
+    $data = json_encode($data, JSON_PRETTY_PRINT);
+  }
+  if( is_string($data)) {
+    $data = str_replace("\n", ' ', $data);
+  }
+  if( is_bool($data)) {
+    $data = $data ? 'true' : 'false';
+  }   
+  if( is_null($data)) {
+    $data = 'null';
+  }
+  // Write the log
+  $logger->info(
+    $data,
+    $context
+  );  
+
+}
 
 function get_sale_amount($price_without_sale, $price_with_sale)
 {

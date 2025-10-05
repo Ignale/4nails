@@ -5,7 +5,7 @@
 			<div class="recovery__content">
 
 
-				<div class="recovery__text copyright"><?= __('Forgot You Password?', '4nails')?></div>
+				<div class="recovery__text copyright"><?= __('Forgot Your Password?', '4nails')?></div>
 				<div><p> <?= __('Enter you email address below, and we’ll email you a link to set a new password', '4nails')?></p></div>
 				<form method="post" class="recovery__form woocommerce-ResetPassword lost_reset_password">
 					<div class="sign-in__item form-item">

@@ -86,7 +86,7 @@ section.checkout {
           align-items: flex-start;
 }
 .checkout__order-notes {
-  margin-top: 16px;
+  margin-top: 42px;
 }
 .checkout__title {
   font-size: 24px;
@@ -155,9 +155,9 @@ section.checkout {
 }
 
 .delivery__info-text {
-  margin-top: -6px;
-  font-size: 13px;
-  line-height: 1.4;
+  margin-top: 0px;
+  font-size: 12px;
+  line-height: 1.2;
 }
 
 .wc-credit-card-form label {
@@ -616,7 +616,7 @@ html[lang=es-ES] .checkout__step-btn {
   margin-top: 32px;
 }
 .step__fields-payment .checkout__title-description {
-  margin-top: -5px;
+  line-height: 1.2;
 }
 
 #ship-to-different-address label.custom-checkbox {
@@ -685,9 +685,6 @@ html[lang=es-ES] .checkout__step-btn {
     -webkit-box-pack: start;
         -ms-flex-pack: start;
             justify-content: flex-start;
-  }
-  .pay-btn {
-    margin: 0 auto;
   }
   .checkout__step {
     margin-bottom: 23px;

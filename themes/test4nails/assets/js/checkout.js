@@ -33,6 +33,31 @@
 
 const checkout_form = $("form.checkout");
 
+function removeCheckoutFormHandlers() {
+  checkout_form.off("change", ".address-field select");
+  checkout_form.off("change", ".input-text, select, input:checkbox");
+  checkout_form.off(
+    "change",
+    ".address-field input.input-text, .update_totals_on_change input.input-text"
+  );
+  checkout_form.off(
+    "keydown",
+    ".address-field input.input-text, .update_totals_on_change input.input-text"
+  );
+}
+
+$(document.body).on("update_checkout", () => {
+  removeCheckoutFormHandlers();
+});
+
+$(document.body).on("init_checkout", () => {
+  removeCheckoutFormHandlers();
+});
+
+$(document).ready(function () {
+  removeCheckoutFormHandlers();
+});
+
 let currentStep = "first";
 
 $(document).on("updated_checkout", function (event) {
@@ -147,12 +172,15 @@ function validateCheckout(callback) {
 
   const _data = checkFields(true);
 
-  return $.ajax({
+  $.ajax({
     url: "/?wc-ajax=checkout",
     type: "POST",
     data: _data,
     dataType: "json",
     success: function (data) {
+      console.log(data);
+      console.log(_data);
+
       var _flug_payment = false;
       _form.removeClass("processing").find(".blockUI").remove();
       if (data.result === "failure") {
@@ -181,12 +209,14 @@ function validateCheckout(callback) {
 
       $(".woocommerce-notices-wrapper").html("");
       _form.removeClass("processing").find(".blockUI").remove();
-
-      if (callback) {
-        callback();
-      }
     },
   });
+
+  // jQuery("body").trigger("update_checkout");
+
+  if (callback) {
+    callback();
+  }
 }
 //country_to_state_changed
 if (bodyClass("woocommerce-checkout")) {
@@ -310,8 +340,6 @@ function calcCurrentTotalPrice(...prices) {
     zelleTotal = $("#wc-zelle-form .woocommerce-Price-amount");
   let total = 0;
 
-  console.log(prices);
-
   for (const arg of prices) {
     if (typeof arg === "number") {
       total += +arg.toFixed(2);
@@ -368,6 +396,7 @@ function secondStep() {
   pasteShipMethodData();
 
   hideSecondStepBlock();
+
   hideFirstStepBlock();
 
   $(".steps__shipping").addClass("active");
@@ -384,7 +413,6 @@ function secondStep() {
   );
 
   $(".aside__content #place_order").prop("disabled", false);
-  $("body").trigger("updated_checkout");
 }
 
 function showThirdStep() {
@@ -435,7 +463,7 @@ function showThirdStepBlock() {
   $(".third-step").slideDown();
   $(".checkout__terms").show();
   $(".totals__title").show();
-  $("body").trigger("updated_checkout");
+  // $("body").trigger("updated_checkout");
 
   $("html, body").animate(
     {
@@ -626,9 +654,11 @@ function pasteShipMethodData() {
   }
 
   $(".shipp-info__name").html(text);
-  $(".shipp-info__desc").append(
-    $(".shipping_method:checked + .custom-control-label .delivery__info-text")
-  );
+
+  $(".shipp-info__desc").empty();
+  $(".shipping_method:checked + .custom-control-label .delivery__info-text")
+    .clone()
+    .appendTo(".shipp-info__desc");
 }
 
 function changeCurrentStepClass(past, current) {
@@ -876,7 +906,6 @@ window.onload = function () {
 };
 
 //styling iframe express payment buttons
-
 document.addEventListener("DOMContentLoaded", function () {
   const frame = $("#wc-stripe-express-checkout-element iframe");
 

@@ -21,8 +21,8 @@ tabindex="-1"
             ><?= __('Create or log into your account', '4nails') ?></a>
             <a
             class="modal__form-button red-btn checkout-button button btn-cyan w-100 alt wc-forward"
-            href="<?= $trouble ? '' : esc_url(wc_get_checkout_url()); ?>"
-            id="<?= $trouble ?>"
+            href="<?= esc_url(wc_get_checkout_url()); ?>"
+
             >
               <?= __('Continue checkout as a guest', '4nails'); ?></a>
           </div>

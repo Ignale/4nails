@@ -90,7 +90,15 @@ cellspacing="0"
   </tr>
 </table>
 
-
+<?php if ($data_info['personal_discount']>0): ?>
+  <table>
+    <tbody>
+      <tr class="total">
+          <td width="50%" align="left" class="border <?php echo esc_attr($class); ?>">Personal discount: <?= $data_info['personal_discount']; ?>%</td>
+      </tr>
+    </tbody>
+  </table>
+<?php endif; ?>
 
 <table
 cellpadding="0"
@@ -160,20 +168,8 @@ cellspacing="0"
       class="border <?php echo esc_attr($class); ?>"
       ><?= wc_price(get_individual_discount_order($order)); ?></td>
     </tr>
-    <!--
-        <tr class="total">
-            <td width="50%">&nbsp;</td>
-            <td width="25%" align="left" class="border <?php echo esc_attr($class); ?>">Sale discount:</td>
-            <td width="25%" align="right" class="border <?php echo esc_attr($class); ?>">$<?= $data_info['sale_discount']; ?></td>
-        </tr>
-    <?php if (is_user_logged_in()): ?>
-        <tr class="total">
-            <td width="50%">&nbsp;</td>
-            <td width="25%" align="left" class="border <?php echo esc_attr($class); ?>">Personal discount (<?= $data_info['personal_discount']; ?>):</td>
-            <td width="25%" align="right" class="border <?php echo esc_attr($class); ?>">$<?= $data_info['personal_total']; ?></td>
-        </tr>
-    <?php endif; ?>
-    -->
+
+
 
     <?php
     foreach ($invoice->get_order_item_totals() as $key => $total) {

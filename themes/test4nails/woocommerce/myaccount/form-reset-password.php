@@ -1,7 +1,7 @@
 <section class="reset">
 
 		<div class="reset__container account__container">
-			<h1 class="title reset__title copyright"><?= __('Reset You Password', '4nails')?></h1>
+			<h1 class="title reset__title copyright"><?= __('Reset Your Password', '4nails')?></h1>
 			<div class="reset__content">
 				<div class="reset__img"><img src="<?= path() ?>assets/img/icons/passwordr.svg"></div>
 				<div class="reset__text"><?= __('Enter a new password for you account.', '4nails')?></div>

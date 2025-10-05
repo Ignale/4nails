@@ -2,7 +2,7 @@
   "ftp://developer@woyqmtgx.a2hosted.com@ftp.woyqmtgx.a2hosted.com:21": {
     ".bash_history": {
       "type": "-",
-      "size": 1166,
+      "size": 20269,
       "lmtime": 0,
       "modified": true
     },
@@ -24,10 +24,12 @@
       "lmtime": 0,
       "modified": false
     },
+    ".cache": {},
     ".cagefs": {},
     ".caldav": {},
     ".cl.selector": {},
     ".clwpos": {},
+    ".config": {},
     ".cpanel": {},
     ".cpanel-logs": {
       "type": "-",
@@ -68,10 +70,17 @@
     },
     ".lastlogin": {
       "type": "-",
-      "size": 590,
+      "size": 605,
       "lmtime": 0,
       "modified": true
     },
+    ".lesshst": {
+      "type": "-",
+      "size": 20,
+      "lmtime": 0,
+      "modified": false
+    },
+    ".local": {},
     ".lsphp_restart.txt": {
       "type": "-",
       "size": 0,
@@ -97,11 +106,18 @@
       "lmtime": 0,
       "modified": false
     },
+    ".putty": {},
     ".razor": {},
     ".redis": {},
     ".redis.on": {
       "type": "-",
       "size": 0,
+      "lmtime": 0,
+      "modified": false
+    },
+    ".rediscli_history": {
+      "type": "-",
+      "size": 33,
       "lmtime": 0,
       "modified": false
     },
@@ -122,6 +138,12 @@
     ".ssh": {},
     ".subaccounts": {},
     ".trash": {},
+    ".viminfo": {
+      "type": "-",
+      "size": 1628,
+      "lmtime": 0,
+      "modified": false
+    },
     ".wget-hsts": {
       "type": "-",
       "size": 204,
@@ -149,12 +171,31 @@
       "modified": false
     },
     "bin": {},
+    "dump.rdb": {
+      "type": "-",
+      "size": 248495,
+      "lmtime": 0,
+      "modified": false
+    },
+    "emp": {},
     "etc": {},
     "logs": {},
     "lscache": {},
     "lscmData": {},
     "mail": {},
+    "monitor_php_cpu.php": {
+      "type": "-",
+      "size": 1331,
+      "lmtime": 0,
+      "modified": false
+    },
     "php": {},
+    "php_cpu_log.txt": {
+      "type": "-",
+      "size": 436,
+      "lmtime": 0,
+      "modified": true
+    },
     "public_ftp": {},
     "public_html": {},
     "ssl": {},

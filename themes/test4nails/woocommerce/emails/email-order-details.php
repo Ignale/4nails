@@ -157,17 +157,6 @@ if ($active) {
       } else {
         $shipping_value = __('Free shipping', '4nails');
       }
-      /* switch (reset($order->get_items('shipping'))->get_method_id()){
-           case 'local_pickup':
-               $shipping_value=$item_totals['shipping']['value'];
-               break;
-           case 'jem_table_rate':
-               $shipping_value='<span >+&nbsp;</span>'.$item_totals['shipping']['value'].' '.__('The amount is approximate and a final sum will need to be determined.','4nails');
-               break;
-           default:
-               $shipping_value='<span >+&nbsp;</span>'.$item_totals['shipping']['value'];
-
-       }*/
       if ($item_totals['shipping']['label'] == 'Local pickup') {
         $shipping_value = $item_totals['shipping']['value'];
       }

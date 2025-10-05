@@ -90,10 +90,12 @@ $(window).scroll(function () {
     sticky.addClass("header-fixed");
     $(".header-fixed__mini").show();
     $(".header__search").addClass("header__search-fixed");
+    $(".breadcrumbs").css({ "margin-top": "37px" });
   } else {
     sticky.removeClass("header-fixed");
     $(".header-fixed__mini").hide();
     $(".header__search").removeClass("header__search-fixed");
+    $(".breadcrumbs").css({ "margin-top": "0px" });
   }
 });
 

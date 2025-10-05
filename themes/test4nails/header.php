@@ -237,7 +237,7 @@
     <div class="header-bottom">
       <div class="header-shadow">
         <div class="wrapper">
-          <div class="header-bottom__container">
+          <div class="header-bottom__container ">
             <nav class="header__menu">
               <?php wp_nav_menu(['menu' => 'header', 'container' => null, 'menu_class' => 'header__menu']); ?>
             </nav>
@@ -345,8 +345,6 @@
   <?php
 
 $news_content = nails_active_news();
-
-
 if ($news_content): ?>
   <div class="notification news__notification">
     <div class="wrapper">

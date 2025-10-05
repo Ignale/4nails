@@ -55,7 +55,7 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                                 array(
                                   'address_1' => $customer->get_shipping_address_1(),
                                   'address_2' => $customer->get_shipping_address_2(),
-                                )
+                                ), ', '
                               );
                             ?>
                         </p>
@@ -84,7 +84,7 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                         </p>
                         <p class="billing-info__street">
                           <?= $customer->get_billing_address_1() .
-                              " " . $customer->get_billing_address_2()
+                              ", " . $customer->get_billing_address_2()
                               ?>
                         </p>
                         <p class="billing-info__location ">
@@ -147,7 +147,7 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                           <label
                             class="custom-control-label"
                             for="ship-to-different-address-checkbox"
-                          ><?php _e('Shipping address matches billing address?', 'woocommerce'); ?></label>
+                          ><?php _e('My billing address is the same as my shipping address', '4nails'); ?></label>
                         </label>
                       </div>
                     </div>

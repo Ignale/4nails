@@ -94,7 +94,7 @@ foreach ($items as $item_id => $item):
     style="text-align:<?php echo esc_attr($text_align); ?>; vertical-align:middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;"
   >
     <?php
-      $actualPrice = get_product_price($order->get_item($item)['product_id'], $order->get_id()) * $order->get_item($item)['quantity'];
+      $actualPrice = get_order_item_subtotal($item, $order) * $order->get_item($item)['quantity'];
       $metaPrice = floatval(wc_get_order_item_meta($item_id, '_product_price', true)) * $item['quantity'];
       echo wc_price($actualPrice);
       // wc_price(wp_kses_post( get_post_meta( $order->get_item( $item )['product_id'], '_regular_price', true) ))

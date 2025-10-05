@@ -18,7 +18,7 @@ $changePopupLink = 0;
 if (!$overweight && !$free_delivery['free_delivery']) {
   $changePopupLink = 'login-error';
 } elseif ($overweight && !$free_delivery['free_delivery']) {
-  $changePopupLink = 'overweight';
+  // $changePopupLink = 'overweight';
 }
 $href = $haveTrouble ? '' : esc_url(wc_get_checkout_url());
 /*
@@ -35,7 +35,7 @@ $id = '';
 if (!$only_free_delivery && $free_delivery['free_delivery']) { // проверка на наличие товара с свободной доставкой
   // $id = 'overweight';
 } elseif ($loggedUser && !($overweight && !$free_delivery['free_delivery'])) {
-  $id = 'goToCheckoutBtn';
+  // $id = 'goToCheckoutBtn';
 } elseif (!$loggedUser) { // if user is not logged in but has no troubles
   $id = 'login-btn';
 } elseif (!$overweight && !$free_delivery['free_delivery']) { // if logged in but has items from different warehouses
@@ -57,10 +57,10 @@ id="<?= $id ?>"
 if (!$loggedUser) {
   get_template_part('widgets/cart/cart', 'login', ['have_trouble' => $free_delivery['free_delivery'] || $overweight ? $changePopupLink : 0]);
 }
-if (!$only_free_delivery && $free_delivery['free_delivery']) {
-  get_template_part('widgets/cart/cart', 'notAllow', ['products_id' => $free_delivery['ids'], 'is_cart' => true]);
-}
-if ($overweight && !$free_delivery['free_delivery']) {
-  get_template_part('widgets/cart/cart', 'overweight', ['is_cart' => true]);
-}
+// if (!$only_free_delivery && $free_delivery['free_delivery']) {
+//   get_template_part('widgets/cart/cart', 'notAllow', ['products_id' => $free_delivery['ids'], 'is_cart' => true]);
+// }
+// if ($overweight && !$free_delivery['free_delivery']) {
+//   get_template_part('widgets/cart/cart', 'overweight', ['is_cart' => true]);
+// }
 ?>
